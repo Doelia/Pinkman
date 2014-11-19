@@ -1,0 +1,57 @@
+package edu.turtlekit3.warbot.FSM.condition;
+
+import edu.turtlekit3.warbot.FSM.WarEtat;
+import edu.turtlekit3.warbot.FSM.action.WarAction;
+import edu.turtlekit3.warbot.brains.WarBrain;
+
+public abstract class WarCondition {
+	
+	WarBrain brain;
+	
+	private WarEtat etatDestination;
+	private WarAction actionDestination;
+	
+	public WarCondition(WarBrain b){
+		this.brain = b;
+	}
+	
+	public abstract boolean isValide();
+
+	public void setDestination(WarEtat etatDestination) {
+		this.etatDestination = etatDestination;
+	}
+	
+	public void setDestination(WarAction a) {
+		this.actionDestination = a;
+	}
+
+	public WarEtat getEtatDestination() {
+		return etatDestination;
+	}
+
+	public void init() {
+		if(this.etatDestination == null & this.actionDestination == null){
+			System.err.println("ERREUR une condition doit obligatoirement avoir un état ou une action destination <" + this.toString() + ">");
+			System.exit(0);
+		}
+		
+		if(this.etatDestination == null){
+			System.out.println("ATTENTION la condition <" + this.getClass() + "> ne contient pas d'état de sortie. Par default l'action appelé sera celle de l'état courant");
+		}
+		
+		
+	}
+
+	public WarAction getActionDestination() {
+		return this.actionDestination;
+	}
+	
+	public WarBrain getBrain(){
+		return this.brain;
+	}
+	
+	
+	public static final String HEALTH = "getHealth";
+	public static final String NB_ELEMEN_IN_BAG = "getNbElementsInBag";
+
+}

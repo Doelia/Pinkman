@@ -1,0 +1,64 @@
+package edu.turtlekit3.warbot.FSM.action;
+
+import edu.turtlekit3.warbot.agents.MovableWarAgent;
+import edu.turtlekit3.warbot.agents.agents.WarBase;
+import edu.turtlekit3.warbot.agents.enums.WarAgentType;
+import edu.turtlekit3.warbot.brains.WarBrain;
+import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
+
+/**
+ * Description de l'action
+ * Si ma vie est inferieur au pourcentage passé en parametre je me heal 
+ * si ma vie est supperieur au pourentage passé en parametre j'ai finit
+ * Idem pour constructeur avec deux pourcentages (le deuxieme pour les unité allié)
+ * Si plus de nourriure je finit
+ * @author Olivier
+ *
+ */
+public class WarActionCreateUnit extends WarAction{
+
+	int minLife;
+	WarAgentType agentType;
+	int nbToCreate;
+	int nbCreate;
+	
+	public WarActionCreateUnit(WarBrain brain, WarAgentType agentType, int nb, int minLife) {
+		super(brain);
+		this.agentType = agentType;
+		this.nbToCreate = nb;
+		this.minLife = minLife;
+	}
+
+	public String executeAction(){
+		
+		if(nbCreate == nbToCreate){
+			setActionTerminate(true);
+			return MovableWarAgent.ACTION_IDLE;
+		}
+		
+		if(!getBrain().isBagEmpty() && getBrain().getHealth() < this.minLife)
+			return WarBase.ACTION_EAT;
+		
+		if(getBrain().getHealth() >= minLife){
+			getBrain().setNextAgentToCreate(agentType);
+			nbCreate++;
+			return WarBase.ACTION_CREATE;
+		}
+		
+		return WarBase.ACTION_IDLE;
+		
+	}
+
+	@Override
+	public void actionWillBegin() {
+		super.actionWillBegin();
+		getBrain().setDebugString(getClass().getSimpleName() + " " + agentType.toString());
+		this.nbCreate = 0;
+	}
+	
+	@Override
+	public WarBaseBrain getBrain(){
+		return (WarBaseBrain)(super.getBrain());
+	}
+
+}
