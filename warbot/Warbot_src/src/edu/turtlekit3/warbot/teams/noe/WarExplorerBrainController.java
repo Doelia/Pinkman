@@ -6,16 +6,20 @@ import java.util.ArrayList;
 import edu.turtlekit3.warbot.agents.ControllableWarAgent;
 import edu.turtlekit3.warbot.agents.MovableWarAgent;
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
+import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarExplorerAbstractBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
+import edu.turtlekit3.warbot.teams.demo.WarKamikazeBrainController;
+import edu.turtlekit3.warbot.tools.CoordPolar;
 
 public class WarExplorerBrainController extends WarExplorerAbstractBrainController {
 	
 
 	private boolean imGiving = false;
 	private String toReturn;
+	ArrayList<WarMessage> messages;
 	
 	public WarExplorerBrainController() {
 		super();
@@ -26,10 +30,13 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		// Develop behaviour here
 		
 		toReturn = null;
-		
+		this.messages = getBrain().getMessages();
+
 		handleMessages();
 		
 		getFood();
+		
+		//stuckEnemies();
 		
 		returnFood();
 		
@@ -44,7 +51,16 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		
 		
 	private void handleMessages(){
-		
+
+	}
+	
+	private void stuckEnemies() {
+		WarMessage m = getFormatedMessageAboutEnemyTankToKill();
+		if(m != null){
+			CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
+			getBrain().setHeading(p.getAngle());
+			toReturn = WarExplorer.ACTION_MOVE;
+		}
 	}
 	
 	private WarMessage getMessageAboutFood() {
@@ -141,5 +157,14 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			
 		}
 		
+	}
+	
+	private WarMessage getFormatedMessageAboutEnemyTankToKill() {
+		for (WarMessage m : this.messages) {
+			if(m.getMessage().equals(Constants.enemyTankHere) && m.getContent() != null && m.getContent().length == 2){
+				return m;
+			}
+		}
+		return null;
 	}
 }
