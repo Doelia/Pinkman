@@ -3,10 +3,6 @@ package edu.turtlekit3.warbot.FSMEditor.Modele;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import edu.turtlekit3.warbot.FSMEditor.dialogues.DialogueCondSetting;
-import edu.turtlekit3.warbot.FSMEditor.dialogues.DialogueStateSetting;
-import sun.org.mozilla.javascript.internal.ast.ArrayLiteral;
-
 public class Modele {
 	
 	private ArrayList<ModeleState> sates = new ArrayList<>();
@@ -25,10 +21,10 @@ public class Modele {
 	}
 
 	public void removeState(ModeleState m) {
-		//On supprime toutes les conditions de l'état source
+		//On supprime toutes les conditions de l'ï¿½tat source
 		this.conditions.removeAll(m.getModeleConditions());
 		
-		//on parcours toutes les condtions pour voir si il yen a qui vont jusqua l'état qui va etre suppr
+		//on parcours toutes les condtions pour voir si il yen a qui vont jusqua l'ï¿½tat qui va etre suppr
 		ArrayList<ModeleCondition> toDelet = new ArrayList<>();
 		for (ModeleCondition cond: this.conditions) {
 			if(cond.getDestination().equals(m)){

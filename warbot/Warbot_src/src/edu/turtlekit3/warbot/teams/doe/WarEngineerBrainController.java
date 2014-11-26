@@ -15,6 +15,9 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 		
 		if (getBrain().isBlocked())
 			getBrain().setRandomHeading();
+		
+		
+		
 		return WarEngineer.ACTION_MOVE;
 	}
 }
