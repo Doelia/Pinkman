@@ -19,7 +19,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	private String toReturn = null;
 	boolean iAbleToFireBase = false;
 	private double lastAngle = 0;
-	private int angleModifier = new Random().nextInt(90) + 90;
+	private int angleModifier = new Random().nextInt(90);
 
 
 	ArrayList<WarMessage> messages;
@@ -46,11 +46,11 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		attackRocketLaunchers();
 		wiggle();
 
-//		if(toReturn == null){
-//			if (getBrain().isBlocked())
-//				getBrain().setRandomHeading();
-//			toReturn = WarRocketLauncher.ACTION_MOVE;
-//		}
+		//		if(toReturn == null){
+		//			if (getBrain().isBlocked())
+		//				getBrain().setRandomHeading();
+		//			toReturn = WarRocketLauncher.ACTION_MOVE;
+		//		}
 
 		return toReturn;
 	}
@@ -114,35 +114,46 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		getBrain().setDebugStringColor(Color.blue);
 		getBrain().setDebugString("Attack launchers");
 
-		ArrayList<WarPercept> percept = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+		if(!unstuck()) {
+			ArrayList<WarPercept> percept = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+			// Je un agentType dans le percept
+			if(percept != null && percept.size() > 0){
 
-		// Je un agentType dans le percept
-		if(percept != null && percept.size() > 0){
-
-			//je le dit aux autres
-			getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.enemyTankHere, String.valueOf(percept.get(0).getDistance()), String.valueOf(percept.get(0).getAngle()));
-
-			if(getBrain().isReloaded()){
-				getBrain().setHeading(percept.get(0).getAngle());
-				toReturn = WarRocketLauncher.ACTION_FIRE;
+				//je le dit aux autres
+				getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.enemyTankHere, String.valueOf(percept.get(0).getDistance()), String.valueOf(percept.get(0).getAngle()));
+				getBrain().broadcastMessageToAgentType(WarAgentType.WarExplorer, Constants.enemyTankHere, String.valueOf(percept.get(0).getDistance()), String.valueOf(percept.get(0).getAngle()));
+				
+				if(getBrain().isReloaded()){
+					getBrain().setHeading(percept.get(0).getAngle());
+					toReturn = WarRocketLauncher.ACTION_FIRE;
+				}else{
+					getBrain().setHeading(percept.get(0).getAngle() + angleModifier);
+					lastAngle = angleModifier;
+					toReturn = WarRocketLauncher.ACTION_MOVE;
+				}
 			}else{
-				getBrain().setHeading(percept.get(0).getAngle() + angleModifier);
-				lastAngle = angleModifier;
-				toReturn = WarRocketLauncher.ACTION_MOVE;
-			}
-		}else{
-			//si j'ai un message me disant qu'il y a  un autre tank a tuer
+				//si j'ai un message me disant qu'il y a  un autre tank a tuer
 
-			WarMessage m = getFormatedMessageAboutEnemyTankToKill();
-			if(m != null){
-				CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
-				getBrain().setHeading(p.getAngle());
-				toReturn = WarRocketLauncher.ACTION_MOVE;
-			}
-		}		
+				WarMessage m = getFormatedMessageAboutEnemyTankToKill();
+				if(m != null){
+					CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
+					getBrain().setHeading(p.getAngle());
+					toReturn = WarRocketLauncher.ACTION_MOVE;
+				}
+			}	
+		}
 	}
 
+	private boolean unstuck() {
+		ArrayList<WarPercept> percept = getBrain().getPerceptsAlliesByType(WarAgentType.WarRocketLauncher);
 
+		if(percept.size() > 0 && percept.get(0).getDistance() < 20) {
+			getBrain().setHeading(getBrain().getHeading() - angleModifier);
+			toReturn = MovableWarAgent.ACTION_MOVE;
+			return true;
+		}
+		return false;
+	}
 
 	private void wiggle() {
 		if(toReturn != null)
@@ -154,11 +165,13 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		getBrain().setDebugStringColor(Color.black);
 		getBrain().setDebugString("Looking for ennemies");
 
-		double angle = getBrain().getHeading() + new Random().nextInt(10) - new Random().nextInt(10);
 
-		getBrain().setHeading(angle);
+		if(!unstuck()) {
+			double angle = getBrain().getHeading() + new Random().nextInt(10) - new Random().nextInt(10);
+			getBrain().setHeading(angle);
+			toReturn = MovableWarAgent.ACTION_MOVE;		
+		}
 
-		toReturn = MovableWarAgent.ACTION_MOVE;		
 	}
 
 	private WarMessage getFormatedMessageAboutEnemyTankToKill() {
