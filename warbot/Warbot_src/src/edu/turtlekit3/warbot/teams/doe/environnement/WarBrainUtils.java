@@ -32,10 +32,13 @@ public class WarBrainUtils {
 	}
 
 	public static void setHeadingOn(WarBrain brain, Vector2 pos, Vector2 target) {
-		double coteOpp = pos.x - target.x;
+		Vector2 sortie = new Vector2(0,0);
+		sortie.sub(pos);
+		sortie.add(target);
+		brain.setHeading(-sortie.angle());
+		/*double coteOpp = pos.x - target.x;
 		double coteAdj = target.y - pos.y;
 		System.out.println(coteOpp+"/"+coteAdj+"="+coteOpp/coteAdj);
-		double angle = Math.atan(coteOpp/coteAdj);
-		brain.setHeading(Math.toDegrees(angle) + 180);
+		double angle = Math.atan(coteOpp/coteAdj);*/
 	}
 }

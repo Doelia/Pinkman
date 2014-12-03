@@ -6,9 +6,12 @@ import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
+import edu.turtlekit3.warbot.brains.brains.WarExplorerBrain;
 
 public class Environnement {
 
+	public static WarExplorerBrain chef = null;
+	
 	private static Environnement instance;
 	public static Environnement getInstance() {
 		if (instance == null) {
@@ -49,15 +52,16 @@ public class Environnement {
 		} else {
 			this.listAllies.put(a.getID(), new StructWarBrain(a, posCart));
 		}
-		//a.setDebugString(""+posCart);
-		
-		
+		a.setDebugString(""+posCart);
 	}
 	
-	
-	
-	
-	
+	public Vector2 getPositionOf(WarBrain a) throws AllieNotFoundException {
+		try {
+		return this.listAllies.get(a.getID()).posCart;
+		} catch (Exception e) {
+			throw new AllieNotFoundException();
+		}
+	}
 	
 	
 }

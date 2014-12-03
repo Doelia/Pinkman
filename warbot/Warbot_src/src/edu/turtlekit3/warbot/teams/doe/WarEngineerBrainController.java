@@ -2,6 +2,7 @@ package edu.turtlekit3.warbot.teams.doe;
 
 import edu.turtlekit3.warbot.agents.agents.WarEngineer;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarEngineerAbstractBrainController;
+import edu.turtlekit3.warbot.teams.doe.environnement.Environnement;
 
 public class WarEngineerBrainController extends WarEngineerAbstractBrainController {
 	
@@ -11,6 +12,8 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 
 	@Override
 	public String action() {
+		
+		
 		// Develop behaviour here
 		
 		if (getBrain().isBlocked())
