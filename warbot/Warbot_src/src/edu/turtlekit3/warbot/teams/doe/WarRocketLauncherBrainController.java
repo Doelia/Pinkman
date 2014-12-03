@@ -35,12 +35,19 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					WarBrainUtils.setHeadingOn(
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
-							t.getMovementPosition(this.getBrain().getID()));
+							t.getMovementPosition(getBrain().getID()));
+					if(ev.getEntitiesInRadiusOfWithAngle(this.getBrain().getID(), 20, 60, (int) getBrain().getHeading()).size() > 0) {
+						System.out.println("ouch");
+						getBrain().setHeading(angleModifier + getBrain().getHeading());
+					}
 				} else {
 					WarBrainUtils.setHeadingOn(
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
-							new Vector2(-500, -500));
+							new Vector2(-200, -200));
+					if(new Random().nextBoolean()) {
+						return WarRocketLauncher.ACTION_IDLE;
+					}
 				}
 			} catch (NotExistException e) {
 			}
