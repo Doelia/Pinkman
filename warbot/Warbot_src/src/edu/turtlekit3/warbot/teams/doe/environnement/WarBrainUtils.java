@@ -18,14 +18,13 @@ public class WarBrainUtils {
 		return null;
 	}
 
-	public static void updatePosition(WarBrain brain, Vector2 position) {
+	public static void updatePositionInEnvironnement(WarBrain brain) {
 		try {
 			WarMessage m = getMessageFromBase(brain);
 			double angle = m.getAngle();
 			double distance = m.getDistance();
 			if (angle != Double.NaN && distance != Double.NaN) {
-				Environnement.cartFromPolaire(position, angle, distance);
-				Environnement.getInstance().updatePosition(brain, position);
+				Environnement.getInstance().updatePosition(brain, Environnement.cartFromPolaire(angle, distance));
 			}
 		} catch (NullPointerException e) {
 		}
