@@ -3,7 +3,6 @@ package edu.turtlekit3.warbot.teams.doe.environnement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -41,15 +40,26 @@ public class Environnement {
 			this.mainBase = mainBase;
 	}
 
+	/**
+	 * 
+	 * @param angle en degres
+	 * @param dist
+	 * @return
+	 */
 	public static Vector2 cartFromPolaire(double angle, double dist) {
 		double rad = Math.toRadians(angle);
 		return new Vector2((float) (-dist*Math.cos(rad)), (float) (dist*Math.sin(rad)));
 	}
 	
+	/**
+	 * 
+	 * @param vec retourn teta en radians
+	 * @return
+	 */
 	public static Vector2 polaireFromCart(Vector2 vec) {
 		float teta = (float) Math.atan2(vec.y, vec.x);
 		int distance = (int) Math.hypot(vec.x, vec.y);
-		return new Vector2(teta, distance);
+		return new Vector2((float) Math.toDegrees(teta), (float) distance);
 	}
 
 	public void updatePosition(WarBrain a, Vector2 posCart) {
@@ -88,12 +98,12 @@ public class Environnement {
 	public ArrayList<Integer> getEntitiesInRadiusOf(int brainId, int radius){
 		ArrayList<Integer> entities = new ArrayList<Integer>();
 		try {
-			Vector2 position = getStructWarBrain(brainId).getPosition();
+			Vector2 outPosition = getStructWarBrain(brainId).getPosition();
 			for (StructWarBrain s : getListAllies()) {
 				try {
 					if(s.getID() != brainId) {
-						Vector2 target = s.getPosition();
-						float distance = position.dst(target);
+						Vector2 targetPosition = s.getPosition();
+						float distance = outPosition.dst(targetPosition);
 						if(distance < radius) {
 							entities.add(s.getID());
 						}
@@ -122,6 +132,7 @@ public class Environnement {
 //						}
 						
 						float distance = position.dst(target);
+						System.out.println("distance = "+distance);
 						if(distance < radius) {
 							Vector2 p1 = cartFromPolaire(heading + angle / 2, distance);
 							p1.add(position);
