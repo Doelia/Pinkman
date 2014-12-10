@@ -1,14 +1,15 @@
-package edu.turtlekit3.warbot.teams.doe.environnement;
+package edu.turtlekit3.warbot.teams.doe.cheat;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 
 import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
+import edu.turtlekit3.warbot.teams.doe.Tools;
+import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class Environnement {
 
@@ -40,17 +41,7 @@ public class Environnement {
 		if (!this.mainBaseIsDefined())
 			this.mainBase = mainBase;
 	}
-
-	public static Vector2 cartFromPolaire(double angle, double dist) {
-		double rad = Math.toRadians(angle);
-		return new Vector2((float) (-dist*Math.cos(rad)), (float) (dist*Math.sin(rad)));
-	}
 	
-	public static Vector2 polaireFromCart(Vector2 vec) {
-		float teta = (float) Math.atan2(vec.y, vec.x);
-		int distance = (int) Math.hypot(vec.x, vec.y);
-		return new Vector2(teta, distance);
-	}
 
 	public void updatePosition(WarBrain a, Vector2 posCart) {
 		StructWarBrain e = this.listAllies.get(a.getID());
@@ -88,12 +79,12 @@ public class Environnement {
 	public ArrayList<Integer> getEntitiesInRadiusOf(int brainId, int radius){
 		ArrayList<Integer> entities = new ArrayList<Integer>();
 		try {
-			Vector2 position = getStructWarBrain(brainId).getPosition();
+			Vector2 outPosition = getStructWarBrain(brainId).getPosition();
 			for (StructWarBrain s : getListAllies()) {
 				try {
 					if(s.getID() != brainId) {
-						Vector2 target = s.getPosition();
-						float distance = position.dst(target);
+						Vector2 targetPosition = s.getPosition();
+						float distance = outPosition.dst(targetPosition);
 						if(distance < radius) {
 							entities.add(s.getID());
 						}
@@ -114,6 +105,7 @@ public class Environnement {
 					if(s.getID() != brainId) {
 						Vector2 target = new Vector2(s.getPosition());
 						float distance = position.dst(target);
+						System.out.println("distance = "+distance);
 						if(distance < radius) {
 							Vector2 selfPos = listAllies.get(brainId).getPosition();
 							Vector2 otherPos = listAllies.get(s.getID()).getPosition();
@@ -137,17 +129,6 @@ public class Environnement {
 		return listAllies.values();
 	}
 	
-	private float computeZCoordinate(Vector2 p1, Vector2 p2, Vector2 p3) {
-		return p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y);
-	}
-	
-	private boolean isPointInsideTriangle(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 target) {
-		float z1 = computeZCoordinate(p1, p2, target);
-		float z2 = computeZCoordinate(p2, p3, target);
-		float z3 = computeZCoordinate(p3, p1, target);
-		
-		return ((z1 > 0) && (z2 > 0) && (z3 > 0)) || ((z1 < 0) && (z2 < 0) && (z3 < 0));
-	}
 
 
 }

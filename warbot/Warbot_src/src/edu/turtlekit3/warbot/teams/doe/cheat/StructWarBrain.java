@@ -1,8 +1,9 @@
-package edu.turtlekit3.warbot.teams.doe.environnement;
+package edu.turtlekit3.warbot.teams.doe.cheat;
 
 import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.brains.WarBrain;
+import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class StructWarBrain {
 

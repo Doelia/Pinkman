@@ -1,4 +1,4 @@
-package edu.turtlekit3.warbot.teams.doe.environnement;
+package edu.turtlekit3.warbot.teams.doe.cheat;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -6,7 +6,13 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.communications.WarMessage;
 import edu.turtlekit3.warbot.teams.demo.Constants;
+import edu.turtlekit3.warbot.teams.doe.Tools;
 
+/**
+ * 
+ * @author swouters
+ *	Méthodes lié au cheat ne pouvant pas être utilisées directement dans les brain
+ */
 public class WarBrainUtils {
 
 	private static WarMessage getMessageFromBase(WarBrain brain) {
@@ -24,7 +30,7 @@ public class WarBrainUtils {
 			double angle = m.getAngle();
 			double distance = m.getDistance();
 			if (angle != Double.NaN && distance != Double.NaN) {
-				Environnement.getInstance().updatePosition(brain, Environnement.cartFromPolaire(angle, distance));
+				Environnement.getInstance().updatePosition(brain, Tools.cartFromPolaire(angle, distance));
 			}
 		} catch (NullPointerException e) {
 		}

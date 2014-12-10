@@ -1,6 +1,8 @@
-package edu.turtlekit3.warbot.teams.doe.environnement;
+package edu.turtlekit3.warbot.teams.doe.cheat;
 
 import java.util.ArrayList;
+
+import edu.turtlekit3.warbot.teams.doe.exceptions.NoTeamFoundException;
 
 public class TeamManager {
 	private ArrayList<Team> teams;
