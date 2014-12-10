@@ -63,7 +63,7 @@ public class Environnement {
 		clean();
 	}
 
-	public void updatePositionOfALlie(WarBrain e, Vector2 newPosCart) {
+	public void updatePositionOfAlly(WarBrain e, Vector2 newPosCart) {
 		StructWarBrain s = this.listAllies.get(e.getID());
 		if (s != null) {
 			s.setPosition(newPosCart);

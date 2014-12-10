@@ -15,6 +15,7 @@ public class Team {
 	public Team() {
 		members = new ArrayList<Integer>();
 		attacking = false;
+		target = new Vector2();
 	}
 
 	public void addMember(Integer w) {
@@ -43,14 +44,19 @@ public class Team {
 
 	public Vector2 getMovementPosition(Integer brainId) throws NotExistException {
 		try {
-		Vector2 position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
-		int index = members.indexOf(brainId);
-		int nbrPersonnes = members.size() - 1;
-		float tick = 360/nbrPersonnes;
-		float alpha = tick*index;
-		Vector2 target = Tools.cartFromPolaire(alpha, 20);
-		target.add(position);
-		return target;
+			//Vector2 position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		try {
+			Vector2 position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
+			int index = members.indexOf(brainId);
+			int nbrPersonnes = members.size() - 1;
+			float tick = 360/nbrPersonnes;
+			float alpha = tick*index;
+			Vector2 target = Tools.cartFromPolaire(alpha, 20);
+			target.add(position);
+			return target;
 		} catch (Exception e) {
 			throw new NotExistException();
 		}
@@ -59,15 +65,15 @@ public class Team {
 	public void setTarget(Vector2 target) {
 		this.target = target;
 	}
-	
+
 	public Vector2 getTarget() {
 		return this.target;
 	}
-	
+
 	public boolean isAttacking() {
 		return attacking;
 	}
-	
+
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
 	}

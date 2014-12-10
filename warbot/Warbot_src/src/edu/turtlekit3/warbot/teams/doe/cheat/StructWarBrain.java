@@ -18,6 +18,7 @@ public abstract class StructWarBrain {
 		super();
 		this.posCart = posCart;
 		this.lastUpdatePosition = new Date();
+		this.ID = ID;
 	}
 
 	public boolean isAlive() {

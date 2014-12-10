@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
+import edu.turtlekit3.warbot.FSM.action.WarAction;
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
@@ -18,7 +19,6 @@ import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractBrainController {
 
-	int x, y;
 	int angleModifier;
 	boolean justTurned = false;
 	String toReturn = "";
@@ -26,8 +26,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	
 	public WarRocketLauncherBrainController() {
 		super();
-		x = - new Random().nextInt() * 1500;
-		y = - new Random().nextInt() * 1500;
 		angleModifier = new Random().nextInt() * 180 - 90;
 	}
 	@Override
@@ -39,12 +37,10 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		WarBrainUtils.doStuff(this.getBrain());
 		
 		toReturn = move();
-		
 		return toReturn;
 	}
 	
 	public String attack() {
-		ArrayList<WarPercept> e = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
 		Environnement ev = Environnement.getInstance();
 		try {
 			Team t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
@@ -57,8 +53,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 								getBrain(), 
 								ev.getStructWarBrain(getBrain().getID()).getPosition(),
 								t.getTarget());
-						toReturn = WarRocketLauncher.ACTION_FIRE;
-						return toReturn;
+						return WarRocketLauncher.ACTION_FIRE;
 					}
 				} else {
 					//on set la target de la team
@@ -67,8 +62,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 						int targetId = ev.getClosestEnemy(ev.getStructWarBrain(getBrain().getID()).getPosition());
 						t.setAttacking(true);
 						t.setTarget(ev.getEnemy(targetId).getPosition());
-						toReturn = WarRocketLauncher.ACTION_FIRE;
-						return toReturn;
+						return WarRocketLauncher.ACTION_FIRE;
 					} catch (NoTargetFoundException e1) {
 						t.setAttacking(false);
 					}
@@ -83,7 +77,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 	
 	public String move() {
-		WarBrainUtils.doStuff(this.getBrain());
 		Environnement ev = Environnement.getInstance();
 		try {
 			Team t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
@@ -105,6 +98,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							new Vector2(-200, -200));
 				}
 			} catch (NotExistException e) {
+//				System.out.println("not exist");
 			}
 
 		} catch (NoTeamFoundException e) {

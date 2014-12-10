@@ -13,6 +13,7 @@ public class StructWarBrainAllie extends StructWarBrain {
 		super(e.getID(), posCart);
 		this.e = e;
 	}
+	
 	public WarBrain getBrain() throws NotExistException {
 		if(!isAlive()) {
 			throw new NotExistException();

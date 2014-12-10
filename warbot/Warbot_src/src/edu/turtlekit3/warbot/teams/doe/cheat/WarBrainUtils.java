@@ -37,7 +37,7 @@ public class WarBrainUtils {
 			double angle = m.getAngle();
 			double distance = m.getDistance();
 			if (angle != Double.NaN && distance != Double.NaN) {
-				Environnement.getInstance().updatePositionOfALlie(
+				Environnement.getInstance().updatePositionOfAlly(
 						brain,
 						Tools.cartFromPolaire(angle, distance)
 						);
