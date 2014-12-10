@@ -24,7 +24,7 @@ public class Environnement {
 	private TeamManager tm;
 	private WarBaseBrain mainBase = null;
 	public HashMap<Integer, StructWarBrainAllie> listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
-	public HashMap<Integer, StructWarBrainEnemy> listEnnemis = new HashMap<Integer, StructWarBrainEnemy>();
+	public HashMap<Integer, StructWarBrainEnemy> listEnemies = new HashMap<Integer, StructWarBrainEnemy>();
 
 	private Environnement() {
 		tm = new TeamManager();
@@ -42,15 +42,23 @@ public class Environnement {
 		if (!this.mainBaseIsDefined())
 			this.mainBase = mainBase;
 	}
+	
+	public Collection<StructWarBrainEnemy> getEnemies() {
+		return listEnemies.values();
+	}
+	
+	public StructWarBrain getEnemy(int enemyId) {
+		return listEnemies.get(enemyId);
+	}
 
 	public void updatePositionOfEnemy(int ID, Vector2 newPosCart, int life) {
-		StructWarBrainEnemy s = this.listEnnemis.get(ID);
+		StructWarBrainEnemy s = this.listEnemies.get(ID);
 		if (s != null) {
 			s.setPosition(newPosCart);
 			s.setLife(life);
 		} else {
 			StructWarBrainEnemy x = new StructWarBrainEnemy(ID, newPosCart, life);
-			this.listEnnemis.put(ID, x);
+			this.listEnemies.put(ID, x);
 		}
 		clean();
 	}
@@ -82,7 +90,7 @@ public class Environnement {
 				listAllies.remove(s.getID());
 			}
 		}
-		for (StructWarBrain s : listEnnemis.values()) {
+		for (StructWarBrain s : listEnemies.values()) {
 			if (!s.isAlive() || !s.positionIsUptodate()) {
 				listAllies.remove(s.getID());
 			}
@@ -145,16 +153,16 @@ public class Environnement {
 		return listAllies.values();
 	}
 	
-	public StructWarBrainEnemy getClosestEnemy(Vector2 position) throws NoTargetFoundException {
+	public int getClosestEnemy(Vector2 position) throws NoTargetFoundException {
 		try {
-			StructWarBrainEnemy plusProche = this.listEnnemis.get(0);
-			for (StructWarBrainEnemy s : this.listEnnemis.values()) {
-				if (position.dst(plusProche.getPosition()) <
+			StructWarBrainEnemy plusProche = this.listEnemies.get(0);
+			for (StructWarBrainEnemy s : this.listEnemies.values()) {
+				if (position.dst(s.getPosition()) <
 					plusProche.getPosition().dst(s.getPosition())) {
 					plusProche = s;
 				}
 			}
-			return plusProche;
+			return plusProche.getID();
 		} catch (Exception e) {
 			throw new NoTargetFoundException();
 		}

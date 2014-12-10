@@ -63,9 +63,10 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 				} else {
 					//on set la target de la team
 					try {
-						WarPercept target = getBestTarget(e);
+						//WarPercept target = getBestTarget(e);
+						int targetId = ev.getClosestEnemy(ev.getStructWarBrain(getBrain().getID()).getPosition());
 						t.setAttacking(true);
-						t.setTarget(new Vector2());
+						t.setTarget(ev.getEnemy(targetId).getPosition());
 						toReturn = WarRocketLauncher.ACTION_FIRE;
 						return toReturn;
 					} catch (NoTargetFoundException e1) {
@@ -113,25 +114,25 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		return WarRocketLauncher.ACTION_MOVE;
 	}
 	
-	public WarPercept getBestTarget(ArrayList<WarPercept> e) throws NoTargetFoundException {
-		WarPercept target = null;
-		double maxDistance = maxDistanceToTarget;
-		int minHealth = 999999;
-		
-		for (WarPercept warPercept : e) {
-			if(warPercept.getDistance() < maxDistanceToTarget) {
-				if(warPercept.getDistance() < maxDistance) {
-					if(warPercept.getHealth() < minHealth) {
-						maxDistance = warPercept.getDistance();
-						minHealth = warPercept.getHealth();
-						target = warPercept;
-					}
-				}
-			}
-		}
-		if(target == null) {
-			throw new NoTargetFoundException();
-		}
-		return target;
-	}
+//	public WarPercept getBestTarget(ArrayList<WarPercept> e) throws NoTargetFoundException {
+//		WarPercept target = null;
+//		double maxDistance = maxDistanceToTarget;
+//		int minHealth = 999999;
+//		
+//		for (WarPercept warPercept : e) {
+//			if(warPercept.getDistance() < maxDistanceToTarget) {
+//				if(warPercept.getDistance() < maxDistance) {
+//					if(warPercept.getHealth() < minHealth) {
+//						maxDistance = warPercept.getDistance();
+//						minHealth = warPercept.getHealth();
+//						target = warPercept;
+//					}
+//				}
+//			}
+//		}
+//		if(target == null) {
+//			throw new NoTargetFoundException();
+//		}
+//		return target;
+//	}
 }
