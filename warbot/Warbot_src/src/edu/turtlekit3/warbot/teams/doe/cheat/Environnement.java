@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.math.Vector2;
 
+import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
@@ -34,7 +35,7 @@ public class Environnement {
 	public boolean isMainBase(WarBaseBrain b) {
 		return (mainBaseIsDefined() && b.getID() == this.mainBase.getID());
 	}
-	
+
 	public ArrayList<Integer> getEnemyBases() {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (StructWarBrainEnemy s : this.getEnemies()) {
@@ -53,11 +54,11 @@ public class Environnement {
 		if (!this.mainBaseIsDefined())
 			this.mainBase = mainBase;
 	}
-	
+
 	public Collection<StructWarBrainEnemy> getEnemies() {
 		return listEnemies.values();
 	}
-	
+
 	public StructWarBrain getEnemy(int enemyId) throws NotExistException {
 		this.clean();
 		try {
@@ -103,20 +104,25 @@ public class Environnement {
 	}
 
 	public void clean() {
-		for (StructWarBrain s : listAllies.values()) {
-			if (!s.isAlive() || !s.positionIsUptodate()) {
-				listAllies.remove(s.getID());
-			}
-		}
-		for (StructWarBrainEnemy s : listEnemies.values()) {
-			if (!s.isAlive()) {
-				listAllies.remove(s.getID());
-			} else {
-				if (!s.isBase() && !s.positionIsUptodate()) {
+		try {
+			for (StructWarBrain s : listAllies.values()) {
+				if (!s.isAlive() || !s.positionIsUptodate()) {
 					listAllies.remove(s.getID());
+					tm.remove(s.getID());
 				}
 			}
-		}
+		} catch(Exception e) { }
+		try {
+			for (StructWarBrainEnemy s : listEnemies.values()) {
+				if (!s.isAlive()) {
+					listEnemies.remove(s.getID());
+				} else {
+					if (!s.isBase() && !s.positionIsUptodate()) {
+						listEnemies.remove(s.getID());
+					}
+				}
+			}
+		} catch(Exception e) { }
 	}
 
 	public TeamManager getTeamManager() {
@@ -157,7 +163,7 @@ public class Environnement {
 							Vector2 selfPos = listAllies.get(brainId).getPosition();
 							Vector2 otherPos = listAllies.get(s.getID()).getPosition();
 							float a = selfPos.sub(otherPos).angle();
-							
+
 							if(heading - a > angle / 2 || heading + a < angle / 2) {
 								entities.add(s.getID());
 							}
@@ -175,19 +181,22 @@ public class Environnement {
 		this.clean();
 		return listAllies.values();
 	}
-	
+
 	public int getClosestEnemy(Vector2 position) throws NoTargetFoundException {
 		this.clean();
+		double minDistance = 30;
+		int id = -1;
 		try {
-			StructWarBrainEnemy plusProche = this.listEnemies.get(0);
 			for (StructWarBrainEnemy s : this.listEnemies.values()) {
-				if (position.dst(s.getPosition()) <
-					plusProche.getPosition().dst(s.getPosition())) {
-					plusProche = s;
+				double dst = position.dst(s.getPosition());
+				if (dst < minDistance) {
+					minDistance = position.dst(s.getPosition());
+					id = s.getID();
 				}
 			}
-			return plusProche.getID();
+			return id;
 		} catch (Exception e) {
+			System.out.println("error");
 			throw new NoTargetFoundException();
 		}
 	}

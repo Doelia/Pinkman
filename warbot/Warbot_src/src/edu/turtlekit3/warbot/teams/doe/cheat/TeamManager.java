@@ -36,4 +36,10 @@ public class TeamManager {
 		teams.add(team);
 		return team;
 	}
+
+	public void remove(Integer id) {
+		for (Team team : teams) {
+			team.removeMember(id);
+		}
+	}
 }
