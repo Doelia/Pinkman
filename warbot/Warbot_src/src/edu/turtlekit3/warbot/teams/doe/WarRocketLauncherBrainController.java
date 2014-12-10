@@ -34,7 +34,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			getBrain().setHeading(getBrain().getHeading() - 30);
 		}
 		justTurned = false;
-		WarBrainUtils.doStuff(this.getBrain());
+		WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarRocketLauncher);
 		
 		toReturn = move();
 		return toReturn;

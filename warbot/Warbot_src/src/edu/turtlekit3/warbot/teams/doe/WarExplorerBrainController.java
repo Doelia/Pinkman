@@ -1,6 +1,7 @@
 package edu.turtlekit3.warbot.teams.doe;
 
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
+import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarExplorerAbstractBrainController;
 import edu.turtlekit3.warbot.teams.doe.cheat.WarBrainUtils;
 
@@ -10,10 +11,9 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		super();
 	}
 
-
 	@Override
 	public String action() {
-		WarBrainUtils.doStuff(this.getBrain());
+		WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarExplorer);
 
 		return WarExplorer.ACTION_MOVE;
 	}

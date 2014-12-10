@@ -8,7 +8,6 @@ import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.communications.WarMessage;
 import edu.turtlekit3.warbot.teams.demo.Constants;
 import edu.turtlekit3.warbot.teams.doe.Tools;
-import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 /**
  * 
@@ -26,12 +25,12 @@ public class WarBrainUtils {
 		return null;
 	}
 	
-	public static void doStuff(WarBrain brain) {
-		updatePositionInEnvironnement(brain);
-		//detectEntityInPercept(brain);
+	public static void doStuff(WarBrain brain, WarAgentType type) {
+		updatePositionInEnvironnement(brain, type);
+		detectEntityInPercept(brain);
 	}
 
-	private static void updatePositionInEnvironnement(WarBrain brain) {
+	private static void updatePositionInEnvironnement(WarBrain brain, WarAgentType type) {
 		try {
 			WarMessage m = getMessageFromBase(brain);
 			double angle = m.getAngle();
@@ -39,7 +38,8 @@ public class WarBrainUtils {
 			if (angle != Double.NaN && distance != Double.NaN) {
 				Environnement.getInstance().updatePositionOfAlly(
 						brain,
-						Tools.cartFromPolaire(angle, distance)
+						Tools.cartFromPolaire(angle, distance),
+						type
 						);
 			}
 		} catch (NullPointerException e) {
@@ -53,10 +53,12 @@ public class WarBrainUtils {
 		try {
 			Vector2 myPosition = Environnement.getInstance().getStructWarBrain(brain.getID()).getPosition();
 			for (WarPercept p : brain.getPercepts()) {
-				int id = p.getID();
-				Vector2 posCart = Tools.cartFromPolaire(p.getAngle(), p.getDistance());
-				posCart.add(myPosition);
-				Environnement.getInstance().updatePositionOfEnemy(id, posCart, p.getHealth());
+				if (!p.getTeamName().equals(brain.getTeamName())) {
+					int id = p.getID();
+					Vector2 posCart = Tools.cartFromPolaire(p.getAngle(), p.getDistance());
+					posCart.add(myPosition);
+					Environnement.getInstance().updatePositionOfEnemy(id, posCart, p.getHealth(), p.getType());
+				}
 			}
 		} catch (Exception e) {
 		}
