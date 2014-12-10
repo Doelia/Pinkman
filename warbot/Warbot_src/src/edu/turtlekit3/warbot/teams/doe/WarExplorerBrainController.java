@@ -13,7 +13,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 	@Override
 	public String action() {
-		WarBrainUtils.updatePositionInEnvironnement(this.getBrain());
+		WarBrainUtils.doStuff(this.getBrain());
 
 		return WarExplorer.ACTION_MOVE;
 	}

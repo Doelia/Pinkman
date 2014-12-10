@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
-import edu.turtlekit3.warbot.teams.doe.Tools;
+import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class Environnement {
@@ -23,7 +23,8 @@ public class Environnement {
 
 	private TeamManager tm;
 	private WarBaseBrain mainBase = null;
-	public HashMap<Integer, StructWarBrain> listAllies = new HashMap<Integer, StructWarBrain>(); 
+	public HashMap<Integer, StructWarBrainAllie> listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
+	public HashMap<Integer, StructWarBrainEnemy> listEnnemis = new HashMap<Integer, StructWarBrainEnemy>();
 
 	private Environnement() {
 		tm = new TeamManager();
@@ -41,16 +42,28 @@ public class Environnement {
 		if (!this.mainBaseIsDefined())
 			this.mainBase = mainBase;
 	}
-	
 
-	public void updatePosition(WarBrain a, Vector2 posCart) {
-		StructWarBrain e = this.listAllies.get(a.getID());
-		if (e != null) {
-			e.setPosition(posCart);
+	public void updatePositionOfEnemy(int ID, Vector2 newPosCart, int life) {
+		StructWarBrainEnemy s = this.listEnnemis.get(ID);
+		if (s != null) {
+			s.setPosition(newPosCart);
+			s.setLife(life);
 		} else {
-			this.listAllies.put(a.getID(), new StructWarBrain(a, posCart));
+			StructWarBrainEnemy x = new StructWarBrainEnemy(ID, newPosCart, life);
+			this.listEnnemis.put(ID, x);
 		}
-		a.setDebugString(""+posCart);
+		clean();
+	}
+
+	public void updatePositionOfALlie(WarBrain e, Vector2 newPosCart) {
+		StructWarBrain s = this.listAllies.get(e.getID());
+		if (s != null) {
+			s.setPosition(newPosCart);
+		} else {
+			StructWarBrainAllie x = new StructWarBrainAllie(e, newPosCart);
+			this.listAllies.put(e.getID(), x);
+		}
+		e.setDebugString(""+newPosCart);
 		clean();
 	}
 
@@ -65,8 +78,12 @@ public class Environnement {
 
 	public void clean() {
 		for (StructWarBrain s : listAllies.values()) {
-			if(!s.isAlive()) {
-				System.out.println("dead");
+			if (!s.isAlive() || !s.positionIsUptodate()) {
+				listAllies.remove(s.getID());
+			}
+		}
+		for (StructWarBrain s : listEnnemis.values()) {
+			if (!s.isAlive() || !s.positionIsUptodate()) {
 				listAllies.remove(s.getID());
 			}
 		}
@@ -123,11 +140,25 @@ public class Environnement {
 		return entities;
 	}
 
-	public Collection<StructWarBrain> getListAllies() {
+	public Collection<StructWarBrainAllie> getListAllies() {
 		clean();
 		return listAllies.values();
 	}
 	
+	public StructWarBrainEnemy getClosestEnemy(Vector2 position) throws NoTargetFoundException {
+		try {
+			StructWarBrainEnemy plusProche = this.listEnnemis.get(0);
+			for (StructWarBrainEnemy s : this.listEnnemis.values()) {
+				if (position.dst(plusProche.getPosition()) <
+					plusProche.getPosition().dst(s.getPosition())) {
+					plusProche = s;
+				}
+			}
+			return plusProche;
+		} catch (Exception e) {
+			throw new NoTargetFoundException();
+		}
+	}
 
 
 }

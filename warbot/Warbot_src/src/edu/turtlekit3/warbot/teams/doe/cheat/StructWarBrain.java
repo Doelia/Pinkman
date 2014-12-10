@@ -1,38 +1,35 @@
 package edu.turtlekit3.warbot.teams.doe.cheat;
 
+import java.util.Date;
+
 import com.badlogic.gdx.math.Vector2;
 
-import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
-public class StructWarBrain {
+public abstract class StructWarBrain {
 
-	private WarBrain e;
 	private Vector2 posCart;
 	private int ID;
+	private Date lastUpdatePosition;
+	
+	public static int LIFE_TIME = 10; // En secondes
 
-	public StructWarBrain(WarBrain e, Vector2 posCart) {
+	public StructWarBrain(int ID, Vector2 posCart) {
 		super();
-		this.e = e;
 		this.posCart = posCart;
-		this.ID = e.getID();
+		this.lastUpdatePosition = new Date();
 	}
 
 	public boolean isAlive() {
 		try {
-			return e.getHealth() > 0;
+			return this.getHealth() > 0;
 		} catch (Exception e) {
 			return false;
 		}
 	}
-
-	public WarBrain getBrain() throws NotExistException {
-		if(!isAlive()) {
-			throw new NotExistException();
-		}
-		return e;
-	}
 	
+	public abstract int getHealth();
+
 	public Vector2 getPosition() throws NotExistException {
 		if(!isAlive()) {
 			throw new NotExistException();
@@ -46,5 +43,14 @@ public class StructWarBrain {
 
 	public void setPosition(Vector2 posCart) {
 		this.posCart = posCart;
+		this.lastUpdatePosition = new Date();
 	}
+	
+	
+	public boolean positionIsUptodate() {
+		Date now = new Date();
+		long ms = now.getTime() - this.lastUpdatePosition.getTime();
+		return (ms/1000 < LIFE_TIME);
+	}
+	
 }
