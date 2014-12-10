@@ -1,4 +1,4 @@
-package edu.turtlekit3.warbot.teams.doe.environnement;
+package edu.turtlekit3.warbot.teams.doe.exceptions;
 
 public class NoTeamFoundException extends Exception {
 

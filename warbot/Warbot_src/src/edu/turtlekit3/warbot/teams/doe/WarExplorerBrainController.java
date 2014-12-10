@@ -2,7 +2,7 @@ package edu.turtlekit3.warbot.teams.doe;
 
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarExplorerAbstractBrainController;
-import edu.turtlekit3.warbot.teams.doe.environnement.WarBrainUtils;
+import edu.turtlekit3.warbot.teams.doe.cheat.WarBrainUtils;
 
 public class WarExplorerBrainController extends WarExplorerAbstractBrainController {
 

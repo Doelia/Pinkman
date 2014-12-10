@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
 import edu.turtlekit3.warbot.teams.demo.Constants;
-import edu.turtlekit3.warbot.teams.doe.environnement.Environnement;
+import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
 
 public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
@@ -21,7 +21,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	public String action() {
 		
 		//System.out.println("coucou");
-		Vector2 v  = new Vector2(1,1);
+		Vector2 v = new Vector2(1,1);
 		//System.out.println(Environnement.polaireFromCart(v));
 		
 		try {

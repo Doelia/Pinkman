@@ -6,11 +6,11 @@ import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarRocketLauncherAbstractBrainController;
-import edu.turtlekit3.warbot.teams.doe.environnement.Environnement;
-import edu.turtlekit3.warbot.teams.doe.environnement.NoTeamFoundException;
-import edu.turtlekit3.warbot.teams.doe.environnement.NotExistException;
-import edu.turtlekit3.warbot.teams.doe.environnement.Team;
-import edu.turtlekit3.warbot.teams.doe.environnement.WarBrainUtils;
+import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
+import edu.turtlekit3.warbot.teams.doe.cheat.Team;
+import edu.turtlekit3.warbot.teams.doe.cheat.WarBrainUtils;
+import edu.turtlekit3.warbot.teams.doe.exceptions.NoTeamFoundException;
+import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractBrainController {
 

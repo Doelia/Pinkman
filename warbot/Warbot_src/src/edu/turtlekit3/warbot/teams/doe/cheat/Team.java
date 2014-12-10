@@ -1,8 +1,11 @@
-package edu.turtlekit3.warbot.teams.doe.environnement;
+package edu.turtlekit3.warbot.teams.doe.cheat;
 
 import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Vector2;
+
+import edu.turtlekit3.warbot.teams.doe.Tools;
+import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class Team {
 	private ArrayList<Integer> members;
@@ -40,7 +43,7 @@ public class Team {
 		Vector2 position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
 		
 		float alpha = (float) (2 * Math.PI / (float) getSize()) * index;
-		Vector2 target = Environnement.cartFromPolaire(alpha, 30);
+		Vector2 target = Tools.cartFromPolaire(alpha, 30);
 		
 		return position.add(target);
 	}

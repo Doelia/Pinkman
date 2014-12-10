@@ -1,4 +1,4 @@
-package edu.turtlekit3.warbot.teams.doe.environnement;
+package edu.turtlekit3.warbot.teams.doe.cheat;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
+import edu.turtlekit3.warbot.teams.doe.Tools;
+import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class Environnement {
 
@@ -39,28 +41,7 @@ public class Environnement {
 		if (!this.mainBaseIsDefined())
 			this.mainBase = mainBase;
 	}
-
-	/**
-	 * 
-	 * @param angle en degres
-	 * @param dist
-	 * @return
-	 */
-	public static Vector2 cartFromPolaire(double angle, double dist) {
-		double rad = Math.toRadians(angle);
-		return new Vector2((float) (-dist*Math.cos(rad)), (float) (dist*Math.sin(rad)));
-	}
 	
-	/**
-	 * 
-	 * @param vec retourn teta en radians
-	 * @return
-	 */
-	public static Vector2 polaireFromCart(Vector2 vec) {
-		float teta = (float) Math.atan2(vec.y, vec.x);
-		int distance = (int) Math.hypot(vec.x, vec.y);
-		return new Vector2((float) Math.toDegrees(teta), (float) distance);
-	}
 
 	public void updatePosition(WarBrain a, Vector2 posCart) {
 		StructWarBrain e = this.listAllies.get(a.getID());
@@ -134,12 +115,12 @@ public class Environnement {
 						float distance = position.dst(target);
 						System.out.println("distance = "+distance);
 						if(distance < radius) {
-							Vector2 p1 = cartFromPolaire(heading + angle / 2, distance);
+							Vector2 p1 = Tools.cartFromPolaire(heading + angle / 2, distance);
 							p1.add(position);
-							Vector2 p2 = cartFromPolaire(heading - angle / 2, distance);
+							Vector2 p2 = Tools.cartFromPolaire(heading - angle / 2, distance);
 							p2.add(position);
 							Vector2 p3 = new Vector2(position);
-							if(isPointInsideTriangle(p1, p2, p3, target)) {
+							if(Tools.isPointInsideTriangle(p1, p2, p3, target)) {
 								System.out.println("au");
 								entities.add(s.getID());
 							}
@@ -158,17 +139,6 @@ public class Environnement {
 		return listAllies.values();
 	}
 	
-	private float computeZCoordinate(Vector2 p1, Vector2 p2, Vector2 p3) {
-		return p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y);
-	}
-	
-	private boolean isPointInsideTriangle(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 target) {
-		float z1 = computeZCoordinate(p1, p2, target);
-		float z2 = computeZCoordinate(p2, p3, target);
-		float z3 = computeZCoordinate(p3, p1, target);
-		
-		return ((z1 > 0) && (z2 > 0) && (z3 > 0)) || ((z1 < 0) && (z2 < 0) && (z3 < 0));
-	}
 
 
 }
