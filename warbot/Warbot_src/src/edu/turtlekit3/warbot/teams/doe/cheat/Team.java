@@ -39,12 +39,13 @@ public class Team {
 	}
 
 	public Vector2 getMovementPosition(Integer brainId) throws NotExistException {
-		int index = members.indexOf(brainId);
 		Vector2 position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
-		
-		float alpha = (float) (2 * Math.PI / (float) getSize()) * index;
+		int index = members.indexOf(brainId);
+		int nbrPersonnes = 8;
+		float tick = 360/nbrPersonnes;
+		float alpha = tick*index;
 		Vector2 target = Tools.cartFromPolaire(alpha, 30);
-		
-		return position.add(target);
+		target.add(position);
+		return target;
 	}
 }
