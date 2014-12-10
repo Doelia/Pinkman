@@ -41,6 +41,7 @@ public class Team {
 		
 		float alpha = (float) (2 * Math.PI / (float) getSize()) * index;
 		Vector2 target = Environnement.cartFromPolaire(alpha, 30);
+		System.out.println(target);
 		
 		return position.add(target);
 	}

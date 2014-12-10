@@ -113,23 +113,13 @@ public class Environnement {
 				try {
 					if(s.getID() != brainId) {
 						Vector2 target = new Vector2(s.getPosition());
-//						target.add(position);
-//						
-//						Vector2 pol = polaireFromCart(target);
-//						int teta = (int) Math.abs(pol.x - heading);
-//						if(teta < angle && pol.x < radius) {
-//							entities.add(s.getID());
-//						}
-						
 						float distance = position.dst(target);
 						if(distance < radius) {
-							Vector2 p1 = cartFromPolaire(heading + angle / 2, distance);
-							p1.add(position);
-							Vector2 p2 = cartFromPolaire(heading - angle / 2, distance);
-							p2.add(position);
-							Vector2 p3 = new Vector2(position);
-							if(isPointInsideTriangle(p1, p2, p3, target)) {
-								System.out.println("au");
+							Vector2 selfPos = listAllies.get(brainId).getPosition();
+							Vector2 otherPos = listAllies.get(s.getID()).getPosition();
+							float a = selfPos.sub(otherPos).angle();
+							
+							if(heading - a > angle / 2 || heading + a < angle / 2) {
 								entities.add(s.getID());
 							}
 						}
