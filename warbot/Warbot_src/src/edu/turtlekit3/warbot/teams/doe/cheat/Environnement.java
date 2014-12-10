@@ -47,8 +47,13 @@ public class Environnement {
 		return listEnemies.values();
 	}
 	
-	public StructWarBrain getEnemy(int enemyId) {
+	public StructWarBrain getEnemy(int enemyId) throws NotExistException {
+		this.clean();
+		try {
 		return listEnemies.get(enemyId);
+		} catch (Exception e) {
+			throw new NotExistException();
+		}
 	}
 
 	public void updatePositionOfEnemy(int ID, Vector2 newPosCart, int life) {
@@ -149,11 +154,12 @@ public class Environnement {
 	}
 
 	public Collection<StructWarBrainAllie> getListAllies() {
-		clean();
+		this.clean();
 		return listAllies.values();
 	}
 	
 	public int getClosestEnemy(Vector2 position) throws NoTargetFoundException {
+		this.clean();
 		try {
 			StructWarBrainEnemy plusProche = this.listEnemies.get(0);
 			for (StructWarBrainEnemy s : this.listEnemies.values()) {

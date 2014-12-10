@@ -12,7 +12,7 @@ public abstract class StructWarBrain {
 	private int ID;
 	private Date lastUpdatePosition;
 	
-	public static int LIFE_TIME = 10; // En secondes
+	public static int LIFE_TIME = 3; // En secondes
 
 	public StructWarBrain(int ID, Vector2 posCart) {
 		super();

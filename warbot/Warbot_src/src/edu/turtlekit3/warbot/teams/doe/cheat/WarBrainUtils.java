@@ -28,7 +28,7 @@ public class WarBrainUtils {
 	
 	public static void doStuff(WarBrain brain) {
 		updatePositionInEnvironnement(brain);
-		//detectEntityInPercept(brain);
+		detectEntityInPercept(brain);
 	}
 
 	private static void updatePositionInEnvironnement(WarBrain brain) {
@@ -53,10 +53,12 @@ public class WarBrainUtils {
 		try {
 			Vector2 myPosition = Environnement.getInstance().getStructWarBrain(brain.getID()).getPosition();
 			for (WarPercept p : brain.getPercepts()) {
-				int id = p.getID();
-				Vector2 posCart = Tools.cartFromPolaire(p.getAngle(), p.getDistance());
-				posCart.add(myPosition);
-				Environnement.getInstance().updatePositionOfEnemy(id, posCart, p.getHealth());
+				if (!p.getTeamName().equals(brain.getTeamName())) {
+					int id = p.getID();
+					Vector2 posCart = Tools.cartFromPolaire(p.getAngle(), p.getDistance());
+					posCart.add(myPosition);
+					Environnement.getInstance().updatePositionOfEnemy(id, posCart, p.getHealth());
+				}
 			}
 		} catch (Exception e) {
 		}
