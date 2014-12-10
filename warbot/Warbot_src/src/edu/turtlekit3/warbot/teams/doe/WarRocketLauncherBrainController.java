@@ -16,15 +16,19 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 
 	int x, y;
 	int angleModifier;
+	boolean justTurned = false;
 	public WarRocketLauncherBrainController() {
 		super();
 		x = - new Random().nextInt() * 1500;
 		y = - new Random().nextInt() * 1500;
-		angleModifier = new Random().nextInt() * 90;
+		angleModifier = new Random().nextInt() * 180 - 90;
 	}
 	@Override
 	public String action() {
-		
+		if(justTurned) {
+			getBrain().setHeading(getBrain().getHeading() - angleModifier);
+		}
+		justTurned = false;
 		WarBrainUtils.updatePositionInEnvironnement(this.getBrain());
 		Environnement ev = Environnement.getInstance();
 		try {
@@ -38,6 +42,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							t.getMovementPosition(getBrain().getID()));
 					if(ev.getEntitiesInRadiusOfWithAngle(this.getBrain().getID(), 20, 60, (int) getBrain().getHeading()).size() > 0) {
 						System.out.println("ouch");
+						justTurned = true;
 						getBrain().setHeading(angleModifier + getBrain().getHeading());
 					}
 				} else {
@@ -45,17 +50,17 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							new Vector2(-200, -200));
-					if(new Random().nextBoolean()) {
+					if(new Random().nextInt() * 10 < 2) {
 						return WarRocketLauncher.ACTION_IDLE;
 					}
 				}
 			} catch (NotExistException e) {
 			}
-			
+
 		} catch (NoTeamFoundException e) {
 			ev.getTeamManager().affectTeamTo(getBrain().getID());
 		}
-		
+
 		return WarRocketLauncher.ACTION_MOVE;
 	}
 }
