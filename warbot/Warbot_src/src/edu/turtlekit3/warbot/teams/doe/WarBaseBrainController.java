@@ -24,13 +24,6 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		Vector2 v = new Vector2(1,1);
 		//System.out.println(Environnement.polaireFromCart(v));
 		
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		Environnement.getInstance().setMainBase(this.getBrain());
 		
 		// Develop behaviour here

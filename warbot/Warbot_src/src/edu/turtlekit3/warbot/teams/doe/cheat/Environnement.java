@@ -105,7 +105,6 @@ public class Environnement {
 					if(s.getID() != brainId) {
 						Vector2 target = new Vector2(s.getPosition());
 						float distance = position.dst(target);
-						System.out.println("distance = "+distance);
 						if(distance < radius) {
 							Vector2 selfPos = listAllies.get(brainId).getPosition();
 							Vector2 otherPos = listAllies.get(s.getID()).getPosition();
