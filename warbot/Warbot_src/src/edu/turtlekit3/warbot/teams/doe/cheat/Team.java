@@ -21,6 +21,10 @@ public class Team {
 	public void addMember(Integer w) {
 		members.add(w);
 	}
+	
+	public ArrayList<Integer> getMembers() {
+		return this.members;
+	}
 
 	public int getLeader() throws NotExistException {
 		try {

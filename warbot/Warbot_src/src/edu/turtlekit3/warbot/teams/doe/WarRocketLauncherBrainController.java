@@ -20,7 +20,8 @@ import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractBrainController {
 
 	int angleModifier;
-	boolean justTurned = false;
+	int x = new Random().nextInt() * 500;
+	int y = new Random().nextInt() * 500;
 	String toReturn = "";
 	int maxDistanceToTarget = 50;
 	
@@ -30,17 +31,18 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 	@Override
 	public String action() {
-		if(justTurned) {
-			getBrain().setHeading(getBrain().getHeading() - 30);
-		}
-		justTurned = false;
+		
 		WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarRocketLauncher);
 		
 		toReturn = move();
+		toReturn = attack();
 		return toReturn;
 	}
 	
 	public String attack() {
+		if(!getBrain().isReloaded()) {
+			return WarRocketLauncher.ACTION_RELOAD;
+		}
 		Environnement ev = Environnement.getInstance();
 		try {
 			Team t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
@@ -61,6 +63,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 						//WarPercept target = getBestTarget(e);
 						int targetId = ev.getClosestEnemy(ev.getStructWarBrain(getBrain().getID()).getPosition());
 						t.setAttacking(true);
+						System.out.println("enemy found, starting to attack");
 						t.setTarget(ev.getEnemy(targetId).getPosition());
 						return WarRocketLauncher.ACTION_FIRE;
 					} catch (NoTargetFoundException e1) {
@@ -87,18 +90,19 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getMovementPosition(getBrain().getID()));
-					if(ev.getEntitiesInRadiusOfWithAngle(this.getBrain().getID(), 20, 60, (int) getBrain().getHeading()).size() > 0) {
-						justTurned = true;
-						getBrain().setHeading(30 + getBrain().getHeading());
+					if(getBrain().isBlocked()) {
+						getBrain().setHeading(90 + getBrain().getHeading());
 					}
 				} else {
 					WarBrainUtils.setHeadingOn(
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
-							new Vector2(-200, -200));
+							new Vector2(-x, -y));
+					if(getBrain().isBlocked()) {
+						getBrain().setHeading(90 + getBrain().getHeading());
+					}
 				}
 			} catch (NotExistException e) {
-//				System.out.println("not exist");
 			}
 
 		} catch (NoTeamFoundException e) {
@@ -107,26 +111,4 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 
 		return WarRocketLauncher.ACTION_MOVE;
 	}
-	
-//	public WarPercept getBestTarget(ArrayList<WarPercept> e) throws NoTargetFoundException {
-//		WarPercept target = null;
-//		double maxDistance = maxDistanceToTarget;
-//		int minHealth = 999999;
-//		
-//		for (WarPercept warPercept : e) {
-//			if(warPercept.getDistance() < maxDistanceToTarget) {
-//				if(warPercept.getDistance() < maxDistance) {
-//					if(warPercept.getHealth() < minHealth) {
-//						maxDistance = warPercept.getDistance();
-//						minHealth = warPercept.getHealth();
-//						target = warPercept;
-//					}
-//				}
-//			}
-//		}
-//		if(target == null) {
-//			throw new NoTargetFoundException();
-//		}
-//		return target;
-//	}
 }
