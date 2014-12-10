@@ -28,7 +28,7 @@ public class WarBrainUtils {
 	
 	public static void doStuff(WarBrain brain) {
 		updatePositionInEnvironnement(brain);
-		detectEntityInPercept(brain);
+		//detectEntityInPercept(brain);
 	}
 
 	private static void updatePositionInEnvironnement(WarBrain brain) {
@@ -58,7 +58,7 @@ public class WarBrainUtils {
 				posCart.add(myPosition);
 				Environnement.getInstance().updatePositionOfEnemy(id, posCart, p.getHealth());
 			}
-		} catch (NotExistException e) {
+		} catch (Exception e) {
 		}
 	}
 

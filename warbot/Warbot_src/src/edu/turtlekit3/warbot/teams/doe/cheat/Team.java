@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.math.Vector2;
 
-import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.teams.doe.Tools;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
@@ -43,6 +42,7 @@ public class Team {
 	}
 
 	public Vector2 getMovementPosition(Integer brainId) throws NotExistException {
+		try {
 		Vector2 position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
 		int index = members.indexOf(brainId);
 		int nbrPersonnes = members.size() - 1;
@@ -51,6 +51,9 @@ public class Team {
 		Vector2 target = Tools.cartFromPolaire(alpha, 20);
 		target.add(position);
 		return target;
+		} catch (Exception e) {
+			throw new NotExistException();
+		}
 	}
 
 	public void setTarget(Vector2 target) {
