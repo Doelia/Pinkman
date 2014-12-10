@@ -29,7 +29,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			getBrain().setHeading(getBrain().getHeading() - angleModifier);
 		}
 		justTurned = false;
-		WarBrainUtils.updatePositionInEnvironnement(this.getBrain());
+		WarBrainUtils.doStuff(this.getBrain());
 		Environnement ev = Environnement.getInstance();
 		try {
 			Team t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
