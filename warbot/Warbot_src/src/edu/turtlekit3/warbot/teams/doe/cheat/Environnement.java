@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.math.Vector2;
 
+import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
@@ -33,6 +34,16 @@ public class Environnement {
 	public boolean isMainBase(WarBaseBrain b) {
 		return (mainBaseIsDefined() && b.getID() == this.mainBase.getID());
 	}
+	
+	public ArrayList<Integer> getEnemyBases() {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for (StructWarBrainEnemy s : this.getEnemies()) {
+			if (s.isBase()) {
+				list.add(s.getID());
+			}
+		}
+		return list;
+	}
 
 	public boolean mainBaseIsDefined() {
 		return (this.mainBase != null);
@@ -50,34 +61,36 @@ public class Environnement {
 	public StructWarBrain getEnemy(int enemyId) throws NotExistException {
 		this.clean();
 		try {
-		return listEnemies.get(enemyId);
+			return listEnemies.get(enemyId);
 		} catch (Exception e) {
 			throw new NotExistException();
 		}
 	}
 
-	public void updatePositionOfEnemy(int ID, Vector2 newPosCart, int life) {
+	public void updatePositionOfEnemy(int ID, Vector2 newPosCart, int life, WarAgentType type) {
+		this.clean();
 		StructWarBrainEnemy s = this.listEnemies.get(ID);
 		if (s != null) {
 			s.setPosition(newPosCart);
 			s.setLife(life);
 		} else {
-			StructWarBrainEnemy x = new StructWarBrainEnemy(ID, newPosCart, life);
+			StructWarBrainEnemy x = new StructWarBrainEnemy(ID, newPosCart, life, type);
 			this.listEnemies.put(ID, x);
 		}
-		clean();
+		this.clean();
 	}
 
-	public void updatePositionOfALlie(WarBrain e, Vector2 newPosCart) {
+	public void updatePositionOfALlie(WarBrain e, Vector2 newPosCart, WarAgentType type) {
+		this.clean();
 		StructWarBrain s = this.listAllies.get(e.getID());
 		if (s != null) {
 			s.setPosition(newPosCart);
 		} else {
-			StructWarBrainAllie x = new StructWarBrainAllie(e, newPosCart);
+			StructWarBrainAllie x = new StructWarBrainAllie(e, newPosCart, type);
 			this.listAllies.put(e.getID(), x);
 		}
 		e.setDebugString(""+newPosCart);
-		clean();
+		this.clean();
 	}
 
 	public StructWarBrain getStructWarBrain(int id) throws NotExistException {
@@ -95,9 +108,13 @@ public class Environnement {
 				listAllies.remove(s.getID());
 			}
 		}
-		for (StructWarBrain s : listEnemies.values()) {
-			if (!s.isAlive() || !s.positionIsUptodate()) {
+		for (StructWarBrainEnemy s : listEnemies.values()) {
+			if (!s.isAlive()) {
 				listAllies.remove(s.getID());
+			} else {
+				if (!s.isBase() && !s.positionIsUptodate()) {
+					listAllies.remove(s.getID());
+				}
 			}
 		}
 	}
@@ -127,6 +144,7 @@ public class Environnement {
 	}
 
 	public ArrayList<Integer> getEntitiesInRadiusOfWithAngle(int brainId, int radius, int angle, int heading) {
+		this.clean();
 		ArrayList<Integer> entities = new ArrayList<Integer>();
 		try {
 			Vector2 position = new Vector2(getStructWarBrain(brainId).getPosition());

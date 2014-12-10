@@ -36,7 +36,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			getBrain().setHeading(getBrain().getHeading() - 30);
 		}
 		justTurned = false;
-		WarBrainUtils.doStuff(this.getBrain());
+		WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarRocketLauncher);
 		
 		toReturn = move();
 		
@@ -83,7 +83,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 	
 	public String move() {
-		WarBrainUtils.doStuff(this.getBrain());
 		Environnement ev = Environnement.getInstance();
 		try {
 			Team t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
