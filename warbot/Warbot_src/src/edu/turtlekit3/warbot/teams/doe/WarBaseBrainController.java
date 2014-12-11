@@ -19,6 +19,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	public String action() {
 		
 		Environnement.getInstance().setMainBase(this.getBrain());
+		Environnement.getInstance().clean();
 		
 		// Develop behaviour here
 		

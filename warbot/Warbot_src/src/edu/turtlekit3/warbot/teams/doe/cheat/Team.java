@@ -21,6 +21,10 @@ public class Team {
 	public void addMember(Integer w) {
 		members.add(w);
 	}
+	
+	public ArrayList<Integer> getMembers() {
+		return this.members;
+	}
 
 	public int getLeader() throws NotExistException {
 		try {
@@ -43,11 +47,6 @@ public class Team {
 	}
 
 	public Vector2 getMovementPosition(Integer brainId) throws NotExistException {
-		try {
-			//Vector2 position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
-		} catch (Exception e) {
-			System.out.println(e);
-		}
 		try {
 			Vector2 position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
 			int index = members.indexOf(brainId);
@@ -76,5 +75,9 @@ public class Team {
 
 	public void setAttacking(boolean attacking) {
 		this.attacking = attacking;
+	}
+	
+	public void removeMember(Integer id) {
+		members.remove(id);
 	}
 }

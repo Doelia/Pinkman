@@ -8,6 +8,7 @@ import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.communications.WarMessage;
 import edu.turtlekit3.warbot.teams.demo.Constants;
 import edu.turtlekit3.warbot.teams.doe.Tools;
+import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 /**
  * 
@@ -24,7 +25,7 @@ public class WarBrainUtils {
 
 		return null;
 	}
-	
+
 	public static void doStuff(WarBrain brain, WarAgentType type) {
 		updatePositionInEnvironnement(brain, type);
 		detectEntityInPercept(brain);
@@ -45,20 +46,27 @@ public class WarBrainUtils {
 		} catch (NullPointerException e) {
 		}
 	}
-	
+
+	public static Vector2 getPositionOfEntityFromMine(Vector2 myPosition, float angle, float distance) {
+		Vector2 posCart = Tools.cartFromPolaire(angle + 180, distance);
+		posCart = posCart.add(myPosition);
+		return posCart;
+	}
+
 	/**
-	 * Detecte les enemis aux allentour et met à jour l'environnement
+	 * Detecte les ennemis aux alentours et met à jour l'environnement
 	 */
 	private static void detectEntityInPercept(WarBrain brain) {
 		try {
-			Vector2 myPosition = Environnement.getInstance().getStructWarBrain(brain.getID()).getPosition();
-			for (WarPercept p : brain.getPercepts()) {
-				if (!p.getTeamName().equals(brain.getTeamName())) {
-					int id = p.getID();
-					Vector2 posCart = Tools.cartFromPolaire(p.getAngle(), p.getDistance());
-					posCart.add(myPosition);
-					Environnement.getInstance().updatePositionOfEnemy(id, posCart, p.getHealth(), p.getType());
+			for (int i = 0; i < 3; i++) {
+				Vector2 myPosition = Environnement.getInstance().getStructWarBrain(brain.getID()).getPosition();
+				for (WarPercept p : brain.getPercepts()) {
+					if (!p.getTeamName().equals(brain.getTeamName())) {
+						int id = p.getID();
+						Environnement.getInstance().updatePositionOfEnemy(id, getPositionOfEntityFromMine(myPosition, (float) p.getAngle(), (float) p.getDistance()), p.getHealth(), p.getType());
+					}
 				}
+				brain.setHeading(brain.getHeading() + 120);
 			}
 		} catch (Exception e) {
 		}
