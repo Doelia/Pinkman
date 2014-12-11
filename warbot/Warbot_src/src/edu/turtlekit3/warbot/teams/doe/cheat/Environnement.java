@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.math.Vector2;
 
-import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
@@ -25,17 +24,30 @@ public class Environnement {
 
 	private TeamManager tm;
 	private WarBaseBrain mainBase = null;
+	private Vector2 lastFood = null;
 	public HashMap<Integer, StructWarBrainAllie> listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
 	public HashMap<Integer, StructWarBrainEnemy> listEnemies = new HashMap<Integer, StructWarBrainEnemy>();
 
 	private Environnement() {
 		tm = new TeamManager();
 	}
-
+	
 	public boolean isMainBase(WarBaseBrain b) {
 		return (mainBaseIsDefined() && b.getID() == this.mainBase.getID());
 	}
-
+	
+	public boolean haveLastFood() {
+		return (this.lastFood != null);
+	}
+	
+	public Vector2 getLastFood() {
+		return lastFood;
+	}
+	
+	public void setLastFood(Vector2 lastFood) {
+		this.lastFood = lastFood;
+	}
+	
 	public ArrayList<Integer> getEnemyBases() {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (StructWarBrainEnemy s : this.getEnemies()) {
@@ -44,6 +56,19 @@ public class Environnement {
 			}
 		}
 		return list;
+	}
+	
+	public Vector2 getPositionFirstEnemyBase() throws NotExistException {
+		try {
+		int id = this.getEnemyBases().get(0);
+		return this.getEnemy(id).getPosition();
+		} catch (Exception e) {
+			throw new NotExistException();
+		}
+	}
+	
+	public boolean oneBaseIsFound() {
+		return (this.getEnemyBases().size() > 0);
 	}
 
 	public boolean mainBaseIsDefined() {
@@ -94,9 +119,11 @@ public class Environnement {
 		this.clean();
 	}
 
-	public StructWarBrain getStructWarBrain(int id) throws NotExistException {
+	public StructWarBrainAllie getStructWarBrain(int id) throws NotExistException {
 		clean();
 		try {
+			if ( this.listAllies.get(id) == null)
+				throw new NotExistException();
 			return this.listAllies.get(id);
 		} catch (Exception e) {
 			throw new NotExistException();

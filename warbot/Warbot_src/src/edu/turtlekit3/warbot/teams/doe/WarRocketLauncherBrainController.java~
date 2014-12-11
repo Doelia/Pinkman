@@ -54,6 +54,18 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 				if(leaderId != getBrain().getID()) {
 					//on tire sur la target du leader
 					if(t.isAttacking()) {
+<<<<<<< HEAD
+						//						WarBrainUtils.setHeadingOn(
+						//								getBrain(), 
+						//								ev.getStructWarBrain(getBrain().getID()).getPosition(),
+						//								t.getTarget());
+=======
+						System.out.println("angle before : " + this.getBrain().getHeading());
+						Tools.setHeadingOn(
+								getBrain(), 
+								ev.getStructWarBrain(getBrain().getID()).getPosition(),
+								t.getTarget());
+>>>>>>> a2636620c3b3fa7009b1f80776c3ded931eb06ea
 						//						System.out.println(t.getTarget());
 						//						System.out.println("angle after : " + this.getBrain().getHeading());
 						if(!getBrain().isReloaded()) {

@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import edu.turtlekit3.warbot.teams.doe.Tools;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
-public class Team {
+public class Group {
 	private ArrayList<Integer> members;
 	private Vector2 target;
 	private boolean attacking;
@@ -16,7 +16,7 @@ public class Team {
 	private int battleModifier;
 	private int nbStopAttacking;
 
-	public Team() {
+	public Group() {
 		members = new ArrayList<Integer>();
 		attacking = false;
 		target = new Vector2();
