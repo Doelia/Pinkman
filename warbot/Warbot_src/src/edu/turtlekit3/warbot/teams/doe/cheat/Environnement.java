@@ -94,9 +94,11 @@ public class Environnement {
 		this.clean();
 	}
 
-	public StructWarBrain getStructWarBrain(int id) throws NotExistException {
+	public StructWarBrainAllie getStructWarBrain(int id) throws NotExistException {
 		clean();
 		try {
+			if ( this.listAllies.get(id) == null)
+				throw new NotExistException();
 			return this.listAllies.get(id);
 		} catch (Exception e) {
 			throw new NotExistException();

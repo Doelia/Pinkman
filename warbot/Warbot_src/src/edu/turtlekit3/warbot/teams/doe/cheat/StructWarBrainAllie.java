@@ -9,10 +9,12 @@ import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 public class StructWarBrainAllie extends StructWarBrain {
 
 	private WarBrain e;
+	int lastLife = 0;
 	
 	public StructWarBrainAllie(WarBrain e, Vector2 posCart, WarAgentType type) {
 		super(e.getID(), posCart, type);
 		this.e = e;
+		this.lastLife = this.getHealth();
 	}
 	
 	public WarBrain getBrain() throws NotExistException {
@@ -24,6 +26,14 @@ public class StructWarBrainAllie extends StructWarBrain {
 	
 	public int getHealth() {
 		return e.getHealth();
+	}
+	
+	public void setLastLife() {
+		this.lastLife = this.getHealth();
+	}
+	
+	public int getLastLife() {
+		return lastLife;
 	}
 	
 

@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTeamFoundException;
 
 public class TeamManager {
-	private ArrayList<Team> teams;
+	private ArrayList<Group> teams;
 	
 	public TeamManager() {
-		teams = new ArrayList<Team>();
+		teams = new ArrayList<Group>();
 	}
 	
-	public Team getTeamOf(int id) throws NoTeamFoundException {
-		for (Team team : teams) {
+	public Group getTeamOf(int id) throws NoTeamFoundException {
+		for (Group team : teams) {
 			if(team.contains(id)) {
 				return team;
 			}
@@ -21,7 +21,7 @@ public class TeamManager {
 	}
 	
 	public void affectTeamTo(int brainId) {
-		for (Team team : teams) {
+		for (Group team : teams) {
 			if(team.getSize() < team.getMaxSize()) {
 				team.addMember(brainId);
 				return;
@@ -30,15 +30,15 @@ public class TeamManager {
 		createTeam(brainId);
 	}
 	
-	public Team createTeam(int brainId) {
-		Team team = new Team();
+	public Group createTeam(int brainId) {
+		Group team = new Group();
 		team.addMember(brainId);
 		teams.add(team);
 		return team;
 	}
 
 	public void remove(Integer id) {
-		for (Team team : teams) {
+		for (Group team : teams) {
 			team.removeMember(id);
 		}
 	}

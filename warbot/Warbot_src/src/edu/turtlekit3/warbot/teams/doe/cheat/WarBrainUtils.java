@@ -29,6 +29,12 @@ public class WarBrainUtils {
 	public static void doStuff(WarBrain brain, WarAgentType type) {
 		updatePositionInEnvironnement(brain, type);
 		detectEntityInPercept(brain);
+		try {
+			StructWarBrainAllie s = Environnement.getInstance().getStructWarBrain(brain.getID());
+			Behavior.heal(s.getLastLife(), brain);
+			s.setLastLife();
+		} catch (NotExistException e) {
+		}
 	}
 
 	private static void updatePositionInEnvironnement(WarBrain brain, WarAgentType type) {
@@ -71,6 +77,8 @@ public class WarBrainUtils {
 		} catch (Exception e) {
 		}
 	}
+	
+
 
 	
 }
