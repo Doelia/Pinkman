@@ -77,7 +77,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					if(e.size() > 0) {
 						WarPercept target = e.get(0);
 						t.setAttacking(true);
-						t.setTarget(WarBrainUtils.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), (float) target.getAngle(), (float) target.getDistance()));
+						t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), (float) target.getAngle(), (float) target.getDistance()));
 						getBrain().setHeading(target.getAngle());
 						return WarRocketLauncher.ACTION_FIRE;
 					} else {

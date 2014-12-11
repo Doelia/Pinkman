@@ -49,6 +49,17 @@ public class Tools {
 		sortie.add(target);
 		brain.setHeading(-sortie.angle());
 	}
+	
+	public static Vector2 getPositionOfEntityFromMine(Vector2 myPosition, float angle, float distance) {
+		Vector2 posCart = Tools.cartFromPolaire(angle + 180, distance);
+		posCart = posCart.add(myPosition);
+		return posCart;
+	}
+	
+	public static boolean isNextTo(Vector2 me, Vector2 target) {
+		return (me.dst(target) < 30);
+	}
+
 
 	
 }

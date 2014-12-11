@@ -1,17 +1,11 @@
 package edu.turtlekit3.warbot.teams.noobteam;
 
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Random;
 
-import edu.turtlekit3.warbot.agents.ControllableWarAgent;
-import edu.turtlekit3.warbot.agents.MovableWarAgent;
-import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarExplorerAbstractBrainController;
-import edu.turtlekit3.warbot.communications.WarMessage;
 
 public class WarExplorerBrainController extends WarExplorerAbstractBrainController {
 	

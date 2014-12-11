@@ -53,12 +53,7 @@ public class WarBrainUtils {
 		}
 	}
 
-	public static Vector2 getPositionOfEntityFromMine(Vector2 myPosition, float angle, float distance) {
-		Vector2 posCart = Tools.cartFromPolaire(angle + 180, distance);
-		posCart = posCart.add(myPosition);
-		return posCart;
-	}
-
+	
 	/**
 	 * Detecte les ennemis aux alentours et met à jour l'environnement
 	 */
@@ -69,7 +64,7 @@ public class WarBrainUtils {
 				for (WarPercept p : brain.getPercepts()) {
 					if (!p.getTeamName().equals(brain.getTeamName())) {
 						int id = p.getID();
-						Environnement.getInstance().updatePositionOfEnemy(id, getPositionOfEntityFromMine(myPosition, (float) p.getAngle(), (float) p.getDistance()), p.getHealth(), p.getType());
+						Environnement.getInstance().updatePositionOfEnemy(id, Tools.getPositionOfEntityFromMine(myPosition, (float) p.getAngle(), (float) p.getDistance()), p.getHealth(), p.getType());
 					}
 				}
 				brain.setHeading(brain.getHeading() + 120);
