@@ -10,6 +10,7 @@ import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarRocketLauncherAbstractBrainController;
+import edu.turtlekit3.warbot.game.Game;
 import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
 import edu.turtlekit3.warbot.teams.doe.cheat.Team;
 import edu.turtlekit3.warbot.teams.doe.cheat.WarBrainUtils;
@@ -36,6 +37,13 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		justTurned = false;
 		WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarRocketLauncher);
 		
+		WarRocketLauncher x =  (WarRocketLauncher) Game.getInstance().getPlayerTeams().get(0).getAgentWithID(this.getBrain().getID());
+		x.fire();
+		x.fire();
+		x.fire();
+		x.fire();
+		x.fire();
+		
 		toReturn = move();
 		return toReturn;
 	}
@@ -49,7 +57,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 				if(leaderId != getBrain().getID()) {
 					//on tire sur la target du leader
 					if(t.isAttacking()) {
-						WarBrainUtils.setHeadingOn(
+						Tools.setHeadingOn(
 								getBrain(), 
 								ev.getStructWarBrain(getBrain().getID()).getPosition(),
 								t.getTarget());
@@ -83,7 +91,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			try {
 				int leaderId = t.getLeader();
 				if(leaderId != this.getBrain().getID()) {
-					WarBrainUtils.setHeadingOn(
+					Tools.setHeadingOn(
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getMovementPosition(getBrain().getID()));
@@ -92,7 +100,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 						getBrain().setHeading(30 + getBrain().getHeading());
 					}
 				} else {
-					WarBrainUtils.setHeadingOn(
+					Tools.setHeadingOn(
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							new Vector2(-200, -200));

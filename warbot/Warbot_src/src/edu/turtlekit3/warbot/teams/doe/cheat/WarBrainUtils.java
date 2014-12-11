@@ -64,13 +64,5 @@ public class WarBrainUtils {
 		}
 	}
 
-	/**
-	 * Fait pointer brain vers la position voulue
-	 */
-	public static void setHeadingOn(WarBrain brain, Vector2 pos, Vector2 target) {
-		Vector2 sortie = new Vector2(0,0);
-		sortie.sub(pos);
-		sortie.add(target);
-		brain.setHeading(-sortie.angle());
-	}
+	
 }
