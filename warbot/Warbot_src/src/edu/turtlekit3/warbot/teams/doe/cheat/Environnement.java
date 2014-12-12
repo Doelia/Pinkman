@@ -36,6 +36,10 @@ public class Environnement {
 		return (mainBaseIsDefined() && b.getID() == this.mainBase.getID());
 	}
 	
+	public WarBaseBrain getMainBase() {
+		return mainBase;
+	}
+	
 	public boolean haveLastFood() {
 		return (this.lastFood != null);
 	}

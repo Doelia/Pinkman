@@ -57,7 +57,7 @@ public class Tools {
 	}
 	
 	public static boolean isNextTo(Vector2 me, Vector2 target) {
-		return (me.dst(target) < 30);
+		return (me.dst(target) < 5);
 	}
 
 

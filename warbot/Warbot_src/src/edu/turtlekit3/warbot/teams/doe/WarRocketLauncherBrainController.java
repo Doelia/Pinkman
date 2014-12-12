@@ -57,7 +57,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 						//						System.out.println(t.getTarget());
 						//						System.out.println("angle after : " + this.getBrain().getHeading());
 						if(!getBrain().isReloaded()) {
-							WarBrainUtils.setHeadingOn(
+							Tools.setHeadingOn(
 									getBrain(), 
 									ev.getStructWarBrain(getBrain().getID()).getPosition(),
 									t.getBattlePosition(getBrain().getID()));
@@ -80,7 +80,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					if(!t.isAttacking()) {
 						try {
 							Integer target = Environnement.getInstance().getClosestEnemy(ev.getStructWarBrain(getBrain().getID()).getPosition());
-							WarBrainUtils.setHeadingOn(
+							Tools.setHeadingOn(
 									getBrain(), 
 									ev.getStructWarBrain(getBrain().getID()).getPosition(),
 									ev.getEnemy(target).getPosition());
