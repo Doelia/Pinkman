@@ -11,6 +11,7 @@ import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarExplorerAbstractBrainController;
 import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
 import edu.turtlekit3.warbot.teams.doe.cheat.WarBrainUtils;
+import edu.turtlekit3.warbot.teams.doe.clean.Tools;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class WarExplorerBrainController extends WarExplorerAbstractBrainController {
@@ -28,9 +29,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		
 		try {
 			
-			// A virer sans CHEAT
-			Vector2 curentPosition = Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).getPosition();
-			
+			Vector2 curentPosition = this.getCurentPosition();
 			ArrayList<WarPercept> foodPercepts = getBrain().getPerceptsResources();
 
 			if (foodPercepts != null && foodPercepts.size() > 0){
@@ -51,13 +50,13 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	
 	public Vector2 getTargetFood() {
 		if (Tools.CHEAT) {
-			return this.targetFood;
-		} else {
 			try {
 				return Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).getTargetFood();
 			} catch (NotExistException e) {
 				return null;
 			}
+		} else {
+			return this.targetFood;
 		}
 	}
 	

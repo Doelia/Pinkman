@@ -1,11 +1,9 @@
 package edu.turtlekit3.warbot.teams.doe.clean;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
-import edu.turtlekit3.warbot.teams.doe.Tools;
 import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 

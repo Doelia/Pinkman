@@ -10,11 +10,11 @@ import com.badlogic.gdx.math.Vector2;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
-import edu.turtlekit3.warbot.teams.doe.Tools;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrain;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainAllie;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainEnemy;
 import edu.turtlekit3.warbot.teams.doe.clean.TeamManager;
+import edu.turtlekit3.warbot.teams.doe.clean.Tools;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 

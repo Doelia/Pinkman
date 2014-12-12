@@ -7,8 +7,8 @@ import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.communications.WarMessage;
 import edu.turtlekit3.warbot.teams.demo.Constants;
-import edu.turtlekit3.warbot.teams.doe.Tools;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainAllie;
+import edu.turtlekit3.warbot.teams.doe.clean.Tools;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 /**

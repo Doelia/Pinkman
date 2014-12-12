@@ -4,6 +4,7 @@ import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
 import edu.turtlekit3.warbot.teams.demo.Constants;
 import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
+import edu.turtlekit3.warbot.teams.doe.clean.Tools;
 
 public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
