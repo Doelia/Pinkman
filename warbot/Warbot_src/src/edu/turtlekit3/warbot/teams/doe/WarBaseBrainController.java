@@ -33,7 +33,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 			return WarBase.ACTION_CREATE;
 		}
 		
-		return WarBase.ACTION_IDLE;
+		return WarBase.ACTION_EAT;
 	}
 }
  

@@ -9,6 +9,7 @@ import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarExplorerAbstractBrainController;
+import edu.turtlekit3.warbot.teams.demo.Constants;
 import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
 import edu.turtlekit3.warbot.teams.doe.cheat.WarBrainUtils;
 import edu.turtlekit3.warbot.teams.doe.clean.Tools;
@@ -24,6 +25,11 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	}
 
 	private String toReturn;
+	
+	private void broadcastFoodPosition() {
+		if (!Tools.CHEAT)
+			getBrain().broadcastMessageToAll(Constants.foodHere, this.targetFood.toString());
+	}
 
 	private void findFood() {
 		try {
@@ -37,6 +43,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 						Environnement.getInstance().addFreeFood(pos, p.getID());
 					} else {
 						targetFood = new Vector2((float) foodPercepts.get(0).getAngle(), (float) p.getDistance());
+						this.broadcastFoodPosition();
 					}
 				}
 			}
