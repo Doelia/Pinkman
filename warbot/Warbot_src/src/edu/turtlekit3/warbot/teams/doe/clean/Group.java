@@ -15,6 +15,7 @@ public class Group {
 	private int battleModifier;
 	private int nbStopAttacking;
 	private boolean leaderCanShoot;
+	private int angle;
 
 	public Group() {
 		members = new ArrayList<Integer>();
@@ -51,7 +52,7 @@ public class Group {
 	}
 
 	public int getMaxSize() {
-		return 12;
+		return 8;
 	}
 	
 	public Vector2 getBattlePosition(Integer brainId) throws NotExistException {
@@ -64,6 +65,24 @@ public class Group {
 		return getMovementPosition(brainId);
 	}
 
+	public Vector2 getTargetPosition(Integer brainId) throws NotExistException {
+		try {
+//			if (Tools.CHEAT) {
+//				position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
+//			}
+			
+			int index = members.indexOf(brainId);
+			int nbrPersonnes = members.size();
+			float tick = (360/nbrPersonnes);
+			float alpha = tick*index;
+			Vector2 target = Tools.cartFromPolaire(alpha, 40);
+			target.add(this.target);
+			return target;
+		} catch (Exception e) {
+			throw new NotExistException();
+		}
+	}
+	
 	public Vector2 getMovementPosition(Integer brainId) throws NotExistException {
 		try {
 			Vector2 position = new Vector2();
@@ -86,8 +105,9 @@ public class Group {
 		}
 	}
 
-	public void setTarget(Vector2 target) {
+	public void setTarget(Vector2 target, int angle) {
 		this.target = target;
+		this.angle = angle;
 	}
 
 	public Vector2 getTarget() {
@@ -124,4 +144,5 @@ public class Group {
 	public void setLeaderCanShoot(boolean b) {
 		leaderCanShoot = b;
 	}
+
 }

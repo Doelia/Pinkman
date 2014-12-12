@@ -46,7 +46,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		//s'ils n'ont pas rechargé
 		//ils wiggle
 
-		if(!getBrain().isReloaded() || !getBrain().isReloading()) {
+		if(!getBrain().isReloaded() && !getBrain().isReloading()) {
 			return WarRocketLauncher.ACTION_RELOAD;
 		}
 
@@ -55,6 +55,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 
 		Environnement ev = Environnement.getInstance();
 		ArrayList<WarPercept> percept = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+		percept.addAll(getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase));
 		// Je un agentType dans le percept
 
 		Group t;
@@ -62,50 +63,80 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
 			if(percept != null && percept.size() > 0){
 				t.setAttacking(true);
+				int leader = t.getLeader();
+				if(getBrain().getID() == leader) {
+					t.setTarget(ev.getEnemy(ev.getClosestEnemy(ev.getStructWarBrain(getBrain().getID()).getPosition())).getPosition(), 0);
+//					t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), percept.get(0).getAngle(), percept.get(0).getDistance()), (int) percept.get(0).getAngle());
+				}
 			} else {
 				t.setAttacking(false);
 			}
-			int leader = t.getLeader();
 			if(t.isAttacking() ) {
-				if(leader != getBrain().getID()) {
-					if(t.canShoot()) {
-						if(percept.size() > 0) {
-							getBrain().setHeading(percept.get(0).getAngle());
-						} else {
-							getBrain().setHeading(getBrain().getHeading() + 180);
-						}
-						return WarRocketLauncher.ACTION_FIRE;
-					}
+				if(!getBrain().isReloaded()) {
 					Tools.setHeadingOn(
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
-							t.getBattlePosition(getBrain().getID()));
-					if(getBrain().isBlocked()) {
-						getBrain().setHeading((new Random().nextBoolean())?1:-1 * 90 + getBrain().getHeading());
-					}
-					return WarRocketLauncher.ACTION_MOVE;
+							t.getTargetPosition(getBrain().getID()));
 				} else {
-					t.setLeaderCanShoot(false);
-					return WarRocketLauncher.ACTION_IDLE;
-//					if(getBrain().isReloaded()) {
-//						System.out.println("in");
-//						if(justShot) {
-//							t.setLeaderCanShoot(false);
-//							justShot = !justShot;
-//							return WarRocketLauncher.ACTION_IDLE;
-//						} else {
-//							t.setLeaderCanShoot(true);
-//							justShot = !justShot;
-//							return WarRocketLauncher.ACTION_FIRE;
-//						}
-//					} else {
-//						System.out.println("out");
-//					}
+					if(percept.size() > 0) {
+						getBrain().setHeading(percept.get(0).getAngle());
+						return WarRocketLauncher.ACTION_FIRE;
+					}
+				}
+				if(new Random().nextBoolean()) {
+					//					return WarRocketLauncher.ACTION_IDLE;
 				}
 			}
-
-		} catch (NoTeamFoundException e) {} catch (NotExistException e) {
-		}
+			if(getBrain().isBlocked()) {
+				getBrain().setHeading((new Random().nextBoolean())?1:1 * 90 + getBrain().getHeading());
+			}
+		} catch (Exception e){};
+		//				if(leader != getBrain().getID()) {
+		//					if(getBrain().isReloaded()) {
+		//						ArrayList<WarPercept> allies = getBrain().getPerceptsAlliesByType(WarAgentType.WarRocketLauncher);
+		//						if(percept.size() > 0 && allies.size() > 0) {
+		//							
+		//							getBrain().setHeading(percept.get(0).getAngle());
+		//						} else {
+		////							Tools.setHeadingOn(
+		////									getBrain(), 
+		////									ev.getStructWarBrain(getBrain().getID()).getPosition(),
+		////									ev.getStructWarBrain(t.getLeader()).getPosition());
+		//							getBrain().setHeading(getBrain().getHeading() - 90);
+		////							return WarRocketLauncher.ACTION_IDLE;
+		//						}
+		//						return WarRocketLauncher.ACTION_FIRE;
+		//					}
+		//					Tools.setHeadingOn(
+		//							getBrain(), 
+		//							ev.getStructWarBrain(getBrain().getID()).getPosition(),
+		//							t.getBattlePosition(getBrain().getID()));
+		//					if(getBrain().isBlocked()) {
+		//						getBrain().setHeading((new Random().nextBoolean())?1:-1 * 90 + getBrain().getHeading());
+		//					}
+		//					return WarRocketLauncher.ACTION_MOVE;
+		//				} else {
+		//					t.setLeaderCanShoot(false);
+		//					return WarRocketLauncher.ACTION_IDLE;
+		////					if(getBrain().isReloaded()) {
+		////						System.out.println("in");
+		////						if(justShot) {
+		////							t.setLeaderCanShoot(false);
+		////							justShot = !justShot;
+		////							return WarRocketLauncher.ACTION_IDLE;
+		////						} else {
+		////							t.setLeaderCanShoot(true);
+		////							justShot = !justShot;
+		////							return WarRocketLauncher.ACTION_FIRE;
+		////						}
+		////					} else {
+		////						System.out.println("out");
+		////					}
+		//				}
+		//			}
+		//
+		//		} catch (NoTeamFoundException e) {} catch (NotExistException e) {
+		//		}
 
 
 		//
@@ -136,8 +167,8 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		//							getBrain(), 
 		//							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 		//							t.getTarget());
-		//				}
-		//			} catch (NoTeamFoundException | NotExistException e) {}
+		//						}
+		//					} catch (NoTeamFoundException | NotExistException e) {}
 
 		return toReturn;
 	}
@@ -154,7 +185,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getMovementPosition(getBrain().getID()));
 					if(getBrain().isBlocked()) {
-						getBrain().setHeading(90 + getBrain().getHeading());
+						getBrain().setHeading((new Random().nextBoolean())?1:1 * 90 + getBrain().getHeading());
 					}
 				} else {
 					int n = new Random().nextInt(100);
@@ -167,7 +198,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							new Vector2(-x, -y));
 					if(getBrain().isBlocked()) {
-						getBrain().setHeading((new Random().nextBoolean())?1:-1 * 90 + getBrain().getHeading());
+						getBrain().setHeading((new Random().nextBoolean())?1:1 * 90 + getBrain().getHeading());
 					}
 				}
 			} catch (NotExistException e) {
