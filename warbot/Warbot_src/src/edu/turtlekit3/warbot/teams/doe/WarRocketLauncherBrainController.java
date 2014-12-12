@@ -1,25 +1,19 @@
 package edu.turtlekit3.warbot.teams.doe;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
-import com.sun.javafx.scene.accessibility.Action;
 
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarRocketLauncherAbstractBrainController;
-import edu.turtlekit3.warbot.communications.WarMessage;
 import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
 import edu.turtlekit3.warbot.teams.doe.cheat.Group;
 import edu.turtlekit3.warbot.teams.doe.cheat.WarBrainUtils;
-import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTeamFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
-import edu.turtlekit3.warbot.teams.noe.Constants;
-import edu.turtlekit3.warbot.tools.CoordPolar;
 
 public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractBrainController {
 

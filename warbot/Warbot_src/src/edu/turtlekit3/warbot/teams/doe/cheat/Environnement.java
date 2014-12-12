@@ -27,7 +27,7 @@ public class Environnement {
 	private TeamManager tm;
 	private WarBaseBrain mainBase = null;
 	private Stack<Vector2> freeFood = new Stack<Vector2>();
-	private Stack<Vector2> takenFood = new Stack<Vector2>();
+	private Stack<Integer> takenFood = new Stack<Integer>();
 	public HashMap<Integer, StructWarBrainAllie> listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
 	public HashMap<Integer, StructWarBrainEnemy> listEnemies = new HashMap<Integer, StructWarBrainEnemy>();
 
@@ -48,7 +48,6 @@ public class Environnement {
 			return null;
 		}
 		Vector2 taken = this.freeFood.remove(0);
-		this.takenFood.push(taken);
 		return taken;
 	}
 	
@@ -60,10 +59,12 @@ public class Environnement {
 		return false;
 	}
 	
-	public void addFreeFood(Vector2 lastFood) {
-		if (!this.containVector(this.freeFood, lastFood) && !containVector(this.takenFood, lastFood)) {
+	public void addFreeFood(Vector2 lastFood, int ID) {
+		if (!this.containVector(this.freeFood, lastFood) && !this.takenFood.contains(ID)) {
 			this.freeFood.push(lastFood);
+			this.takenFood.add(ID);
 		}
+		System.out.println("size="+this.freeFood.size());
 	}
 	
 	

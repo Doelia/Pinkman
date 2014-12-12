@@ -9,9 +9,7 @@ import edu.turtlekit3.warbot.game.Team;
 public class Behavior {
 
 	public static void addLife(WarBrain brain, int n) {
-		int idTeam = getTeamId("doe");
-		Team t = Game.getInstance().getAllTeams().get(idTeam);
-		WarAgent wa = t.getAgentWithID(brain.getID());
+		WarAgent wa = getAgent(brain);
 		ControllableWarAgent x = (ControllableWarAgent) wa;
 		x.heal(n);
 	}
@@ -31,6 +29,13 @@ public class Behavior {
 		if (lifePerdue > 0) {
 			addLife(brain, lifePerdue/4);
 		}
+	}
+	
+	public static WarAgent getAgent(WarBrain brain) {
+		int idTeam = getTeamId("doe");
+		Team t = Game.getInstance().getAllTeams().get(idTeam);
+		WarAgent wa = t.getAgentWithID(brain.getID());
+		return wa;
 	}
 	
 }
