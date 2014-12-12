@@ -3,12 +3,14 @@ package edu.turtlekit3.warbot.teams.doe.cheat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Stack;
 
 import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
+import edu.turtlekit3.warbot.teams.doe.Tools;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
@@ -24,7 +26,8 @@ public class Environnement {
 
 	private TeamManager tm;
 	private WarBaseBrain mainBase = null;
-	private Vector2 lastFood = null;
+	private Stack<Vector2> freeFood = new Stack<Vector2>();
+	private Stack<Vector2> takenFood = new Stack<Vector2>();
 	public HashMap<Integer, StructWarBrainAllie> listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
 	public HashMap<Integer, StructWarBrainEnemy> listEnemies = new HashMap<Integer, StructWarBrainEnemy>();
 
@@ -40,17 +43,29 @@ public class Environnement {
 		return mainBase;
 	}
 	
-	public boolean haveLastFood() {
-		return (this.lastFood != null);
+	public Vector2 getFreeFood() {
+		if (freeFood.size() == 0) {
+			return null;
+		}
+		Vector2 taken = this.freeFood.remove(0);
+		this.takenFood.push(taken);
+		return taken;
 	}
 	
-	public Vector2 getLastFood() {
-		return lastFood;
+	private boolean containVector(Stack<Vector2> list, Vector2 v) {
+		for (Vector2 i : list) {
+			if (Tools.isSame(v, i))
+				return true;
+		}
+		return false;
 	}
 	
-	public void setLastFood(Vector2 lastFood) {
-		this.lastFood = lastFood;
+	public void addFreeFood(Vector2 lastFood) {
+		if (!this.containVector(this.freeFood, lastFood) && !containVector(this.takenFood, lastFood)) {
+			this.freeFood.push(lastFood);
+		}
 	}
+	
 	
 	public ArrayList<Integer> getEnemyBases() {
 		ArrayList<Integer> list = new ArrayList<Integer>();
@@ -119,7 +134,6 @@ public class Environnement {
 			StructWarBrainAllie x = new StructWarBrainAllie(e, newPosCart, type);
 			this.listAllies.put(e.getID(), x);
 		}
-		e.setDebugString(""+newPosCart);
 		this.clean();
 	}
 

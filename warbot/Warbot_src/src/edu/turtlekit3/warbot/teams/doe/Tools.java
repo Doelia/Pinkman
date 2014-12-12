@@ -50,14 +50,18 @@ public class Tools {
 		brain.setHeading(-sortie.angle());
 	}
 	
-	public static Vector2 getPositionOfEntityFromMine(Vector2 myPosition, float angle, float distance) {
+	public static Vector2 getPositionOfEntityFromMine(Vector2 myPosition, double angle, double distance) {
 		Vector2 posCart = Tools.cartFromPolaire(angle + 180, distance);
 		posCart = posCart.add(myPosition);
 		return posCart;
 	}
 	
-	public static boolean isNextTo(Vector2 me, Vector2 target) {
-		return (me.dst(target) < 5);
+	public static boolean isNextTo(Vector2 me, Vector2 target, double dist) {
+		return (me.dst(target) < dist);
+	}
+	
+	public static boolean isSame(Vector2 v1, Vector2 v2) {
+		return (v1.dst(v2) < 1);
 	}
 
 

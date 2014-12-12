@@ -56,7 +56,6 @@ public class Group {
 	public Vector2 getBattlePosition(Integer brainId) throws NotExistException {
 		requestNumber++;
 		if(requestNumber > 20 * getSize()) {
-			System.out.println("rotating");
 			requestNumber = 0;
 			battleModifier++;
 			battleModifier = battleModifier % getMaxSize();
@@ -65,7 +64,6 @@ public class Group {
 			Vector2 position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
 			int index = 1 + (members.indexOf(brainId) + battleModifier) % (getMaxSize() - 1);
 //			int index= members.indexOf(brainId);
-			System.out.println(index);
 			int nbrPersonnes = members.size() - 1;
 			float tick = 180/nbrPersonnes;
 			float alpha = tick*index;
@@ -105,7 +103,6 @@ public class Group {
 	}
 
 	public void setAttacking(boolean attacking) {
-		System.out.println(nbStopAttacking);
 		if(!attacking) {
 			nbStopAttacking++;
 		}
