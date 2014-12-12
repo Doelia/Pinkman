@@ -18,13 +18,18 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	@Override
 	public String action() {
 		
-		Environnement.getInstance().setMainBase(this.getBrain());
-		Environnement.getInstance().clean();
+		if (Tools.CHEAT)
+			Environnement.getInstance().setMainBase(this.getBrain());
 		
 		// Develop behaviour here
 		
-		if (Environnement.getInstance().isMainBase(this.getBrain()))
+		if (Tools.CHEAT) {
+			if (Environnement.getInstance().isMainBase(this.getBrain()))
 				this.broadcastPosition();
+		} else {
+			this.broadcastPosition();
+		}
+			
 		
 		return WarBase.ACTION_IDLE;
 	}

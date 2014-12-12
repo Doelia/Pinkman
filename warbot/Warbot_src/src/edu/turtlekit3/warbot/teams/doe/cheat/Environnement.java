@@ -11,6 +11,10 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
 import edu.turtlekit3.warbot.teams.doe.Tools;
+import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrain;
+import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainAllie;
+import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainEnemy;
+import edu.turtlekit3.warbot.teams.doe.clean.TeamManager;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
@@ -26,7 +30,6 @@ public class Environnement {
 
 	private TeamManager tm;
 	private WarBaseBrain mainBase = null;
-	private Stack<Vector2> freeFood = new Stack<Vector2>();
 	private Stack<Integer> takenFood = new Stack<Integer>();
 	public HashMap<Integer, StructWarBrainAllie> listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
 	public HashMap<Integer, StructWarBrainEnemy> listEnemies = new HashMap<Integer, StructWarBrainEnemy>();
@@ -43,14 +46,6 @@ public class Environnement {
 		return mainBase;
 	}
 	
-	public Vector2 getFreeFood() {
-		if (freeFood.size() == 0) {
-			return null;
-		}
-		Vector2 taken = this.freeFood.remove(0);
-		return taken;
-	}
-	
 	private boolean containVector(Stack<Vector2> list, Vector2 v) {
 		for (Vector2 i : list) {
 			if (Tools.isSame(v, i))
@@ -60,12 +55,27 @@ public class Environnement {
 	}
 	
 	public void addFreeFood(Vector2 lastFood, int ID) {
-		if (!this.containVector(this.freeFood, lastFood) && !this.takenFood.contains(ID)) {
-			this.freeFood.push(lastFood);
-			this.takenFood.add(ID);
+		if (!this.takenFood.contains(ID)) {
+			try {
+				StructWarBrainAllie s = this.getClosest(this.getExplorersCanTakeFood(), lastFood);
+				s.setTargetFood(lastFood);
+				this.takenFood.add(ID);
+			} catch (NoTargetFoundException e) {
+			}
 		}
-		System.out.println("size="+this.freeFood.size());
 	}
+	
+	public ArrayList<StructWarBrainAllie> getExplorersCanTakeFood() {
+		ArrayList<StructWarBrainAllie> list = new ArrayList<StructWarBrainAllie>();
+		for (StructWarBrainAllie s : this.getListAllies()) {
+			if (s.getType() == WarAgentType.WarExplorer && s.getTargetFood() == null) {
+				list.add(s);
+			}
+		}
+		return list;
+	}
+	
+	
 	
 	
 	public ArrayList<Integer> getEnemyBases() {
@@ -226,6 +236,23 @@ public class Environnement {
 	public Collection<StructWarBrainAllie> getListAllies() {
 		this.clean();
 		return listAllies.values();
+	}
+	
+	public StructWarBrainAllie getClosest(ArrayList<StructWarBrainAllie> list, Vector2 position) throws NoTargetFoundException {
+		double minDistance = 10000000;
+		try {
+			StructWarBrainAllie id = list.get(0);
+			for (StructWarBrainAllie s : list) {
+				double dst = position.dst(s.getPosition());
+				if (dst < minDistance) {
+					minDistance = position.dst(s.getPosition());
+					id = s;
+				}
+			}
+			return id;
+		} catch (Exception e) {
+			throw new NoTargetFoundException();
+		}
 	}
 
 	public int getClosestEnemy(Vector2 position) throws NoTargetFoundException {

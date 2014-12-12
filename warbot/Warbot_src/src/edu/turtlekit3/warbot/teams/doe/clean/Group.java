@@ -1,4 +1,4 @@
-package edu.turtlekit3.warbot.teams.doe.cheat;
+package edu.turtlekit3.warbot.teams.doe.clean;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -6,6 +6,7 @@ import java.util.Random;
 import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.teams.doe.Tools;
+import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class Group {
@@ -67,7 +68,11 @@ public class Group {
 
 	public Vector2 getMovementPosition(Integer brainId) throws NotExistException {
 		try {
-			Vector2 position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
+			Vector2 position = new Vector2();
+			if (Tools.CHEAT) {
+				position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
+			}
+			
 			int index = 1 + (members.indexOf(brainId) + battleModifier) % (getSize() - 1);
 //			int index = members.indexOf(brainId);
 			int nbrPersonnes = members.size() - 1;

@@ -1,4 +1,4 @@
-package edu.turtlekit3.warbot.teams.doe.cheat;
+package edu.turtlekit3.warbot.teams.doe.clean;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -10,6 +10,7 @@ public class StructWarBrainAllie extends StructWarBrain {
 
 	private WarBrain e;
 	int lastLife = 0;
+	private Vector2 targetFood = null;
 	
 	public StructWarBrainAllie(WarBrain e, Vector2 posCart, WarAgentType type) {
 		super(e.getID(), posCart, type);
@@ -22,6 +23,14 @@ public class StructWarBrainAllie extends StructWarBrain {
 			throw new NotExistException();
 		}
 		return e;
+	}
+	
+	public void setTargetFood(Vector2 targetFood) {
+		this.targetFood = targetFood;
+	}
+	
+	public Vector2 getTargetFood() {
+		return targetFood;
 	}
 	
 	@Override

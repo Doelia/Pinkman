@@ -1,4 +1,4 @@
-package edu.turtlekit3.warbot.teams.doe.cheat;
+package edu.turtlekit3.warbot.teams.doe.clean;
 
 import java.util.Date;
 
@@ -22,6 +22,10 @@ public abstract class StructWarBrain {
 		this.posCart = posCart;
 		this.lastUpdatePosition = new Date();
 		this.ID = ID;
+	}
+	
+	public WarAgentType getType() {
+		return type;
 	}
 
 	public boolean isAlive() {

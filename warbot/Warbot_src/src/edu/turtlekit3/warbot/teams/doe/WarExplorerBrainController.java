@@ -24,17 +24,23 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 	private String toReturn;
 
-	private void recordFood() {
+	private void findFood() {
 		
 		try {
+			
+			// A virer sans CHEAT
 			Vector2 curentPosition = Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).getPosition();
-
+			
 			ArrayList<WarPercept> foodPercepts = getBrain().getPerceptsResources();
 
 			if (foodPercepts != null && foodPercepts.size() > 0){
 				for (WarPercept p : foodPercepts) {
-					Vector2 pos = Tools.getPositionOfEntityFromMine(curentPosition, p.getAngle(), p.getDistance());
-					Environnement.getInstance().addFreeFood(pos, p.getID());
+					if (Tools.CHEAT) {
+						Vector2 pos = Tools.getPositionOfEntityFromMine(curentPosition, p.getAngle(), p.getDistance());
+						Environnement.getInstance().addFreeFood(pos, p.getID());
+					} else {
+						targetFood = new Vector2((float) foodPercepts.get(0).getAngle(), (float) p.getDistance());
+					}
 				}
 			}
 			
@@ -42,18 +48,58 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		}
 
 	}
+	
+	public Vector2 getTargetFood() {
+		if (Tools.CHEAT) {
+			return this.targetFood;
+		} else {
+			try {
+				return Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).getTargetFood();
+			} catch (NotExistException e) {
+				return null;
+			}
+		}
+	}
+	
+	public Vector2 getCurentPosition() throws NotExistException {
+		try {
+			if (Tools.CHEAT)
+				return Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).getPosition();
+			else {
+				return new Vector2((float) this.getBrain().getHeading(), 0);
+			}
+		} catch (Exception e) {
+			throw new NotExistException();
+		}
+	}
+	
+	public void disableFoodTarget() {
+		if (Tools.CHEAT) {
+			try {
+				Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).setTargetFood(null);
+			} catch (NotExistException e) {
+				e.printStackTrace();
+			}
+		} else {
+			this.targetFood = null;
+		}
+	}
 
 
 	@Override
 	public String action() {
-		WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarExplorer);
+		
+		if (Tools.CHEAT) {
+			WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarExplorer);
+		}
 
 		toReturn = WarExplorer.ACTION_MOVE;
 		
 		try {
-			Vector2 curentPosition = Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).getPosition();
 			
-			this.recordFood();
+			Vector2 curentPosition = this.getCurentPosition();
+			
+			this.findFood();
 			
 			if (getBrain().isBagFull()){
 				this.getBrain().setDebugString("return base");
@@ -72,18 +118,15 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 				
 			} else {
 				
-				if (this.targetFood == null) {
-					this.targetFood = Environnement.getInstance().getFreeFood();
-				} else {
+				if (this.getTargetFood() != null) {
 					this.getBrain().setDebugString("target food");
-					if (Tools.isNextTo(curentPosition, this.targetFood, MovableWarAgent.MAX_DISTANCE_GIVE)) {
+					if (Tools.isNextTo(curentPosition, this.getTargetFood(), MovableWarAgent.MAX_DISTANCE_GIVE)) {
 						this.getBrain().setDebugString("taking food");
 						toReturn = MovableWarAgent.ACTION_TAKE;
-						this.targetFood = null;
+						this.disableFoodTarget();
 					}
 				}
-				this.target = this.targetFood;
-				
+				this.target = this.getTargetFood();
 			}
 
 			if (getBrain().isBlocked()) {
@@ -92,7 +135,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			} else {
 				if (target == null) {
 					this.getBrain().setDebugString("randomised");
-					this.getBrain().setRandomHeading(20);
+					getBrain().setRandomHeading(20);
 				} else {
 					Tools.setHeadingOn(this.getBrain(), curentPosition, target);
 				}
