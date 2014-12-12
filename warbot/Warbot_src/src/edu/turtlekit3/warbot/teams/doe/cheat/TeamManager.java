@@ -38,8 +38,10 @@ public class TeamManager {
 	}
 
 	public void remove(Integer id) {
+		int size = 0;
 		for (Group team : teams) {
 			team.removeMember(id);
+			size += team.getSize();
 		}
 	}
 }

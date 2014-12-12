@@ -25,11 +25,12 @@ public abstract class StructWarBrain {
 	}
 
 	public boolean isAlive() {
-		try {
-			return this.getHealth() > 0;
-		} catch (Exception e) {
-			return false;
-		}
+//		try {
+//			return this.getHealth() > 0;
+//		} catch (Exception e) {
+//			return false;
+//		}
+		return this.getHealth() > 0;
 	}
 	
 	public abstract int getHealth();

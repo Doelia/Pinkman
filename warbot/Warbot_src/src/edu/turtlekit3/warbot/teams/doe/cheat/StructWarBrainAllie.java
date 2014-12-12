@@ -24,6 +24,7 @@ public class StructWarBrainAllie extends StructWarBrain {
 		return e;
 	}
 	
+	@Override
 	public int getHealth() {
 		return e.getHealth();
 	}

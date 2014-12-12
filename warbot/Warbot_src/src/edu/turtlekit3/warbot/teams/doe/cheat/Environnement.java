@@ -138,7 +138,7 @@ public class Environnement {
 					tm.remove(s.getID());
 				}
 			}
-		} catch(Exception e) { }
+		} catch(Exception e) {}
 		try {
 			for (StructWarBrainEnemy s : listEnemies.values()) {
 				if (!s.isAlive()) {
