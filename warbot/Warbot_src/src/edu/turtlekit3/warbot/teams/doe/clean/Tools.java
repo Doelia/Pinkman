@@ -16,7 +16,6 @@ public class Tools {
 		float z1 = computeZCoordinate(p1, p2, target);
 		float z2 = computeZCoordinate(p2, p3, target);
 		float z3 = computeZCoordinate(p3, p1, target);
-		
 		return ((z1 > 0) && (z2 > 0) && (z3 > 0)) || ((z1 < 0) && (z2 < 0) && (z3 < 0));
 	}
 	

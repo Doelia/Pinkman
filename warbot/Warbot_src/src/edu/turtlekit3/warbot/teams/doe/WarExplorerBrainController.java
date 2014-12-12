@@ -26,9 +26,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private String toReturn;
 
 	private void findFood() {
-		
 		try {
-			
 			Vector2 curentPosition = this.getCurentPosition();
 			ArrayList<WarPercept> foodPercepts = getBrain().getPerceptsResources();
 
@@ -42,10 +40,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 					}
 				}
 			}
-			
 		}  catch (NotExistException e) {
 		}
-
 	}
 	
 	public Vector2 getTargetFood() {
@@ -104,12 +100,11 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 				this.getBrain().setDebugString("return base");
 				
 				this.target = new Vector2(0,0);
-				
 				ArrayList<WarPercept> basePercepts = getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
 
 				if(basePercepts != null && basePercepts.size() > 0){
 					WarPercept base = basePercepts.get(0);
-					if (base.getDistance() <= MovableWarAgent.MAX_DISTANCE_GIVE){
+					if (base.getDistance() < MovableWarAgent.MAX_DISTANCE_GIVE){
 						getBrain().setIdNextAgentToGive(base.getID());
 						toReturn = MovableWarAgent.ACTION_GIVE;
 					}
@@ -130,7 +125,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 			if (getBrain().isBlocked()) {
 				this.getBrain().setDebugString("blocked");
-				getBrain().setHeading(getBrain().getHeading()+45);
+				getBrain().setHeading(getBrain().getHeading()+20);
 			} else {
 				if (target == null) {
 					this.getBrain().setDebugString("randomised");

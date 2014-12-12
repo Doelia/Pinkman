@@ -66,11 +66,14 @@ public class Environnement {
 	}
 	
 	public ArrayList<StructWarBrainAllie> getExplorersCanTakeFood() {
+		this.clean();
 		ArrayList<StructWarBrainAllie> list = new ArrayList<StructWarBrainAllie>();
 		for (StructWarBrainAllie s : this.getListAllies()) {
-			if (s.getType() == WarAgentType.WarExplorer && s.getTargetFood() == null) {
+			try {
+			if (s.getType() == WarAgentType.WarExplorer && s.getTargetFood() == null && !s.getBrain().isBagFull()) {
 				list.add(s);
 			}
+			} catch (Exception e) {}
 		}
 		return list;
 	}
