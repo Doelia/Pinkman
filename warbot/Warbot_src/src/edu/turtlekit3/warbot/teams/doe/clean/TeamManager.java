@@ -38,10 +38,14 @@ public class TeamManager {
 	}
 
 	public void remove(Integer id) {
-		int size = 0;
 		for (Group team : teams) {
 			team.removeMember(id);
-			size += team.getSize();
+		}
+	}
+
+	public void setBaseAttacked(boolean b) {
+		for (int i = 0; i < teams.size() / 2 + 1; i++) {
+			teams.get(i).setBaseAttacked(b);
 		}
 	}
 }

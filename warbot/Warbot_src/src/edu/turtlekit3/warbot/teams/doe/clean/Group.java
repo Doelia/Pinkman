@@ -16,6 +16,7 @@ public class Group {
 	private int nbStopAttacking;
 	private boolean leaderCanShoot;
 	private int angle;
+	boolean isBaseAttacked;
 
 	public Group() {
 		members = new ArrayList<Integer>();
@@ -24,6 +25,7 @@ public class Group {
 		requestNumber = 0;
 		battleModifier = 0;
 		nbStopAttacking = 0;
+		isBaseAttacked = false;
 	}
 
 	public void addMember(Integer w) {
@@ -143,6 +145,14 @@ public class Group {
 	
 	public void setLeaderCanShoot(boolean b) {
 		leaderCanShoot = b;
+	}
+
+	public void setBaseAttacked(boolean b) {
+		this.isBaseAttacked = b;
+	}
+	
+	public boolean isBaseAttacked() {
+		return this.isBaseAttacked;
 	}
 
 }
