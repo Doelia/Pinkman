@@ -96,7 +96,6 @@ public class Group {
 	}
 
 	public void setAttacking(boolean attacking) {
-//		System.out.println(this.attacking);
 		if(!attacking) {
 			nbStopAttacking++;
 		}

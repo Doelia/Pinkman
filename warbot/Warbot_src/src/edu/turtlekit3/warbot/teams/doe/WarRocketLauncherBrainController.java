@@ -90,22 +90,22 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					}
 					return WarRocketLauncher.ACTION_MOVE;
 				} else {
-//					t.setLeaderCanShoot(false);
-//					return WarRocketLauncher.ACTION_IDLE;
-					if(getBrain().isReloaded()) {
-						System.out.println("in");
-						if(justShot) {
-							t.setLeaderCanShoot(false);
-							justShot = !justShot;
-							return WarRocketLauncher.ACTION_IDLE;
-						} else {
-							t.setLeaderCanShoot(true);
-							justShot = !justShot;
-							return WarRocketLauncher.ACTION_FIRE;
-						}
-					} else {
-						System.out.println("out");
-					}
+					t.setLeaderCanShoot(false);
+					return WarRocketLauncher.ACTION_IDLE;
+//					if(getBrain().isReloaded()) {
+//						System.out.println("in");
+//						if(justShot) {
+//							t.setLeaderCanShoot(false);
+//							justShot = !justShot;
+//							return WarRocketLauncher.ACTION_IDLE;
+//						} else {
+//							t.setLeaderCanShoot(true);
+//							justShot = !justShot;
+//							return WarRocketLauncher.ACTION_FIRE;
+//						}
+//					} else {
+//						System.out.println("out");
+//					}
 				}
 			}
 
