@@ -130,6 +130,7 @@ public class Environnement {
 	}
 
 	public Vector2 getPositionFirstEnemyBase() throws NotExistException {
+		this.clean();
 		try {
 			int id = this.getEnemyBases().get(0);
 			return this.getEnemy(id).getPosition();
