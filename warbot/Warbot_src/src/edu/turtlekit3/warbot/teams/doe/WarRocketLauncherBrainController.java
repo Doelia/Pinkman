@@ -76,18 +76,24 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			int leader = t.getLeader();
 
 			if(ev.oneBaseIsFound()) {
-				if(!getBrain().isReloaded()) {
+				ArrayList<WarPercept> p = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
+				if(p.size() > 0) {
+					if(!getBrain().isReloaded()) {
+						Tools.setHeadingOn(
+								getBrain(), 
+								ev.getStructWarBrain(getBrain().getID()).getPosition(),
+								t.getBaseAttackPosition(getBrain().getID()));
+						return WarRocketLauncher.ACTION_MOVE;
+					} else {
+						getBrain().setHeading(p.get(0).getAngle());
+						return WarRocketLauncher.ACTION_FIRE;
+					}
+				} else {
 					Tools.setHeadingOn(
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getBaseAttackPosition(getBrain().getID()));
 					return WarRocketLauncher.ACTION_MOVE;
-				} else {
-					ArrayList<WarPercept> p = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
-					if(p.size() > 0) {
-						getBrain().setHeading(p.get(0).getAngle());
-						return WarRocketLauncher.ACTION_FIRE;
-					}
 				}
 			} else {
 
