@@ -63,7 +63,7 @@ public class Environnement {
 	public void addFreeFood(Vector2 lastFood, int ID) {
 		if (!this.takenFood.contains(ID)) {
 			try {
-				StructWarBrainAllie s = this.getClosest(this.getExplorersCanTakeFood(), lastFood);
+				StructWarBrainAllie s = Tools.getClosest(this.getExplorersCanTakeFood(), lastFood);
 				s.addTargetFood(lastFood);
 				this.takenFood.add(ID);
 			} catch (NoTargetFoundException e) {
@@ -85,8 +85,6 @@ public class Environnement {
 	}
 	
 	
-	
-	
 	public ArrayList<Integer> getEnemyBases() {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (StructWarBrainEnemy s : this.getEnemies()) {
@@ -99,8 +97,8 @@ public class Environnement {
 	
 	public Vector2 getPositionFirstEnemyBase() throws NotExistException {
 		try {
-		int id = this.getEnemyBases().get(0);
-		return this.getEnemy(id).getPosition();
+			int id = this.getEnemyBases().get(0);
+			return this.getEnemy(id).getPosition();
 		} catch (Exception e) {
 			throw new NotExistException();
 		}
@@ -247,22 +245,6 @@ public class Environnement {
 		return listAllies.values();
 	}
 	
-	public StructWarBrainAllie getClosest(ArrayList<StructWarBrainAllie> list, Vector2 position) throws NoTargetFoundException {
-		double minDistance = 10000000;
-		try {
-			StructWarBrainAllie id = list.get(0);
-			for (StructWarBrainAllie s : list) {
-				double dst = position.dst(s.getPosition());
-				if (dst < minDistance) {
-					minDistance = position.dst(s.getPosition());
-					id = s;
-				}
-			}
-			return id;
-		} catch (Exception e) {
-			throw new NoTargetFoundException();
-		}
-	}
 
 	public int getClosestEnemy(Vector2 position) throws NoTargetFoundException {
 		this.clean();
