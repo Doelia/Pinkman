@@ -125,7 +125,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 				
 				if(getBrain().isReloaded()){
 					getBrain().setHeading(percept.get(0).getAngle());
-					//toReturn = WarRocketLauncher.ACTION_FIRE;
+					toReturn = WarRocketLauncher.ACTION_FIRE;
 				}else{
 					getBrain().setHeading(percept.get(0).getAngle() + angleModifier);
 					lastAngle = angleModifier;

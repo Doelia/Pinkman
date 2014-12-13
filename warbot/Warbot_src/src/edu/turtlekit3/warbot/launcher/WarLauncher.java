@@ -431,6 +431,23 @@ public class WarLauncher extends TKLauncher {
 			
 			Simulation.getInstance().addAvailableTeam(currentTeam);
 		}
+		
+		{
+			Team currentTeam;
+			currentTeam = new Team("noob");
+			currentTeam.setDescription("Coucou");
+			
+			currentTeam.setLogo(teamLogo);
+			
+			currentTeam.addBrainControllerClassForAgent("WarBase", edu.turtlekit3.warbot.teams.noob.WarBaseBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarExplorer", edu.turtlekit3.warbot.teams.noob.WarExplorerBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarEngineer", edu.turtlekit3.warbot.teams.noob.WarEngineerBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarKamikaze", edu.turtlekit3.warbot.teams.noob.WarKamikazeBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarRocketLauncher", edu.turtlekit3.warbot.teams.noob.WarRocketLauncherBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarTurretBrainController", edu.turtlekit3.warbot.teams.noob.WarTurretBrainController.class);
+			
+			Simulation.getInstance().addAvailableTeam(currentTeam);
+		}
 	}
 
 	public static void main() {

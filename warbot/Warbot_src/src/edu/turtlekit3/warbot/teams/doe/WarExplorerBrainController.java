@@ -78,7 +78,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	public void disableFoodTarget() {
 		if (Environnement.CHEAT) {
 			try {
-				Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).setTargetFood(null);
+				Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).setFirstTargetFound();
 			} catch (NotExistException e) {
 				e.printStackTrace();
 			}
