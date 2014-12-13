@@ -19,6 +19,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 	private Vector2 targetFood = null;
 	private Vector2 target = new Vector2(0, 0);
+	private boolean isInGave = false;
 
 	public WarExplorerBrainController() {
 		super();
@@ -103,7 +104,12 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			
 			this.findFood();
 			
-			if (getBrain().isBagFull()){
+			if (this.getBrain().isBagEmpty()) {
+				this.isInGave = false;
+			}
+			
+			if ((getBrain().isBagFull() || this.isInGave)){
+				this.isInGave = true;
 				this.getBrain().setDebugString("return base");
 				
 				this.target = new Vector2(0,0);
@@ -144,6 +150,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 		}  catch (NotExistException e) {
 		}
+		
+		this.getBrain().setDebugString("bagSize="+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize());
 		
 		return toReturn;
 

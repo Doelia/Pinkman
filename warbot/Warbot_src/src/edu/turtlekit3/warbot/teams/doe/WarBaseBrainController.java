@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
+import edu.turtlekit3.warbot.agents.resources.WarFood;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
 import edu.turtlekit3.warbot.teams.demo.Constants;
 import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
+import edu.turtlekit3.warbot.teams.doe.cheat.WarBrainUtils;
 
 public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
@@ -21,6 +23,11 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	
 	@Override
 	public String action() {
+		
+		
+		if (Environnement.CHEAT) {
+			WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarBase);
+		}
 		
 		if (Environnement.CHEAT) {
 			Environnement ev = Environnement.getInstance();
@@ -41,12 +48,15 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 			this.broadcastPosition();
 		}
 		
-		if (this.getBrain().isBagFull()) {
+		if (this.getBrain().getHealth() == 12000 && this.getBrain().isBagFull()) {
 			this.getBrain().setNextAgentToCreate(WarAgentType.WarRocketLauncher);
 			return WarBase.ACTION_CREATE;
 		}
-		
-		return WarBase.ACTION_EAT;
+	
+		if (this.getBrain().getHealth() < 12000)
+			return WarBase.ACTION_EAT;
+		else
+			return WarBase.ACTION_IDLE;
 	}
 }
  

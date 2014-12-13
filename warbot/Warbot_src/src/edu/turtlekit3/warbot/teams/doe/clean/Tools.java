@@ -1,8 +1,11 @@
 package edu.turtlekit3.warbot.teams.doe.clean;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.brains.WarBrain;
+import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
 
 public class Tools {
 
@@ -67,6 +70,23 @@ public class Tools {
 		int x = - (int) (Math.random()*500);
 		int y = - (int) (Math.random()*500);
 		return new Vector2(x,y);
+	}
+	
+	public static StructWarBrainAllie getClosest(ArrayList<StructWarBrainAllie> list, Vector2 position) throws NoTargetFoundException {
+		double minDistance = 10000000;
+		try {
+			StructWarBrainAllie id = list.get(0);
+			for (StructWarBrainAllie s : list) {
+				double dst = position.dst(s.getPosition());
+				if (dst < minDistance) {
+					minDistance = position.dst(s.getPosition());
+					id = s;
+				}
+			}
+			return id;
+		} catch (Exception e) {
+			throw new NoTargetFoundException();
+		}
 	}
 
 
