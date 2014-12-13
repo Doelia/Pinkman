@@ -20,6 +20,8 @@ import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class Environnement {
 
+	public static final boolean CHEAT = true;
+	
 	private static Environnement instance;
 	public static Environnement getInstance() {
 		if (instance == null) {
@@ -62,7 +64,7 @@ public class Environnement {
 		if (!this.takenFood.contains(ID)) {
 			try {
 				StructWarBrainAllie s = this.getClosest(this.getExplorersCanTakeFood(), lastFood);
-				s.setTargetFood(lastFood);
+				s.addTargetFood(lastFood);
 				this.takenFood.add(ID);
 			} catch (NoTargetFoundException e) {
 			}
@@ -74,7 +76,7 @@ public class Environnement {
 		ArrayList<StructWarBrainAllie> list = new ArrayList<StructWarBrainAllie>();
 		for (StructWarBrainAllie s : this.getListAllies()) {
 			try {
-			if (s.getType() == WarAgentType.WarExplorer && s.getTargetFood() == null && !s.getBrain().isBagFull()) {
+			if (s.getType() == WarAgentType.WarExplorer && s.canTargetNewFood()) {
 				list.add(s);
 			}
 			} catch (Exception e) {}
@@ -280,5 +282,6 @@ public class Environnement {
 			throw new NoTargetFoundException();
 		}
 	}
+	
 
 }

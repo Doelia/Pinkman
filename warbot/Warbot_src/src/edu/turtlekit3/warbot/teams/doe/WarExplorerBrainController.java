@@ -27,7 +27,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private String toReturn;
 	
 	private void broadcastFoodPosition() {
-		if (!Tools.CHEAT)
+		if (!Environnement.CHEAT)
 			getBrain().broadcastMessageToAll(Constants.foodHere, this.targetFood.toString());
 	}
 
@@ -38,7 +38,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 			if (foodPercepts != null && foodPercepts.size() > 0){
 				for (WarPercept p : foodPercepts) {
-					if (Tools.CHEAT) {
+					if (Environnement.CHEAT) {
 						Vector2 pos = Tools.getPositionOfEntityFromMine(curentPosition, p.getAngle(), p.getDistance());
 						Environnement.getInstance().addFreeFood(pos, p.getID());
 					} else {
@@ -52,7 +52,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	}
 	
 	public Vector2 getTargetFood() {
-		if (Tools.CHEAT) {
+		if (Environnement.CHEAT) {
 			try {
 				return Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).getTargetFood();
 			} catch (NotExistException e) {
@@ -65,7 +65,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	
 	public Vector2 getCurentPosition() throws NotExistException {
 		try {
-			if (Tools.CHEAT)
+			if (Environnement.CHEAT)
 				return Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).getPosition();
 			else {
 				return new Vector2((float) this.getBrain().getHeading(), 0);
@@ -76,9 +76,9 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	}
 	
 	public void disableFoodTarget() {
-		if (Tools.CHEAT) {
+		if (Environnement.CHEAT) {
 			try {
-				Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).setTargetFood(null);
+				Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).setFirstTargetFound();
 			} catch (NotExistException e) {
 				e.printStackTrace();
 			}
@@ -91,7 +91,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	@Override
 	public String action() {
 		
-		if (Tools.CHEAT) {
+		if (Environnement.CHEAT) {
 			WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarExplorer);
 		}
 

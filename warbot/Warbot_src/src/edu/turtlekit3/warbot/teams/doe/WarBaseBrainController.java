@@ -8,7 +8,6 @@ import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
 import edu.turtlekit3.warbot.teams.demo.Constants;
 import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
-import edu.turtlekit3.warbot.teams.doe.clean.Tools;
 
 public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
@@ -24,15 +23,18 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	@Override
 	public String action() {
 		
-		Environnement ev = Environnement.getInstance();
-		ArrayList<WarPercept> percept = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
-		if(percept.size() > 0) {
-			ev.getTeamManager().setBaseAttacked(true);
-		} else {
-			ev.getTeamManager().setBaseAttacked(false);
+		if (Environnement.CHEAT) {
+			Environnement ev = Environnement.getInstance();
+			ArrayList<WarPercept> percept = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+			if(percept.size() > 0) {
+				ev.getTeamManager().setBaseAttacked(true);
+			} else {
+				ev.getTeamManager().setBaseAttacked(false);
+			}
 		}
 		
-		if (Tools.CHEAT) {
+		
+		if (Environnement.CHEAT) {
 			Environnement.getInstance().setMainBase(this.getBrain());
 			if (Environnement.getInstance().isMainBase(this.getBrain()))
 				this.broadcastPosition();
