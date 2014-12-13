@@ -40,13 +40,21 @@ public class Environnement {
 	public Boolean weAreInTop = null; // En haut à droite, null si on sait pas encore
 
 	private TeamManager tm;
-	private WarBaseBrain mainBase = null;
-	private Stack<Integer> takenFood = new Stack<Integer>();
-	public HashMap<Integer, StructWarBrainAllie> listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
-	public HashMap<Integer, StructWarBrainEnemy> listEnemies = new HashMap<Integer, StructWarBrainEnemy>();
+	private WarBaseBrain mainBase;
+	private Stack<Integer> takenFood;
+	public HashMap<Integer, StructWarBrainAllie> listAllies;
+	public HashMap<Integer, StructWarBrainEnemy> listEnemies;
+	private int voteToKillNumber;
+	private boolean killedFirstBase;
 
 	private Environnement() {
 		tm = new TeamManager();
+		mainBase = null;
+		takenFood = new Stack<Integer>();
+		listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
+		listEnemies = new HashMap<Integer, StructWarBrainEnemy>();
+		voteToKillNumber = 0;
+		killedFirstBase = false;
 	}
 
 	public int getIndexOfTeam(Group t) {
@@ -62,7 +70,11 @@ public class Environnement {
 			throw new BaseNotFoundException();
 		return weAreInTop;
 	}
-
+	
+	public void voteToKillBase(Integer baseId) {
+		listEnemies.get(baseId).decrementTtl();
+	}
+ 
 	public Vector2 getApproxEnemyBasePosition() throws BaseNotFoundException {
 		boolean top;
 		try {
@@ -137,6 +149,10 @@ public class Environnement {
 			throw new NotExistException();
 		}
 	}
+	
+	public int getFirstEnemyBase() {
+		return this.getEnemyBases().get(0);
+	}
 
 	public boolean oneBaseIsFound() {
 		return (this.getEnemyBases().size() > 0);
@@ -170,6 +186,9 @@ public class Environnement {
 		if (s != null) {
 			s.setPosition(newPosCart);
 			s.setLife(life);
+			if(type.equals(WarAgentType.WarBase)) {
+				s.resetTtl();
+			}
 		} else {
 			StructWarBrainEnemy x = new StructWarBrainEnemy(ID, newPosCart, life, type);
 			this.listEnemies.put(ID, x);
@@ -199,6 +218,10 @@ public class Environnement {
 			throw new NotExistException();
 		}
 	}
+	
+	public boolean killedFirstBase() {
+		return killedFirstBase;
+	}
 
 	public void clean() {
 		try {
@@ -211,7 +234,11 @@ public class Environnement {
 		} catch(Exception e) {}
 		try {
 			for (StructWarBrainEnemy s : listEnemies.values()) {
-				if (!s.isAlive()) {
+				if (!s.isAlive() || s.getTtl() <= 0) {
+					if(s.isBase()) {
+						killedFirstBase = true;
+						System.out.println("removing base");
+					}
 					listEnemies.remove(s.getID());
 				} else {
 					if (!s.isBase() && !s.positionIsUptodate()) {

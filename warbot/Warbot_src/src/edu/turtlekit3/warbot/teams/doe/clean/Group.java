@@ -90,7 +90,7 @@ public class Group {
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
 			float alpha = tick*index + Environnement.getInstance().getIndexOfTeam(this) * 7;
-			Vector2 target = Tools.cartFromPolaire(alpha, 40);
+			Vector2 target = Tools.cartFromPolaire(alpha, 30);
 			target.add(base);
 			return target;
 		} catch (Exception e) {
