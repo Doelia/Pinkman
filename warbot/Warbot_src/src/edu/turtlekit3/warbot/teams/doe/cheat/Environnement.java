@@ -20,6 +20,8 @@ import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class Environnement {
 
+	public static final boolean CHEAT = true;
+	
 	private static Environnement instance;
 	public static Environnement getInstance() {
 		if (instance == null) {

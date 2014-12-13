@@ -67,7 +67,7 @@ public class Group {
 	public Vector2 getMovementPosition(Integer brainId) throws NotExistException {
 		try {
 			Vector2 position = new Vector2();
-			if (Tools.CHEAT) {
+			if (Environnement.CHEAT) {
 				position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
 			}
 			
