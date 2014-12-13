@@ -1,6 +1,7 @@
 package edu.turtlekit3.warbot.teams.doe.clean;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -26,6 +27,7 @@ public class Group {
 		battleModifier = 0;
 		nbStopAttacking = 0;
 		isBaseAttacked = false;
+		angle = new Random().nextInt(20);
 	}
 
 	public void addMember(Integer w) {
@@ -106,6 +108,28 @@ public class Group {
 			throw new NotExistException();
 		}
 	}
+	
+	public Vector2 getDefensePosition(Integer brainId) throws NotExistException {
+		try {
+			Vector2 position = new Vector2(0, 0);
+//			if (Tools.CHEAT) {
+//				position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
+//			}
+//			
+			int index = members.indexOf(brainId);
+//			int index = members.indexOf(brainId);
+			int nbrPersonnes = members.size();
+			float tick = (360/nbrPersonnes);
+			float alpha = tick*index + angle;
+//			target.rotate(alpha);
+//			Vector2 target = new Vector2(50, 0);
+			Vector2 target = Tools.cartFromPolaire(alpha, 20);
+			target.add(position);
+			return target;
+		} catch (Exception e) {
+			throw new NotExistException();
+		}
+	}
 
 	public void setTarget(Vector2 target, int angle) {
 		this.target = target;
@@ -124,7 +148,7 @@ public class Group {
 		if(!attacking) {
 			nbStopAttacking++;
 		}
-		if(nbStopAttacking > getSize() * 2) {
+		if(nbStopAttacking > getSize() * 5) {
 			nbStopAttacking = 0;
 			this.attacking = false;
 		}

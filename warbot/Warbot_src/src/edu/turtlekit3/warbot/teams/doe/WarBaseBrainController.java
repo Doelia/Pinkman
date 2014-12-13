@@ -14,6 +14,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
 	public WarBaseBrainController() {
 		super();
+		Environnement.clear();
 	}
 	
 	private void broadcastPosition() {

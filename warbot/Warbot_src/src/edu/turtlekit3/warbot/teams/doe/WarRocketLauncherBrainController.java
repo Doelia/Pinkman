@@ -18,15 +18,13 @@ import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractBrainController {
 
-	int x = new Random().nextInt(800);
-	int y = new Random().nextInt(400);
+	int x = new Random().nextInt(1600);
+	int y = new Random().nextInt(1000);
 	String toReturn = "";
 	int maxDistanceToTarget = 50;
 
 	public WarRocketLauncherBrainController() {
 		super();
-		System.out.println("x : " + x);
-		System.out.println("y : " + y);
 	}
 	@Override
 	public String action() {
@@ -55,18 +53,26 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		Group t;
 		try {
 			t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
+			int leader = t.getLeader();
 			if(t.isBaseAttacked()) {
-				Tools.setHeadingOn(
-						getBrain(), 
-						ev.getStructWarBrain(getBrain().getID()).getPosition(),
-						new Vector2(0,0));
+				if(!getBrain().isReloaded()) {
+					Tools.setHeadingOn(
+							getBrain(), 
+							ev.getStructWarBrain(getBrain().getID()).getPosition(),
+							t.getDefensePosition(getBrain().getID()));
+					return WarRocketLauncher.ACTION_MOVE;
+				} else {
+					if(percept.size() > 0) {
+						getBrain().setHeading(percept.get(0).getAngle());
+						return WarRocketLauncher.ACTION_FIRE;
+					}
+				}
 			}
 			if(percept != null && percept.size() > 0){
 				t.setAttacking(true);
-				int leader = t.getLeader();
 				if(getBrain().getID() == leader) {
 					t.setTarget(ev.getEnemy(ev.getClosestEnemy(ev.getStructWarBrain(getBrain().getID()).getPosition())).getPosition(), 0);
-//					t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), percept.get(0).getAngle(), percept.get(0).getDistance()), (int) percept.get(0).getAngle());
+					//					t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), percept.get(0).getAngle(), percept.get(0).getDistance()), (int) percept.get(0).getAngle());
 				}
 			} else {
 				t.setAttacking(false);
@@ -109,8 +115,8 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 				} else {
 					int n = new Random().nextInt(100);
 					if(n > 95) {
-						x = new Random().nextInt(1000);
-						y = new Random().nextInt(600);
+						x = new Random().nextInt(200);
+						y = new Random().nextInt(200);
 					}
 					Tools.setHeadingOn(
 							getBrain(), 

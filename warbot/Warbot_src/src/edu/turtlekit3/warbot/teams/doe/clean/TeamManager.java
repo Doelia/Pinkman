@@ -44,8 +44,12 @@ public class TeamManager {
 	}
 
 	public void setBaseAttacked(boolean b) {
-		for (int i = 0; i < teams.size() / 2 + 1; i++) {
-			teams.get(i).setBaseAttacked(b);
+//		for (int i = 0; i < teams.size() / 2 + 1; i++) {
+//			teams.get(i).setBaseAttacked(b);
+//		}
+		
+		for (Group group : teams) {
+			group.setBaseAttacked(b);
 		}
 	}
 }

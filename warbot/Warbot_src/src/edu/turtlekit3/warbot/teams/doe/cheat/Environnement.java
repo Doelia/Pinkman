@@ -27,6 +27,10 @@ public class Environnement {
 		}
 		return instance;
 	}
+	
+	public static void clear() {
+		instance = null;
+	}
 
 	private TeamManager tm;
 	private WarBaseBrain mainBase = null;
@@ -276,6 +280,5 @@ public class Environnement {
 			throw new NoTargetFoundException();
 		}
 	}
-
 
 }
