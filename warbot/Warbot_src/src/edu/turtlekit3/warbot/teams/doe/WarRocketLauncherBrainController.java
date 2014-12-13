@@ -11,10 +11,11 @@ import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarRocketLauncherAbstractBrainController;
 import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
-import edu.turtlekit3.warbot.teams.doe.environement.EnvironnementUpdater;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTeamFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
+import edu.turtlekit3.warbot.teams.doe.tasks.DetectEnemyTask;
+import edu.turtlekit3.warbot.teams.doe.tasks.SendAlliesTask;
 import edu.turtlekit3.warbot.teams.doe.teams.Group;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
@@ -27,7 +28,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	int isOnTop;
 	int lastBaseFoundId = -1;
 	
-	private EnvironnementUpdater eu = null;
 	private Environnement e;
 
 	public WarRocketLauncherBrainController() {
@@ -50,16 +50,16 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	@Override
 	public String action() {
 		
-		if (eu == null) {
-			eu = new EnvironnementUpdater(getEnvironnement());
-		}
+		Environnement e = this.getEnvironnement();
+		WarAgentType t = WarAgentType.WarRocketLauncher;
 		
-		eu.updateEnvironement(this.getBrain(), WarAgentType.WarRocketLauncher);
+		new DetectEnemyTask(this, t, e).exec();
+		new SendAlliesTask(this, t, e).exec();
 
 		try {
 			boolean top = getEnvironnement().getWeAreInTop();
 			isOnTop = ((top)?-1:1);
-		} catch (BaseNotFoundException e) {}
+		} catch (BaseNotFoundException ex) {}
 
 		toReturn = move();
 		toReturn = attack();

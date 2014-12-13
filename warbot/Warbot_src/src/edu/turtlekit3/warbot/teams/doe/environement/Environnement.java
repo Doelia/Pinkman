@@ -31,10 +31,9 @@ public class Environnement {
 
 	public static void clear() {
 		instance = null;
-		idSearcherBase = -1;
 	}
 
-	public static int idSearcherBase = -1;
+	public int idSearcherBase = -1;
 	
 	private TeamManager tm;
 	private WarBaseBrain mainBase;

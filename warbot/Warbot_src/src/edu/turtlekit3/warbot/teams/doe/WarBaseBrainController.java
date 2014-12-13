@@ -1,19 +1,17 @@
 package edu.turtlekit3.warbot.teams.doe;
 
-import java.util.ArrayList;
-
 import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
-import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
 import edu.turtlekit3.warbot.teams.demo.Constants;
 import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
-import edu.turtlekit3.warbot.teams.doe.environement.EnvironnementUpdater;
+import edu.turtlekit3.warbot.teams.doe.tasks.DetectEnemyTask;
+import edu.turtlekit3.warbot.teams.doe.tasks.SendAlliesTask;
+import edu.turtlekit3.warbot.teams.doe.tasks.SetBaseAttackedTask;
 
 public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
-	private EnvironnementUpdater eu = null;
 	private Environnement e;
 	
 	public WarBaseBrainController() {
@@ -39,22 +37,15 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	@Override
 	public String action() {
 		
-		if (eu == null) {
-			eu = new EnvironnementUpdater(getEnvironnement());
-		}
+		Environnement e = this.getEnvironnement();
+		WarAgentType t = WarAgentType.WarBase;
 		
-		eu.updateEnvironement(this.getBrain(), WarAgentType.WarBase);
+		new DetectEnemyTask(this, t, e).exec();
+		new SendAlliesTask(this, t, e).exec();
+		new SetBaseAttackedTask(this, t, e).exec();
 		
-		Environnement ev = this.getEnvironnement();
-		ArrayList<WarPercept> percept = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
-		if(percept.size() > 0) {
-			ev.getTeamManager().setBaseAttacked(true);
-		} else {
-			ev.getTeamManager().setBaseAttacked(false);
-		}
-		
-		ev.setMainBase(this.getBrain());
-		if (ev.isMainBase(this.getBrain()))
+		e.setMainBase(this.getBrain());
+		if (e.isMainBase(this.getBrain()))
 			this.broadcastPosition();
 		
 		this.getBrain().setDebugString("Bag "+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize()+" - life "+this.getBrain().getHealth());

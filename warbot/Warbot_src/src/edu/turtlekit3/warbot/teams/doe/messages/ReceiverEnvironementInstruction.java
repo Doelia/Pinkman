@@ -1,6 +1,5 @@
 package edu.turtlekit3.warbot.teams.doe.messages;
 
-import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.communications.WarMessage;
