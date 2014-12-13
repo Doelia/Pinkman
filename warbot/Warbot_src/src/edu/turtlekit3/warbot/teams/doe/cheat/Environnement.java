@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
+import edu.turtlekit3.warbot.teams.doe.clean.Group;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrain;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainAllie;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainEnemy;
@@ -44,6 +45,9 @@ public class Environnement {
 		tm = new TeamManager();
 	}
 	
+	public int getIndexOfTeam(Group t) {
+		return tm.getIndexOfTeam(t);
+	}
 	public boolean isMainBase(WarBaseBrain b) {
 		return (mainBaseIsDefined() && b.getID() == this.mainBase.getID());
 	}

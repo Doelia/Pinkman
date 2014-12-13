@@ -52,4 +52,8 @@ public class TeamManager {
 			group.setBaseAttacked(b);
 		}
 	}
+
+	public int getIndexOfTeam(Group t) {
+		return teams.indexOf(t);
+	}
 }
