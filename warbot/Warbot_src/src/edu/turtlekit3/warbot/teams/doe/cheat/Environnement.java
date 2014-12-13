@@ -22,7 +22,7 @@ import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 public class Environnement {
 
 	public static final boolean CHEAT = true;
-	public static boolean RUSH_MODE = false;
+	public static boolean RUSH_MODE = true;
 	
 	private static Environnement instance;
 	public static Environnement getInstance() {
@@ -91,6 +91,7 @@ public class Environnement {
 		listEnemies.get(baseId).decrementTtl();
 	}
  
+	// TODO Vérifier que les coordonées sont bien dans la carte, au cas ou si la carte change
 	public Vector2 getApproxEnemyBasePosition() throws BaseNotFoundException {
 		boolean top;
 		try {
@@ -103,6 +104,7 @@ public class Environnement {
 		} catch (BaseNotFoundException e) {
 			throw new BaseNotFoundException();
 		}
+		
 		
 	}
 
