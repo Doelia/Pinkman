@@ -9,20 +9,20 @@ import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarExplorerAbstractBrainController;
-import edu.turtlekit3.warbot.teams.demo.Constants;
+import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
+import edu.turtlekit3.warbot.teams.doe.environement.EnvironnementUpdater;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
-import edu.turtlekit3.warbot.teams.doe.tools.WarBrainUtils;
 
 public class WarExplorerBrainController extends WarExplorerAbstractBrainController {
 
-	private Vector2 targetFood = null;
+	private EnvironnementUpdater eu = null;
+	private Environnement ev;
+	
 	private Vector2 target = null;
 	private boolean isInGave = false;
-	private boolean baseIsFound = false;
-	private int pos = 0;
 	private boolean haveTouchAproxTarget = false;
 	
 	public boolean isAWall() {
@@ -35,43 +35,30 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 	private String toReturn;
 	
-	private void broadcastFoodPosition() {
-		if (!Environnement.CHEAT)
-			getBrain().broadcastMessageToAll(Constants.foodHere, this.targetFood.toString());
+	private Environnement getEnvironnement() {
+		if (Behavior.CHEAT)
+			return Environnement.getInstance();
+		else {
+			if (ev == null) {
+				ev = new Environnement();
+			}
+			return ev;
+		}
 	}
-	
-	private void broadcastOurBasePosition() {
-		getBrain().broadcastMessageToAll(Constants.enemyBaseHere, this.pos+"");
-	}
-	
 	
 	int distance = 0;
 	private String findOurPositionBase() {
 		
-		if (Environnement.CHEAT) {
-			if (this.isAWall()) {
-				System.out.println("Base en haut à droite");
-				Environnement.getInstance().setWeAreInTop(true);
-				return MovableWarAgent.ACTION_IDLE;
-			}
-			
-			if (this.distance > 200) {
-				System.out.println("Base en bas à droite");
-				Environnement.getInstance().setWeAreInTop(false);
-				return MovableWarAgent.ACTION_IDLE;
-			}
-		} else {
-			if (this.isAWall()) {
-				this.baseIsFound = true;
-				this.pos = 1;
-			}
-			
-			if (this.distance > 200) {
-				this.baseIsFound = false;
-				this.pos = 2;
-			}
-			
-			this.broadcastOurBasePosition();
+		if (this.isAWall()) {
+			System.out.println("Base en haut à droite");
+			getEnvironnement().setWeAreInTop(true);
+			return MovableWarAgent.ACTION_IDLE;
+		}
+		
+		if (this.distance > 200) {
+			System.out.println("Base en bas à droite");
+			getEnvironnement().setWeAreInTop(false);
+			return MovableWarAgent.ACTION_IDLE;
 		}
 		
 		this.getBrain().setHeading(0);
@@ -89,13 +76,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 			if (foodPercepts != null && foodPercepts.size() > 0){
 				for (WarPercept p : foodPercepts) {
-					if (Environnement.CHEAT) {
 						Vector2 pos = Tools.getPositionOfEntityFromMine(curentPosition, p.getAngle(), p.getDistance());
-						Environnement.getInstance().addFreeFood(pos, p.getID());
-					} else {
-						targetFood = new Vector2((float) foodPercepts.get(0).getAngle(), (float) p.getDistance());
-						this.broadcastFoodPosition();
-					}
+						getEnvironnement().addFreeFood(pos, p.getID());
 				}
 			}
 		}  catch (NotExistException e) {
@@ -103,85 +85,57 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	}
 	
 	public Vector2 getTargetFood() {
-		if (Environnement.CHEAT) {
 			try {
-				return Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).getTargetFood();
+				return getEnvironnement().getStructWarBrain(this.getBrain().getID()).getTargetFood();
 			} catch (NotExistException e) {
 				return null;
 			}
-		} else {
-			return this.targetFood;
-		}
 	}
 	
 	public Vector2 getCurentPosition() throws NotExistException {
 		try {
-			if (Environnement.CHEAT)
-				return Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).getPosition();
-			else {
-				return new Vector2((float) this.getBrain().getHeading(), 0);
-			}
+			return getEnvironnement().getStructWarBrain(this.getBrain().getID()).getPosition();
 		} catch (Exception e) {
 			throw new NotExistException();
 		}
 	}
 	
 	public void disableFoodTarget() {
-		if (Environnement.CHEAT) {
-			try {
-				Environnement.getInstance().getStructWarBrain(this.getBrain().getID()).setFirstTargetFound();
-			} catch (NotExistException e) {
-				e.printStackTrace();
-			}
-		} else {
-			this.targetFood = null;
+		try {
+			getEnvironnement().getStructWarBrain(this.getBrain().getID()).setFirstTargetFound();
+		} catch (NotExistException e) {
+			e.printStackTrace();
 		}
 	}
 	
 	private boolean imSearcher() {
-		if (Environnement.CHEAT) {
-			if (Environnement.idSearcherBase == -1) {
-				Environnement.idSearcherBase = this.getBrain().getID();
-			}
-			
-			return (Environnement.idSearcherBase == this.getBrain().getID());
+		if (getEnvironnement().idSearcherBase == -1) {
+			getEnvironnement().idSearcherBase = this.getBrain().getID();
 		}
 		
-		return (this.getBrain().getID() == 1);
+		return (Environnement.idSearcherBase == this.getBrain().getID());
 	}
 	
 	private boolean ourBaseIsFound() {
-		if (Environnement.CHEAT) {
-			try {
-				Environnement.getInstance().getWeAreInTop();
-				return true;
-			} catch (BaseNotFoundException e) {
-				return false;
-			}
+		try {
+			getEnvironnement().getWeAreInTop();
+			return true;
+		} catch (BaseNotFoundException e) {
+			return false;
 		}
-		
-		return this.baseIsFound;
 	}
 
-
 	private boolean baseEnemyIsFound() {
-		if (Environnement.CHEAT) {
-			try {
-				Environnement.getInstance().getPositionFirstEnemyBase();
-				return true;
-			} catch (NotExistException e) {
-				return false;
-			}
+		try {
+			getEnvironnement().getPositionFirstEnemyBase();
+			return true;
+		} catch (NotExistException e) {
+			return false;
 		}
-		
-		return (this.target == null && baseIsFound);
 	}
 	
 	private Vector2 getPositionAprox() throws BaseNotFoundException {
-		if (Environnement.CHEAT)
-			return Environnement.getInstance().getApproxEnemyBasePosition();
-		
-		return this.target;
+		return getEnvironnement().getApproxEnemyBasePosition();
 	}
 	
 	private boolean imInSearchEnemyBaseGroup() {
@@ -191,9 +145,11 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	@Override
 	public String action() {
 		
-		if (Environnement.CHEAT) {
-			WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarExplorer);
+		if (eu == null) {
+			eu = new EnvironnementUpdater(getEnvironnement());
 		}
+		
+		eu.updateEnvironement(this.getBrain(), WarAgentType.WarExplorer);
 		
 		this.toReturn = WarExplorer.ACTION_MOVE;
 		
@@ -235,8 +191,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 					this.isInGave = true;
 					this.getBrain().setDebugString("return base");
 					
-					if (Environnement.CHEAT) {
-						this.target = Environnement.getInstance().getPositionAllieBaseWithLowLife();
+					if (Behavior.CHEAT) {
+						this.target = getEnvironnement().getPositionAllieBaseWithLowLife();
 					} else {
 						this.target = new Vector2(0,0);
 					}
@@ -263,9 +219,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 					}
 					this.target = this.getTargetFood();
 				}
-
 			}
-			
 			
 			if (getBrain().isBlocked()) {
 				getBrain().setHeading(getBrain().getHeading()+20);

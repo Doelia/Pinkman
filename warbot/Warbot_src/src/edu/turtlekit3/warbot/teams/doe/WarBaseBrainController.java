@@ -7,11 +7,15 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
 import edu.turtlekit3.warbot.teams.demo.Constants;
+import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
-import edu.turtlekit3.warbot.teams.doe.tools.WarBrainUtils;
+import edu.turtlekit3.warbot.teams.doe.environement.EnvironnementUpdater;
 
 public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
+	private EnvironnementUpdater eu = null;
+	private Environnement e;
+	
 	public WarBaseBrainController() {
 		super();
 		Environnement.clear();
@@ -19,35 +23,39 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	
 	private void broadcastPosition() {
 		getBrain().broadcastMessageToAll(Constants.here, "");
-		getBrain().broadcastMessageToAll(Constants.whereAreYou, Environnement.getInstance().toString());
+	}
+	
+	private Environnement getEnvironnement() {
+		if (Behavior.CHEAT) {
+			return Environnement.getInstance();
+		} else {
+			if (e == null) {
+				e = new Environnement();
+			}
+			return e;
+		}
 	}
 	
 	@Override
 	public String action() {
 		
-		
-		if (Environnement.CHEAT) {
-			WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarBase);
+		if (eu == null) {
+			eu = new EnvironnementUpdater(getEnvironnement());
 		}
 		
-		if (Environnement.CHEAT) {
-			Environnement ev = Environnement.getInstance();
-			ArrayList<WarPercept> percept = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
-			if(percept.size() > 0) {
-				ev.getTeamManager().setBaseAttacked(true);
-			} else {
-				ev.getTeamManager().setBaseAttacked(false);
-			}
-		}
+		eu.updateEnvironement(this.getBrain(), WarAgentType.WarBase);
 		
-		
-		if (Environnement.CHEAT) {
-			Environnement.getInstance().setMainBase(this.getBrain());
-			if (Environnement.getInstance().isMainBase(this.getBrain()))
-				this.broadcastPosition();
+		Environnement ev = this.getEnvironnement();
+		ArrayList<WarPercept> percept = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+		if(percept.size() > 0) {
+			ev.getTeamManager().setBaseAttacked(true);
 		} else {
-			this.broadcastPosition();
+			ev.getTeamManager().setBaseAttacked(false);
 		}
+		
+		ev.setMainBase(this.getBrain());
+		if (ev.isMainBase(this.getBrain()))
+			this.broadcastPosition();
 		
 		this.getBrain().setDebugString("Bag "+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize()+" - life "+this.getBrain().getHealth());
 		

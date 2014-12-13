@@ -9,13 +9,14 @@ import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarRocketLauncherAbstractBrainController;
+import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
+import edu.turtlekit3.warbot.teams.doe.environement.EnvironnementUpdater;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTeamFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 import edu.turtlekit3.warbot.teams.doe.teams.Group;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
-import edu.turtlekit3.warbot.teams.doe.tools.WarBrainUtils;
 
 public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractBrainController {
 
@@ -25,18 +26,38 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	int maxDistanceToTarget = 50;
 	int isOnTop;
 	int lastBaseFoundId = -1;
+	
+	private EnvironnementUpdater eu = null;
+	private Environnement e;
 
 	public WarRocketLauncherBrainController() {
 		super();
 		newPosition();
 		isOnTop = 0;
 	}
+	
+	private Environnement getEnvironnement() {
+		if (Behavior.CHEAT) {
+			return Environnement.getInstance();
+		} else {
+			if (e == null) {
+				e = new Environnement();
+			}
+			return e;
+		}
+	}
+	
 	@Override
 	public String action() {
-		WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarRocketLauncher);
+		
+		if (eu == null) {
+			eu = new EnvironnementUpdater(getEnvironnement());
+		}
+		
+		eu.updateEnvironement(this.getBrain(), WarAgentType.WarRocketLauncher);
 
 		try {
-			boolean top = Environnement.getInstance().getWeAreInTop();
+			boolean top = getEnvironnement().getWeAreInTop();
 			isOnTop = ((top)?-1:1);
 		} catch (BaseNotFoundException e) {}
 
@@ -66,7 +87,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			return WarRocketLauncher.ACTION_RELOAD;
 		}
 
-		Environnement ev = Environnement.getInstance();
+		Environnement ev = this.getEnvironnement();
 		ArrayList<WarPercept> percept = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
 		percept.addAll(getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase));
 		// Je un agentType dans le percept
@@ -168,7 +189,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 
 	public String move() {
-		Environnement ev = Environnement.getInstance();
+		Environnement ev = this.getEnvironnement();
 		try {
 			Group t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
 			try {

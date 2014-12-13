@@ -37,5 +37,7 @@ public class Behavior {
 		WarAgent wa = t.getAgentWithID(brain.getID());
 		return wa;
 	}
+
+	public static final boolean CHEAT = false;
 	
 }

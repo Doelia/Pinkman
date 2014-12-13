@@ -19,7 +19,6 @@ import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
 public class Environnement {
 
-	public static final boolean CHEAT = true;
 	public static boolean RUSH_MODE = true;
 
 	private static Environnement instance;
@@ -45,7 +44,7 @@ public class Environnement {
 	private boolean killedFirstBase;
 	private Boolean weAreInTop = null; // En haut à droite, null si on sait pas encore
 
-	private Environnement() {
+	public Environnement() {
 		tm = new TeamManager();
 		mainBase = null;
 		takenFood = new Stack<Integer>();

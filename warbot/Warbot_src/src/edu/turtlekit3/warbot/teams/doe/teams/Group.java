@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
+import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
@@ -19,6 +20,7 @@ public class Group {
 	private boolean leaderCanShoot;
 	private int angle;
 	boolean isBaseAttacked;
+	Environnement e = null;
 
 	public Group() {
 		members = new ArrayList<Integer>();
@@ -84,13 +86,20 @@ public class Group {
 		}
 	}
 	
+	private Environnement getEnvironnement() {
+		if (Behavior.CHEAT)
+			return Environnement.getInstance();
+		else
+			return this.e;
+	}
+	
 	public Vector2 getBaseAttackPosition(Integer brainId) throws NotExistException {
 		try {
-			Vector2 base = Environnement.getInstance().getPositionFirstEnemyBase();
+			Vector2 base = getEnvironnement().getPositionFirstEnemyBase();
 			int index = members.indexOf(brainId);
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
-			float alpha = tick*index + Environnement.getInstance().getIndexOfTeam(this) * 7;
+			float alpha = tick*index + getEnvironnement().getIndexOfTeam(this) * 7;
 			Vector2 target = Tools.cartFromPolaire(alpha, 30);
 			target.add(base);
 			return target;
@@ -102,8 +111,8 @@ public class Group {
 	public Vector2 getMovementPosition(Integer brainId) throws NotExistException {
 		try {
 			Vector2 position = new Vector2();
-			if (Environnement.CHEAT) {
-				position = new Vector2(Environnement.getInstance().getStructWarBrain(getLeader()).getPosition());
+			if (Behavior.CHEAT) {
+				position = new Vector2(getEnvironnement().getStructWarBrain(getLeader()).getPosition());
 			}
 			
 			int index = 1 + (members.indexOf(brainId) + battleModifier) % (getSize() - 1);
