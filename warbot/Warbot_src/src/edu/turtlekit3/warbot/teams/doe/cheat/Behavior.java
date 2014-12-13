@@ -38,6 +38,6 @@ public class Behavior {
 		return wa;
 	}
 
-	public static final boolean CHEAT = false;
+	public static final boolean CHEAT = true;
 	
 }

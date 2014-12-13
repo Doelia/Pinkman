@@ -7,7 +7,7 @@ import edu.turtlekit3.warbot.communications.WarMessage;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 
 
-public class UpdateEnvironementInstruction {
+public class ReceiverEnvironementInstruction {
 
 	Environnement e;
 	
