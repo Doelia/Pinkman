@@ -1,10 +1,12 @@
-package edu.turtlekit3.warbot.teams.doe.clean;
+package edu.turtlekit3.warbot.teams.doe.tools;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.brains.WarBrain;
+import edu.turtlekit3.warbot.teams.doe.environement.StructWarBrainAllie;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
 
 public class Tools {
@@ -88,6 +90,15 @@ public class Tools {
 			throw new NoTargetFoundException();
 		}
 	}
+	
+	public static boolean containVector(Stack<Vector2> list, Vector2 v) {
+		for (Vector2 i : list) {
+			if (Tools.isSame(v, i))
+				return true;
+		}
+		return false;
+	}
+
 
 
 	

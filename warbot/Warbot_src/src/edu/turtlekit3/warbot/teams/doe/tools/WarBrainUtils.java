@@ -1,4 +1,4 @@
-package edu.turtlekit3.warbot.teams.doe.cheat;
+package edu.turtlekit3.warbot.teams.doe.tools;
 
 import com.badlogic.gdx.math.Vector2;
 
@@ -7,8 +7,9 @@ import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.communications.WarMessage;
 import edu.turtlekit3.warbot.teams.demo.Constants;
-import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainAllie;
-import edu.turtlekit3.warbot.teams.doe.clean.Tools;
+import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
+import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
+import edu.turtlekit3.warbot.teams.doe.environement.StructWarBrainAllie;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 /**
@@ -20,7 +21,7 @@ public class WarBrainUtils {
 
 	private static WarMessage getMessageFromBase(WarBrain brain) {
 		for (WarMessage m : brain.getMessages()) {
-			if(m.getSenderType().equals(WarAgentType.WarBase) && m.getMessage().equals(Constants.here))
+			if (m.getSenderType().equals(WarAgentType.WarBase) && m.getMessage().equals(Constants.here))
 				return m;
 		}
 

@@ -1,4 +1,4 @@
-package edu.turtlekit3.warbot.teams.doe.cheat;
+package edu.turtlekit3.warbot.teams.doe.environement;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,20 +10,18 @@ import com.badlogic.gdx.math.Vector2;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
-import edu.turtlekit3.warbot.teams.doe.clean.Group;
-import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrain;
-import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainAllie;
-import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainEnemy;
-import edu.turtlekit3.warbot.teams.doe.clean.Tools;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
+import edu.turtlekit3.warbot.teams.doe.teams.Group;
+import edu.turtlekit3.warbot.teams.doe.teams.TeamManager;
+import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
 public class Environnement {
 
 	public static final boolean CHEAT = true;
 	public static boolean RUSH_MODE = true;
-	
+
 	private static Environnement instance;
 	public static Environnement getInstance() {
 		if (instance == null) {
@@ -38,15 +36,14 @@ public class Environnement {
 	}
 
 	public static int idSearcherBase = -1;
-	public Boolean weAreInTop = null; // En haut à droite, null si on sait pas encore
-
+	
 	private TeamManager tm;
 	private WarBaseBrain mainBase;
 	private Stack<Integer> takenFood;
-	public HashMap<Integer, StructWarBrainAllie> listAllies;
-	public HashMap<Integer, StructWarBrainEnemy> listEnemies;
-	private int voteToKillNumber;
+	private HashMap<Integer, StructWarBrainAllie> listAllies;
+	private HashMap<Integer, StructWarBrainEnemy> listEnemies;
 	private boolean killedFirstBase;
+	private Boolean weAreInTop = null; // En haut à droite, null si on sait pas encore
 
 	private Environnement() {
 		tm = new TeamManager();
@@ -54,74 +51,17 @@ public class Environnement {
 		takenFood = new Stack<Integer>();
 		listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
 		listEnemies = new HashMap<Integer, StructWarBrainEnemy>();
-		voteToKillNumber = 0;
 		killedFirstBase = false;
 	}
 
-	public int getIndexOfTeam(Group t) {
-		return tm.getIndexOfTeam(t);
-	}
+	/*** ECRITURE **/
 
 	public void setWeAreInTop(boolean weAreInTop) {
 		this.weAreInTop = weAreInTop;
 	}
 
-	public boolean getWeAreInTop() throws BaseNotFoundException {
-		if (weAreInTop == null)
-			throw new BaseNotFoundException();
-		return weAreInTop;
-	}
-	
-	public Vector2 getPositionAllieBaseWithLowLife() {
-		Vector2 base = new Vector2(0, 0);
-		int life = 12000;
-		for (StructWarBrainAllie s : this.getListAllies()) {
-			if (s.isBase() && s.getHealth() < life) {
-				try {
-					base = s.getPosition();
-					life = s.getHealth();
-				} catch (NotExistException e) {
-				}
-			}
-		}
-		return base;
-	}
-	
 	public void voteToKillBase(Integer baseId) {
 		listEnemies.get(baseId).decrementTtl();
-	}
- 
-	// TODO Vérifier que les coordonées sont bien dans la carte, au cas ou si la carte change
-	public Vector2 getApproxEnemyBasePosition() throws BaseNotFoundException {
-		boolean top;
-		try {
-			top = getWeAreInTop();
-			if(top) {
-				return new Vector2(-780, -420);
-			} else {
-				return new Vector2(780, 420);
-			}
-		} catch (BaseNotFoundException e) {
-			throw new BaseNotFoundException();
-		}
-		
-		
-	}
-
-	public boolean isMainBase(WarBaseBrain b) {
-		return (mainBaseIsDefined() && b.getID() == this.mainBase.getID());
-	}
-
-	public WarBaseBrain getMainBase() {
-		return mainBase;
-	}
-
-	private boolean containVector(Stack<Vector2> list, Vector2 v) {
-		for (Vector2 i : list) {
-			if (Tools.isSame(v, i))
-				return true;
-		}
-		return false;
 	}
 
 	public void addFreeFood(Vector2 lastFood, int ID) {
@@ -133,6 +73,103 @@ public class Environnement {
 			} catch (NoTargetFoundException e) {
 			}
 		}
+	}
+
+	public void setMainBase(WarBaseBrain mainBase) {
+		if (!this.mainBaseIsDefined())
+			this.mainBase = mainBase;
+	}
+
+	public void updatePositionOfEnemy(int ID, Vector2 newPosCart, int life, WarAgentType type) {
+		this.clean();
+		StructWarBrainEnemy s = this.listEnemies.get(ID);
+		if (s != null) {
+			s.setPosition(newPosCart);
+			s.setLife(life);
+			if(type.equals(WarAgentType.WarBase)) {
+				s.resetTtl();
+			}
+		} else {
+			StructWarBrainEnemy x = new StructWarBrainEnemy(ID, newPosCart, life, type);
+			this.listEnemies.put(ID, x);
+		}
+		this.clean();
+	}
+
+	public void updatePositionOfAlly(WarBrain e, Vector2 newPosCart, WarAgentType type) {
+		this.clean();
+		StructWarBrain s = this.listAllies.get(e.getID());
+		if (s != null) {
+			s.setPosition(newPosCart);
+		} else {
+			StructWarBrainAllie x = new StructWarBrainAllie(e, newPosCart, type);
+			this.listAllies.put(e.getID(), x);
+		}
+		this.clean();
+	}
+
+	public void clean() {
+		try {
+			for (StructWarBrain s : listAllies.values()) {
+				if (!s.isAlive() || !s.positionIsUptodate()) {
+					listAllies.remove(s.getID());
+					tm.remove(s.getID());
+				}
+			}
+		} catch(Exception e) {}
+		try {
+			for (StructWarBrainEnemy s : listEnemies.values()) {
+				if (!s.isAlive() || s.getTtl() <= 0) {
+					if(s.isBase()) {
+						killedFirstBase = true;
+						System.out.println("removing base");
+					}
+					listEnemies.remove(s.getID());
+				} else {
+					if (!s.isBase() && !s.positionIsUptodate()) {
+						listEnemies.remove(s.getID());
+					}
+				}
+			}
+		} catch(Exception e) { }
+	}
+
+
+	/** LECTURE **/
+
+	// TODO Vérifier que les coordonées sont bien dans la carte, au cas ou si la carte change
+	public Vector2 getApproxEnemyBasePosition() throws BaseNotFoundException {
+		boolean top;
+		try {
+			top = getWeAreInTop();
+			if(top) {
+				return new Vector2(-750, -400);
+			} else {
+				return new Vector2(750, 400);
+			}
+		} catch (BaseNotFoundException e) {
+			throw new BaseNotFoundException();
+		}
+
+	}
+
+	public boolean isMainBase(WarBaseBrain b) {
+		return (mainBaseIsDefined() && b.getID() == this.mainBase.getID());
+	}
+
+	public WarBaseBrain getMainBase() {
+		return mainBase;
+	}
+
+
+	public boolean getWeAreInTop() throws BaseNotFoundException {
+		if (weAreInTop == null)
+			throw new BaseNotFoundException();
+		return weAreInTop;
+	}
+
+	public int getIndexOfTeam(Group t) {
+		return tm.getIndexOfTeam(t);
 	}
 
 	public ArrayList<StructWarBrainAllie> getExplorersCanTakeFood() {
@@ -168,7 +205,7 @@ public class Environnement {
 			throw new NotExistException();
 		}
 	}
-	
+
 	public int getFirstEnemyBase() {
 		return this.getEnemyBases().get(0);
 	}
@@ -179,11 +216,6 @@ public class Environnement {
 
 	public boolean mainBaseIsDefined() {
 		return (this.mainBase != null);
-	}
-
-	public void setMainBase(WarBaseBrain mainBase) {
-		if (!this.mainBaseIsDefined())
-			this.mainBase = mainBase;
 	}
 
 	public Collection<StructWarBrainEnemy> getEnemies() {
@@ -199,34 +231,6 @@ public class Environnement {
 		}
 	}
 
-	public void updatePositionOfEnemy(int ID, Vector2 newPosCart, int life, WarAgentType type) {
-		this.clean();
-		StructWarBrainEnemy s = this.listEnemies.get(ID);
-		if (s != null) {
-			s.setPosition(newPosCart);
-			s.setLife(life);
-			if(type.equals(WarAgentType.WarBase)) {
-				s.resetTtl();
-			}
-		} else {
-			StructWarBrainEnemy x = new StructWarBrainEnemy(ID, newPosCart, life, type);
-			this.listEnemies.put(ID, x);
-		}
-		this.clean();
-	}
-
-	public void updatePositionOfAlly(WarBrain e, Vector2 newPosCart, WarAgentType type) {
-		this.clean();
-		StructWarBrain s = this.listAllies.get(e.getID());
-		if (s != null) {
-			s.setPosition(newPosCart);
-		} else {
-			StructWarBrainAllie x = new StructWarBrainAllie(e, newPosCart, type);
-			this.listAllies.put(e.getID(), x);
-		}
-		this.clean();
-	}
-
 	public StructWarBrainAllie getStructWarBrain(int id) throws NotExistException {
 		clean();
 		try {
@@ -237,36 +241,11 @@ public class Environnement {
 			throw new NotExistException();
 		}
 	}
-	
+
 	public boolean killedFirstBase() {
 		return killedFirstBase;
 	}
 
-	public void clean() {
-		try {
-			for (StructWarBrain s : listAllies.values()) {
-				if (!s.isAlive() || !s.positionIsUptodate()) {
-					listAllies.remove(s.getID());
-					tm.remove(s.getID());
-				}
-			}
-		} catch(Exception e) {}
-		try {
-			for (StructWarBrainEnemy s : listEnemies.values()) {
-				if (!s.isAlive() || s.getTtl() <= 0) {
-					if(s.isBase()) {
-						killedFirstBase = true;
-						System.out.println("removing base");
-					}
-					listEnemies.remove(s.getID());
-				} else {
-					if (!s.isBase() && !s.positionIsUptodate()) {
-						listEnemies.remove(s.getID());
-					}
-				}
-			}
-		} catch(Exception e) { }
-	}
 
 	public TeamManager getTeamManager() {
 		return this.tm;
@@ -344,6 +323,23 @@ public class Environnement {
 			throw new NoTargetFoundException();
 		}
 	}
+
+	public Vector2 getPositionAllieBaseWithLowLife() {
+		Vector2 base = new Vector2(0, 0);
+		int life = 12000;
+		for (StructWarBrainAllie s : this.getListAllies()) {
+			if (s.isBase() && s.getHealth() < life) {
+				try {
+					base = s.getPosition();
+					life = s.getHealth();
+				} catch (NotExistException e) {
+				}
+			}
+		}
+		return base;
+	}
+
+
 
 
 }

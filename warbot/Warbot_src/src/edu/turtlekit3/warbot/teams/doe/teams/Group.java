@@ -1,12 +1,13 @@
-package edu.turtlekit3.warbot.teams.doe.clean;
+package edu.turtlekit3.warbot.teams.doe.teams;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
-import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
+import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
+import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
 public class Group {
 	private ArrayList<Integer> members;

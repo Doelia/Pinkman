@@ -7,8 +7,8 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
 import edu.turtlekit3.warbot.teams.demo.Constants;
-import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
-import edu.turtlekit3.warbot.teams.doe.cheat.WarBrainUtils;
+import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
+import edu.turtlekit3.warbot.teams.doe.tools.WarBrainUtils;
 
 public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
@@ -19,6 +19,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	
 	private void broadcastPosition() {
 		getBrain().broadcastMessageToAll(Constants.here, "");
+		getBrain().broadcastMessageToAll(Constants.whereAreYou, Environnement.getInstance().toString());
 	}
 	
 	@Override

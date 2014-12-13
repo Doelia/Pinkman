@@ -9,13 +9,13 @@ import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarRocketLauncherAbstractBrainController;
-import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
-import edu.turtlekit3.warbot.teams.doe.cheat.WarBrainUtils;
-import edu.turtlekit3.warbot.teams.doe.clean.Group;
-import edu.turtlekit3.warbot.teams.doe.clean.Tools;
+import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTeamFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
+import edu.turtlekit3.warbot.teams.doe.teams.Group;
+import edu.turtlekit3.warbot.teams.doe.tools.Tools;
+import edu.turtlekit3.warbot.teams.doe.tools.WarBrainUtils;
 
 public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractBrainController {
 

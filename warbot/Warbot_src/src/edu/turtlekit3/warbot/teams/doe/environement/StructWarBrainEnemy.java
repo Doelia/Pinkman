@@ -1,4 +1,4 @@
-package edu.turtlekit3.warbot.teams.doe.clean;
+package edu.turtlekit3.warbot.teams.doe.environement;
 
 import com.badlogic.gdx.math.Vector2;
 
