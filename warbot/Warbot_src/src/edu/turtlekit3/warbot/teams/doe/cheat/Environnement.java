@@ -34,6 +34,7 @@ public class Environnement {
 
 	public static void clear() {
 		instance = null;
+		idSearcherBase = -1;
 	}
 
 	public static int idSearcherBase = -1;
@@ -64,12 +65,18 @@ public class Environnement {
 	}
 
 	public Vector2 getApproxEnemyBasePosition() throws BaseNotFoundException {
-		boolean top = getWeAreInTop();
-		if(top) {
-			return new Vector2(-1400, -700);
-		} else {
-			return new Vector2(1400, 700);
+		boolean top;
+		try {
+			top = getWeAreInTop();
+			if(top) {
+				return new Vector2(-780, -420);
+			} else {
+				return new Vector2(780, 420);
+			}
+		} catch (BaseNotFoundException e) {
+			throw new BaseNotFoundException();
 		}
+		
 	}
 
 	public boolean isMainBase(WarBaseBrain b) {
