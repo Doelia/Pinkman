@@ -40,7 +40,7 @@ public abstract class StructWarBrain {
 	public abstract int getHealth();
 
 	public Vector2 getPosition() throws NotExistException {
-		if(!isAlive()) {
+		if (!isAlive()) {
 			throw new NotExistException();
 		}
 		return posCart;

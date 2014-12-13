@@ -23,9 +23,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 	private Environnement ev;
 	
+	private MoveTask activeTask = null;
+	private String action;
 	private boolean isInGave = false;
 	private boolean haveTouchAproxTarget = false;
-	private MoveTask activeTask = null;
 	
 	public boolean isAWall() {
 		return (this.getBrain().isBlocked() && this.getBrain().getPercepts().isEmpty());
@@ -34,8 +35,6 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	public WarExplorerBrainController() {
 		super();
 	}
-
-	private String toReturn;
 	
 	private Environnement getEnvironnement() {
 		if (Behavior.CHEAT)
@@ -118,7 +117,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		if (activeTask == null)
 			activeTask = new MoveTask(this, t, e);
 		
-		this.toReturn = WarExplorer.ACTION_MOVE;
+		this.action = WarExplorer.ACTION_MOVE;
 		
 		try {
 			
@@ -165,7 +164,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 						WarPercept base = basePercepts.get(0);
 						if (base.getDistance() < MovableWarAgent.MAX_DISTANCE_GIVE){
 							getBrain().setIdNextAgentToGive(base.getID());
-							toReturn = MovableWarAgent.ACTION_GIVE;
+							action = MovableWarAgent.ACTION_GIVE;
 						}
 					}
 					
@@ -175,7 +174,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 						this.getBrain().setDebugString("target food");
 						if (Tools.isNextTo(curentPosition, this.getTargetFood(), MovableWarAgent.MAX_DISTANCE_GIVE)) {
 							this.getBrain().setDebugString("taking food");
-							toReturn = MovableWarAgent.ACTION_TAKE;
+							action = MovableWarAgent.ACTION_TAKE;
 							getEnvironnement().getStructWarBrain(this.getBrain().getID()).setFirstTargetFound();
 						}
 					}
@@ -190,7 +189,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		} catch (BaseNotFoundException ex) {
 		}
 		
-		return toReturn;
+		return action;
 
 
 	}
