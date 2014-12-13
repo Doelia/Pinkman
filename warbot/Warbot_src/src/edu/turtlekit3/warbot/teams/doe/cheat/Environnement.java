@@ -14,7 +14,6 @@ import edu.turtlekit3.warbot.teams.doe.clean.Group;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrain;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainAllie;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainEnemy;
-import edu.turtlekit3.warbot.teams.doe.clean.TeamManager;
 import edu.turtlekit3.warbot.teams.doe.clean.Tools;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
@@ -66,9 +65,9 @@ public class Environnement {
 	public Vector2 getApproxEnemyBasePosition() throws BaseNotFoundException {
 		boolean top = getWeAreInTop();
 		if(top) {
-			return new Vector2(-1400, -700);
+			return new Vector2(-200, -200);
 		} else {
-			return new Vector2(1400, 700);
+			return new Vector2(200, 200);
 		}
 	}
 

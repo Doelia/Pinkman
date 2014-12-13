@@ -21,6 +21,9 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private Vector2 targetFood = null;
 	private Vector2 target = new Vector2(0, 0);
 	private boolean isInGave = false;
+	private boolean baseIsFound = false;
+	private int pos = 0;
+	private boolean haveTouchAproxTarget = false;
 	
 	public boolean isAWall() {
 		return (this.getBrain().isBlocked() && this.getBrain().getPercepts().isEmpty());
@@ -37,29 +40,49 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			getBrain().broadcastMessageToAll(Constants.foodHere, this.targetFood.toString());
 	}
 	
+	private void broadcastOurBasePosition() {
+		getBrain().broadcastMessageToAll(Constants.enemyBaseHere, this.pos+"");
+	}
+	
 	
 	int distance = 0;
-	private String findBase() {
+	private String findOurPositionBase() {
 		
-		if (this.isAWall()) {
-			System.out.println("Base en haut à droite");
-			Environnement.getInstance().setWeAreInTop(true);
-			return MovableWarAgent.ACTION_IDLE;
-		}
-		
-		if (this.distance > 200) {
-			System.out.println("Base en bas à droite");
-			Environnement.getInstance().setWeAreInTop(false);
-			return MovableWarAgent.ACTION_IDLE;
+		if (Environnement.CHEAT) {
+			if (this.isAWall()) {
+				System.out.println("Base en haut à droite");
+				Environnement.getInstance().setWeAreInTop(true);
+				return MovableWarAgent.ACTION_IDLE;
+			}
+			
+			if (this.distance > 200) {
+				System.out.println("Base en bas à droite");
+				Environnement.getInstance().setWeAreInTop(false);
+				return MovableWarAgent.ACTION_IDLE;
+			}
+		} else {
+			if (this.isAWall()) {
+				this.baseIsFound = true;
+				this.pos = 1;
+			}
+			
+			if (this.distance > 200) {
+				this.baseIsFound = false;
+				this.pos = 2;
+			}
+			
+			this.broadcastOurBasePosition();
 		}
 		
 		this.getBrain().setHeading(0);
-		distance++;
+		if (!this.getBrain().isBlocked())
+			distance++;
+		
 		this.getBrain().setDebugString("distance="+distance);
 		return MovableWarAgent.ACTION_MOVE;
 	}
 
-	private void findFood() {
+	private void recordFood() {
 		try {
 			Vector2 curentPosition = this.getCurentPosition();
 			ArrayList<WarPercept> foodPercepts = getBrain().getPerceptsResources();
@@ -124,10 +147,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			return (Environnement.idSearcherBase == this.getBrain().getID());
 		}
 		
-		return false;
+		return (this.getBrain().getID() == 1);
 	}
 	
-	private boolean baseIsFound() {
+	private boolean outBaseIsFound() {
 		if (Environnement.CHEAT) {
 			try {
 				Environnement.getInstance().getWeAreInTop();
@@ -137,65 +160,104 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			}
 		}
 		
-		return false; // TODO
+		return this.baseIsFound;
 	}
 
 
+	private boolean baseEnemyIsFound() {
+		if (Environnement.CHEAT) {
+			try {
+				Environnement.getInstance().getPositionFirstEnemyBase();
+				return true;
+			} catch (NotExistException e) {
+				return false;
+			}
+		}
+		
+		return (this.target == null && baseIsFound);
+	}
+	
+	private Vector2 getPositionAprox() throws BaseNotFoundException {
+		if (Environnement.CHEAT)
+			return Environnement.getInstance().getApproxEnemyBasePosition();
+		
+		return this.target;
+	}
+	
 	@Override
 	public String action() {
 		
 		if (Environnement.CHEAT) {
 			WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarExplorer);
-			
 		}
 		
-		if (!this.baseIsFound()) {
-			if (this.imSearcher())
-				return this.findBase();
-		}
-		
-		toReturn = WarExplorer.ACTION_MOVE;
+		this.toReturn = WarExplorer.ACTION_MOVE;
 		
 		try {
 			
 			Vector2 curentPosition = this.getCurentPosition();
+			this.recordFood();
 			
-			this.findFood();
-			
-			if (this.getBrain().isBagEmpty()) {
-				this.isInGave = false;
-			}
-			
-			if ((getBrain().isBagFull() || this.isInGave)){
-				this.isInGave = true;
-				this.getBrain().setDebugString("return base");
+			if (!this.baseEnemyIsFound()) {
 				
-				this.target = new Vector2(0,0);
-				ArrayList<WarPercept> basePercepts = getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
-
-				if(basePercepts != null && basePercepts.size() > 0){
-					WarPercept base = basePercepts.get(0);
-					if (base.getDistance() < MovableWarAgent.MAX_DISTANCE_GIVE){
-						getBrain().setIdNextAgentToGive(base.getID());
-						toReturn = MovableWarAgent.ACTION_GIVE;
+				if (this.outBaseIsFound()) {
+					this.getBrain().setDebugString("going to aprox enemy base");
+					
+					this.target = this.getPositionAprox();
+					
+					if (Tools.isNextTo(curentPosition, target, 5)) {
+						this.haveTouchAproxTarget = true;
+					}
+					
+					if (this.haveTouchAproxTarget) {
+						this.target = null;
+					}
+					
+				} else {
+					if (this.imSearcher()) {
+						this.getBrain().setDebugString("searching our base position");
+						return this.findOurPositionBase();
 					}
 				}
 				
 			} else {
 				
-				if (this.getTargetFood() != null) {
-					this.getBrain().setDebugString("target food");
-					if (Tools.isNextTo(curentPosition, this.getTargetFood(), MovableWarAgent.MAX_DISTANCE_GIVE)) {
-						this.getBrain().setDebugString("taking food");
-						toReturn = MovableWarAgent.ACTION_TAKE;
-						this.disableFoodTarget();
-					}
+				if (this.getBrain().isBagEmpty()) {
+					this.isInGave = false;
 				}
-				this.target = this.getTargetFood();
-			}
+				
+				if ((getBrain().isBagFull() || this.isInGave)){
+					this.isInGave = true;
+					this.getBrain().setDebugString("return base");
+					
+					this.target = new Vector2(0,0);
+					ArrayList<WarPercept> basePercepts = getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
 
+					if(basePercepts != null && basePercepts.size() > 0){
+						WarPercept base = basePercepts.get(0);
+						if (base.getDistance() < MovableWarAgent.MAX_DISTANCE_GIVE){
+							getBrain().setIdNextAgentToGive(base.getID());
+							toReturn = MovableWarAgent.ACTION_GIVE;
+						}
+					}
+					
+				} else {
+					
+					if (this.getTargetFood() != null) {
+						this.getBrain().setDebugString("target food");
+						if (Tools.isNextTo(curentPosition, this.getTargetFood(), MovableWarAgent.MAX_DISTANCE_GIVE)) {
+							this.getBrain().setDebugString("taking food");
+							toReturn = MovableWarAgent.ACTION_TAKE;
+							this.disableFoodTarget();
+						}
+					}
+					this.target = this.getTargetFood();
+				}
+
+			}
+			
+			
 			if (getBrain().isBlocked()) {
-				this.getBrain().setDebugString("blocked");
 				getBrain().setHeading(getBrain().getHeading()+20);
 			} else {
 				if (target == null) {
@@ -207,9 +269,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			}
 
 		}  catch (NotExistException e) {
+		} catch (BaseNotFoundException e) {
 		}
-		
-		this.getBrain().setDebugString("bagSize="+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize());
 		
 		return toReturn;
 
