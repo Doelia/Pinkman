@@ -13,6 +13,7 @@ import edu.turtlekit3.warbot.teams.demo.Constants;
 import edu.turtlekit3.warbot.teams.doe.cheat.Environnement;
 import edu.turtlekit3.warbot.teams.doe.cheat.WarBrainUtils;
 import edu.turtlekit3.warbot.teams.doe.clean.Tools;
+import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
 public class WarExplorerBrainController extends WarExplorerAbstractBrainController {
@@ -20,6 +21,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private Vector2 targetFood = null;
 	private Vector2 target = new Vector2(0, 0);
 	private boolean isInGave = false;
+	
+	public boolean isAWall() {
+		return (this.getBrain().isBlocked() && this.getBrain().getPercepts().isEmpty());
+	}
 
 	public WarExplorerBrainController() {
 		super();
@@ -30,6 +35,28 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private void broadcastFoodPosition() {
 		if (!Environnement.CHEAT)
 			getBrain().broadcastMessageToAll(Constants.foodHere, this.targetFood.toString());
+	}
+	
+	
+	int distance = 0;
+	private String findBase() {
+		
+		if (this.isAWall()) {
+			System.out.println("Base en haut à droite");
+			Environnement.getInstance().setWeAreInTop(true);
+			return MovableWarAgent.ACTION_IDLE;
+		}
+		
+		if (this.distance > 200) {
+			System.out.println("Base en bas à droite");
+			Environnement.getInstance().setWeAreInTop(false);
+			return MovableWarAgent.ACTION_IDLE;
+		}
+		
+		this.getBrain().setHeading(0);
+		distance++;
+		this.getBrain().setDebugString("distance="+distance);
+		return MovableWarAgent.ACTION_MOVE;
 	}
 
 	private void findFood() {
@@ -87,6 +114,31 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			this.targetFood = null;
 		}
 	}
+	
+	private boolean imSearcher() {
+		if (Environnement.CHEAT) {
+			if (Environnement.idSearcherBase == -1) {
+				Environnement.idSearcherBase = this.getBrain().getID();
+			}
+			
+			return (Environnement.idSearcherBase == this.getBrain().getID());
+		}
+		
+		return false;
+	}
+	
+	private boolean baseIsFound() {
+		if (Environnement.CHEAT) {
+			try {
+				Environnement.getInstance().getWeAreInTop();
+				return true;
+			} catch (BaseNotFoundException e) {
+				return false;
+			}
+		}
+		
+		return false; // TODO
+	}
 
 
 	@Override
@@ -94,8 +146,14 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		
 		if (Environnement.CHEAT) {
 			WarBrainUtils.doStuff(this.getBrain(), WarAgentType.WarExplorer);
+			
 		}
-
+		
+		if (!this.baseIsFound()) {
+			if (this.imSearcher())
+				return this.findBase();
+		}
+		
 		toReturn = WarExplorer.ACTION_MOVE;
 		
 		try {

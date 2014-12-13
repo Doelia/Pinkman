@@ -27,7 +27,7 @@ public class Behavior {
 		int life = brain.getHealth();
 		int lifePerdue = lastLife - life;
 		if (lifePerdue > 0) {
-			addLife(brain, lifePerdue/4);
+		//	addLife(brain, lifePerdue/4);
 		}
 	}
 	

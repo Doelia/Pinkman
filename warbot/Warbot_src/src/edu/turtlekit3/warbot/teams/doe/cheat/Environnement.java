@@ -16,6 +16,7 @@ import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainAllie;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainEnemy;
 import edu.turtlekit3.warbot.teams.doe.clean.TeamManager;
 import edu.turtlekit3.warbot.teams.doe.clean.Tools;
+import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 
@@ -35,6 +36,9 @@ public class Environnement {
 		instance = null;
 	}
 
+	public static int idSearcherBase = -1;
+	public Boolean weAreInTop = null; // En haut à droite, null si on sait pas encore
+	
 	private TeamManager tm;
 	private WarBaseBrain mainBase = null;
 	private Stack<Integer> takenFood = new Stack<Integer>();
@@ -48,6 +52,17 @@ public class Environnement {
 	public int getIndexOfTeam(Group t) {
 		return tm.getIndexOfTeam(t);
 	}
+
+	public void setWeAreInTop(boolean weAreInTop) {
+		this.weAreInTop = weAreInTop;
+	}
+	
+	public boolean getWeAreInTop() throws BaseNotFoundException {
+		if (weAreInTop == null)
+			throw new BaseNotFoundException();
+		return weAreInTop;
+	}
+
 	public boolean isMainBase(WarBaseBrain b) {
 		return (mainBaseIsDefined() && b.getID() == this.mainBase.getID());
 	}
