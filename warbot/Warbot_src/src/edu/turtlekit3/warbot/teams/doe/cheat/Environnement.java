@@ -22,7 +22,8 @@ import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 public class Environnement {
 
 	public static final boolean CHEAT = true;
-
+	public static boolean RUSH_MODE = false;
+	
 	private static Environnement instance;
 	public static Environnement getInstance() {
 		if (instance == null) {
@@ -69,6 +70,21 @@ public class Environnement {
 		if (weAreInTop == null)
 			throw new BaseNotFoundException();
 		return weAreInTop;
+	}
+	
+	public Vector2 getPositionAllieBaseWithLowLife() {
+		Vector2 base = new Vector2(0, 0);
+		int life = 12000;
+		for (StructWarBrainAllie s : this.getListAllies()) {
+			if (s.isBase() && s.getHealth() < life) {
+				try {
+					base = s.getPosition();
+					life = s.getHealth();
+				} catch (NotExistException e) {
+				}
+			}
+		}
+		return base;
 	}
 	
 	public void voteToKillBase(Integer baseId) {

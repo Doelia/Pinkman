@@ -19,7 +19,7 @@ import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 public class WarExplorerBrainController extends WarExplorerAbstractBrainController {
 
 	private Vector2 targetFood = null;
-	private Vector2 target = new Vector2(0, 0);
+	private Vector2 target = null;
 	private boolean isInGave = false;
 	private boolean baseIsFound = false;
 	private int pos = 0;
@@ -150,7 +150,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		return (this.getBrain().getID() == 1);
 	}
 	
-	private boolean outBaseIsFound() {
+	private boolean ourBaseIsFound() {
 		if (Environnement.CHEAT) {
 			try {
 				Environnement.getInstance().getWeAreInTop();
@@ -184,6 +184,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		return this.target;
 	}
 	
+	private boolean imInSearchEnemyBaseGroup() {
+		return this.imSearcher();
+	}
+	
 	@Override
 	public String action() {
 		
@@ -198,10 +202,11 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			Vector2 curentPosition = this.getCurentPosition();
 			this.recordFood();
 			
-			if (!this.baseEnemyIsFound()) {
+			if (!this.baseEnemyIsFound() && (Environnement.RUSH_MODE || this.imInSearchEnemyBaseGroup())) {
 				
-				if (this.outBaseIsFound()) {
-					this.getBrain().setDebugString("going to aprox enemy base");
+				if (this.ourBaseIsFound()) {
+					
+					this.getBrain().setDebugString("going to aprox enemy base: "+this.getPositionAprox());
 					
 					this.target = this.getPositionAprox();
 					
@@ -230,10 +235,15 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 					this.isInGave = true;
 					this.getBrain().setDebugString("return base");
 					
-					this.target = new Vector2(0,0);
+					if (Environnement.CHEAT) {
+						this.target = Environnement.getInstance().getPositionAllieBaseWithLowLife();
+					} else {
+						this.target = new Vector2(0,0);
+					}
+					
 					ArrayList<WarPercept> basePercepts = getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
 
-					if(basePercepts != null && basePercepts.size() > 0){
+					if(basePercepts != null && basePercepts.size() > 0) {
 						WarPercept base = basePercepts.get(0);
 						if (base.getDistance() < MovableWarAgent.MAX_DISTANCE_GIVE){
 							getBrain().setIdNextAgentToGive(base.getID());

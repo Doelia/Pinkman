@@ -48,6 +48,8 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 			this.broadcastPosition();
 		}
 		
+		this.getBrain().setDebugString("Bag "+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize()+" - life "+this.getBrain().getHealth());
+		
 		if (this.getBrain().getHealth() == 12000 && this.getBrain().isBagFull()) {
 			this.getBrain().setNextAgentToCreate(WarAgentType.WarRocketLauncher);
 			return WarBase.ACTION_CREATE;
