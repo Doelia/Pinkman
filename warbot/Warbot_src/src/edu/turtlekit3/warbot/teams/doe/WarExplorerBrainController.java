@@ -130,8 +130,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private boolean baseIsFound() {
 		if (Environnement.CHEAT) {
 			try {
-				return (Environnement.getInstance().getWeAreInTop() != null);
+				Environnement.getInstance().getWeAreInTop();
+				return true;
 			} catch (BaseNotFoundException e) {
+				return false;
 			}
 		}
 		
