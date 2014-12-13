@@ -14,7 +14,6 @@ import edu.turtlekit3.warbot.teams.doe.clean.Group;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrain;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainAllie;
 import edu.turtlekit3.warbot.teams.doe.clean.StructWarBrainEnemy;
-import edu.turtlekit3.warbot.teams.doe.clean.TeamManager;
 import edu.turtlekit3.warbot.teams.doe.clean.Tools;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
