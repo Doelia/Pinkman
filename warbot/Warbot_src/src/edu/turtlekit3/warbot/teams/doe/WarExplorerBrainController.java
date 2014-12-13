@@ -14,6 +14,8 @@ import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 import edu.turtlekit3.warbot.teams.doe.tasks.DetectEnemyTask;
+import edu.turtlekit3.warbot.teams.doe.tasks.DetectFoodTask;
+import edu.turtlekit3.warbot.teams.doe.tasks.MoveTask;
 import edu.turtlekit3.warbot.teams.doe.tasks.SendAlliesTask;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
@@ -21,9 +23,9 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 	private Environnement ev;
 	
-	private Vector2 target = null;
 	private boolean isInGave = false;
 	private boolean haveTouchAproxTarget = false;
+	private MoveTask activeTask = null;
 	
 	public boolean isAWall() {
 		return (this.getBrain().isBlocked() && this.getBrain().getPercepts().isEmpty());
@@ -69,42 +71,11 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		return MovableWarAgent.ACTION_MOVE;
 	}
 
-	private void recordFood() {
-		try {
-			Vector2 curentPosition = this.getCurentPosition();
-			ArrayList<WarPercept> foodPercepts = getBrain().getPerceptsResources();
-
-			if (foodPercepts != null && foodPercepts.size() > 0){
-				for (WarPercept p : foodPercepts) {
-						Vector2 pos = Tools.getPositionOfEntityFromMine(curentPosition, p.getAngle(), p.getDistance());
-						getEnvironnement().addFreeFood(pos, p.getID());
-				}
-			}
-		}  catch (NotExistException e) {
-		}
-	}
-	
 	public Vector2 getTargetFood() {
-			try {
-				return getEnvironnement().getStructWarBrain(this.getBrain().getID()).getTargetFood();
-			} catch (NotExistException e) {
-				return null;
-			}
-	}
-	
-	public Vector2 getCurentPosition() throws NotExistException {
 		try {
-			return getEnvironnement().getStructWarBrain(this.getBrain().getID()).getPosition();
-		} catch (Exception e) {
-			throw new NotExistException();
-		}
-	}
-	
-	public void disableFoodTarget() {
-		try {
-			getEnvironnement().getStructWarBrain(this.getBrain().getID()).setFirstTargetFound();
+			return getEnvironnement().getStructWarBrain(this.getBrain().getID()).getTargetFood();
 		} catch (NotExistException e) {
-			e.printStackTrace();
+			return null;
 		}
 	}
 	
@@ -116,14 +87,6 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		return (getEnvironnement().idSearcherBase == this.getBrain().getID());
 	}
 	
-	private boolean ourBaseIsFound() {
-		try {
-			getEnvironnement().getWeAreInTop();
-			return true;
-		} catch (BaseNotFoundException e) {
-			return false;
-		}
-	}
 
 	private boolean baseEnemyIsFound() {
 		try {
@@ -150,28 +113,31 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		
 		new DetectEnemyTask(this, t, e).exec();
 		new SendAlliesTask(this, t, e).exec();
+		new DetectFoodTask(this, t, e).exec();
+		
+		if (activeTask == null)
+			activeTask = new MoveTask(this, t, e);
 		
 		this.toReturn = WarExplorer.ACTION_MOVE;
 		
 		try {
 			
-			Vector2 curentPosition = this.getCurentPosition();
-			this.recordFood();
+			Vector2 curentPosition = activeTask.getCurentPosition();
 			
 			if (!this.baseEnemyIsFound() && (Environnement.RUSH_MODE || this.imInSearchEnemyBaseGroup())) {
 				
-				if (this.ourBaseIsFound()) {
+				if (this.getEnvironnement().ourBaseIsFound()) {
 					
 					this.getBrain().setDebugString("going to aprox enemy base: "+this.getPositionAprox());
 					
-					this.target = this.getPositionAprox();
+					this.activeTask.setTarget(this.getPositionAprox());
 					
-					if (Tools.isNextTo(curentPosition, target, 5)) {
+					if (Tools.isNextTo(curentPosition, activeTask.getTarget(), 5)) {
 						this.haveTouchAproxTarget = true;
 					}
 					
 					if (this.haveTouchAproxTarget) {
-						this.target = null;
+						this.activeTask.setTarget(null);
 					}
 					
 				} else {
@@ -191,11 +157,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 					this.isInGave = true;
 					this.getBrain().setDebugString("return base");
 					
-					if (Behavior.CHEAT) {
-						this.target = getEnvironnement().getPositionAllieBaseWithLowLife();
-					} else {
-						this.target = new Vector2(0,0);
-					}
+					this.activeTask.setTarget(getEnvironnement().getPositionAllieBaseWithLowLife());
 					
 					ArrayList<WarPercept> basePercepts = getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
 
@@ -214,23 +176,15 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 						if (Tools.isNextTo(curentPosition, this.getTargetFood(), MovableWarAgent.MAX_DISTANCE_GIVE)) {
 							this.getBrain().setDebugString("taking food");
 							toReturn = MovableWarAgent.ACTION_TAKE;
-							this.disableFoodTarget();
+							getEnvironnement().getStructWarBrain(this.getBrain().getID()).setFirstTargetFound();
 						}
 					}
-					this.target = this.getTargetFood();
+					this.activeTask.setTarget(this.getTargetFood());
 				}
 			}
 			
-			if (getBrain().isBlocked()) {
-				getBrain().setHeading(getBrain().getHeading()+20);
-			} else {
-				if (target == null) {
-					this.getBrain().setDebugString("randomised");
-					getBrain().setRandomHeading(20);
-				} else {
-					Tools.setHeadingOn(this.getBrain(), curentPosition, target);
-				}
-			}
+			this.activeTask.exec();
+			
 
 		}  catch (NotExistException ex) {
 		} catch (BaseNotFoundException ex) {

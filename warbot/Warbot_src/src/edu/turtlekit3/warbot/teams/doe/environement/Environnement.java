@@ -134,6 +134,16 @@ public class Environnement {
 
 
 	/** LECTURE **/
+	
+	
+	public boolean ourBaseIsFound() {
+		try {
+			this.getWeAreInTop();
+			return true;
+		} catch (BaseNotFoundException e) {
+			return false;
+		}
+	}
 
 	// TODO Vérifier que les coordonées sont bien dans la carte, au cas ou si la carte change
 	public Vector2 getApproxEnemyBasePosition() throws BaseNotFoundException {

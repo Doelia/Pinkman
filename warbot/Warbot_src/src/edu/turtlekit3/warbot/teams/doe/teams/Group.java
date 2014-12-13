@@ -110,10 +110,7 @@ public class Group {
 	
 	public Vector2 getMovementPosition(Integer brainId) throws NotExistException {
 		try {
-			Vector2 position = new Vector2();
-			if (Behavior.CHEAT) {
-				position = new Vector2(getEnvironnement().getStructWarBrain(getLeader()).getPosition());
-			}
+			Vector2 position = new Vector2(getEnvironnement().getStructWarBrain(getLeader()).getPosition());
 			
 			int index = 1 + (members.indexOf(brainId) + battleModifier) % (getSize() - 1);
 			int nbrPersonnes = members.size() - 1;
