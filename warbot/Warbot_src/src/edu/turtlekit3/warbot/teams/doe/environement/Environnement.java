@@ -157,6 +157,16 @@ public class Environnement {
 
 	/** LECTURE **/
 
+
+	public boolean ourBaseIsFound() {
+		try {
+			this.getWeAreInTop();
+			return true;
+		} catch (BaseNotFoundException e) {
+			return false;
+		}
+	}
+
 	// TODO Vérifier que les coordonées sont bien dans la carte, au cas ou si la carte change
 	public Vector2 getApproxEnemyBasePosition() throws BaseNotFoundException {
 		boolean top;
@@ -329,12 +339,10 @@ public class Environnement {
 		int id = -1;
 		try {
 			for (StructWarBrainEnemy s : this.listEnemies.values()) {
-				if(!s.isBase()) {
-					double dst = position.dst(s.getPosition());
-					if (dst < minDistance) {
-						minDistance = position.dst(s.getPosition());
-						id = s.getID();
-					}
+				double dst = position.dst(s.getPosition());
+				if (dst < minDistance) {
+					minDistance = position.dst(s.getPosition());
+					id = s.getID();
 				}
 			}
 			return id;

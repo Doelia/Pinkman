@@ -80,7 +80,7 @@ public class Group {
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
 			float alpha = tick*index;
-			Vector2 target = Tools.cartFromPolaire(alpha, 40);
+			Vector2 target = Tools.cartFromPolaire(alpha, 30);
 			target.add(this.target);
 			return target;
 		} catch (Exception e) {
@@ -102,7 +102,7 @@ public class Group {
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
 			float alpha = tick*index + getEnvironnement().getIndexOfTeam(this) * 7;
-			Vector2 target = Tools.cartFromPolaire(alpha, 30);
+			Vector2 target = Tools.cartFromPolaire(alpha, 25);
 			target.add(base);
 			return target;
 		} catch (Exception e) {
@@ -112,10 +112,7 @@ public class Group {
 	
 	public Vector2 getMovementPosition(Integer brainId) throws NotExistException {
 		try {
-			Vector2 position = new Vector2();
-			if (Behavior.CHEAT) {
-				position = new Vector2(getEnvironnement().getStructWarBrain(getLeader()).getPosition());
-			}
+			Vector2 position = new Vector2(getEnvironnement().getStructWarBrain(getLeader()).getPosition());
 			
 			int index = 1 + (members.indexOf(brainId) + battleModifier) % (getSize() - 1);
 			int nbrPersonnes = members.size() - 1;

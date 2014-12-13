@@ -112,6 +112,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			//			}
 			percept = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
 			percept.addAll(getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase));
+			
 			if(percept != null && percept.size() > 0){
 				if(!t.isAttacking()) {
 					t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), percept.get(0).getAngle(), percept.get(0).getDistance()), false);
@@ -121,7 +122,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 				try {
 					Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
 					Vector2 enemyPosition = ev.getEnemy(ev.getClosestEnemy(myPosition)).getPosition();
-					if(myPosition.dst(enemyPosition) < 150) {
+					if(myPosition.dst(enemyPosition) < 350) {
 						if(!t.isAttacking()) {
 							t.setTarget(enemyPosition, false);
 						}
@@ -129,11 +130,13 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 								getBrain(), 
 								ev.getStructWarBrain(getBrain().getID()).getPosition(),
 								t.getTargetPosition(getBrain().getID()));
+						toReturn = WarRocketLauncher.ACTION_MOVE;
 					} else {
 						t.setAttacking(false);
 						return move();
 					}
 				} catch (Exception e) {
+					System.out.println("catch");
 					t.setAttacking(false);
 					return move();
 				};
@@ -157,6 +160,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getTargetPosition(getBrain().getID()));
+					toReturn = WarRocketLauncher.ACTION_MOVE;
 				}
 			}
 			if(getBrain().isBlocked()) {

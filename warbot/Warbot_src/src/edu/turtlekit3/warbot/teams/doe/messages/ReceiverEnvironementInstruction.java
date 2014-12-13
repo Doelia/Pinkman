@@ -12,11 +12,11 @@ public class ReceiverEnvironementInstruction {
 	
 	public void onMessage(WarMessage m) {
 		
-		if (m.getMessage().equals(TypeUpdateEnv.setWeAreInTop)) {
+		if (m.getMessage().equals(TypeUpdateEnv.SET_WERE_TOP)) {
 			e.setWeAreInTop(Boolean.parseBoolean(m.getContent()[0]));
 		}
 		
-		if (m.getMessage().equals(TypeUpdateEnv.addFreeFood)) {
+		if (m.getMessage().equals(TypeUpdateEnv.ADD_FREE_FOOD)) {
 			e.addFreeFood(
 					new Vector2(
 							Integer.parseInt(m.getContent()[0]),
@@ -26,7 +26,7 @@ public class ReceiverEnvironementInstruction {
 							
 		}
 		
-		if (m.getMessage().equals(TypeUpdateEnv.setMainBase)) {
+		if (m.getMessage().equals(TypeUpdateEnv.SET_MAIN_BASE)) {
 			e.addFreeFood(
 					new Vector2(
 							Integer.parseInt(m.getContent()[0]),
