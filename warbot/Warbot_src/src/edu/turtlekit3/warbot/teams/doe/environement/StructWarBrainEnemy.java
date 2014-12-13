@@ -12,7 +12,7 @@ public class StructWarBrainEnemy extends StructWarBrain {
 	public StructWarBrainEnemy(int ID, Vector2 posCart, int life, WarAgentType type) {
 		super(ID, posCart, type);
 		this.life = life;
-		ttl = 20;
+		ttl = 200;
 	}
 
 	public void setLife(int life) {
@@ -33,7 +33,11 @@ public class StructWarBrainEnemy extends StructWarBrain {
 	}
 	
 	public void resetTtl() {
-		ttl = 20;
+		if(isBase()) {
+		ttl = 1000;
+		} else {
+			ttl = 200;
+		}
 	}
 	
 	

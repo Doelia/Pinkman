@@ -20,6 +20,7 @@ public class Group {
 	private boolean leaderCanShoot;
 	private int angle;
 	boolean isBaseAttacked;
+	boolean isTargetBase;
 	Environnement e = null;
 
 	public Group() {
@@ -31,6 +32,7 @@ public class Group {
 		nbStopAttacking = 0;
 		isBaseAttacked = false;
 		angle = new Random().nextInt(20);
+		isTargetBase = false;
 	}
 
 	public void addMember(Integer w) {
@@ -142,9 +144,9 @@ public class Group {
 		}
 	}
 
-	public void setTarget(Vector2 target, int angle) {
+	public void setTarget(Vector2 target, boolean isTargetBase) {
 		this.target = target;
-		this.angle = angle;
+		this.isTargetBase = isTargetBase;
 	}
 
 	public Vector2 getTarget() {
@@ -159,7 +161,7 @@ public class Group {
 		if(!attacking) {
 			nbStopAttacking++;
 		}
-		if(nbStopAttacking > getSize() * 5) {
+		if(nbStopAttacking > getSize() * 12) {
 			nbStopAttacking = 0;
 			this.attacking = false;
 		}
@@ -189,5 +191,8 @@ public class Group {
 	public boolean isBaseAttacked() {
 		return this.isBaseAttacked;
 	}
-
+	
+	public boolean isTargetBase() {
+		return isTargetBase;
+	}
 }

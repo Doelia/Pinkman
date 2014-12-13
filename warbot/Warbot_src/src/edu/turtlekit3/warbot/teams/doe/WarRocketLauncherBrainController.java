@@ -3,6 +3,8 @@ package edu.turtlekit3.warbot.teams.doe;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.lwjgl.Sys;
+
 import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
@@ -27,7 +29,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	int maxDistanceToTarget = 50;
 	int isOnTop;
 	int lastBaseFoundId = -1;
-	
+
 	private Environnement e;
 
 	public WarRocketLauncherBrainController() {
@@ -35,7 +37,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		newPosition();
 		isOnTop = 0;
 	}
-	
+
 	private Environnement getEnvironnement() {
 		if (Behavior.CHEAT) {
 			return Environnement.getInstance();
@@ -46,13 +48,13 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			return e;
 		}
 	}
-	
+
 	@Override
 	public String action() {
-		
+
 		Environnement e = this.getEnvironnement();
 		WarAgentType t = WarAgentType.WarRocketLauncher;
-		
+
 		new DetectEnemyTask(this, t, e).exec();
 		new SendAlliesTask(this, t, e).exec();
 
@@ -72,8 +74,8 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			y = new Random().nextInt(2000) - 1000;
 		}
 		else {
-			x = new Random().nextInt(1600) * isOnTop;
-			y = new Random().nextInt(1000) * isOnTop;
+			x = (new Random().nextInt(200) + 700) * isOnTop;
+			y = (new Random().nextInt(300) + 250) * isOnTop;
 		}
 	}
 
@@ -97,87 +99,64 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
 			int leader = t.getLeader();
 
-			if(!ev.killedFirstBase()) {
-				if(ev.oneBaseIsFound()) {
-					ArrayList<WarPercept> p = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
-					if(p.size() > 0) {
-						lastBaseFoundId = p.get(0).getID();
-						if(!getBrain().isReloaded()) {
-							Tools.setHeadingOn(
-									getBrain(), 
-									ev.getStructWarBrain(getBrain().getID()).getPosition(),
-									t.getBaseAttackPosition(getBrain().getID()));
-							if(getBrain().isBlocked()) {
-								getBrain().setHeading((new Random().nextBoolean())?1:1 * 90 + getBrain().getHeading());
-							}
-							return WarRocketLauncher.ACTION_MOVE;
-						} else {
-							getBrain().setHeading(p.get(0).getAngle());
-							return WarRocketLauncher.ACTION_FIRE;
-						}
-					} else {
-						if(lastBaseFoundId >= 0) {
-							ev.voteToKillBase(lastBaseFoundId);
-							if(ev.getFirstEnemyBase() != lastBaseFoundId) {
-								lastBaseFoundId = -1;
-							}
+			String s = rush(leader, t, ev);
+			if(!s.equals("")) {
+				System.out.println("rushing");
+				return s;
+			}
+			//			if(t.isBaseAttacked() && getBrain().getID() == leader) {
+			//				Tools.setHeadingOn(
+			//						getBrain(), 
+			//						ev.getStructWarBrain(getBrain().getID()).getPosition(),
+			//						t.getDefensePosition(leader));
+			//			}
+			percept = getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher);
+			percept.addAll(getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase));
+			if(percept != null && percept.size() > 0){
+				if(!t.isAttacking()) {
+					t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), percept.get(0).getAngle(), percept.get(0).getDistance()), false);
+				}
+				t.setAttacking(true);
+			} else {
+				try {
+					Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
+					Vector2 enemyPosition = ev.getEnemy(ev.getClosestEnemy(myPosition)).getPosition();
+					if(myPosition.dst(enemyPosition) < 150) {
+						if(!t.isAttacking()) {
+							t.setTarget(enemyPosition, false);
 						}
 						Tools.setHeadingOn(
 								getBrain(), 
 								ev.getStructWarBrain(getBrain().getID()).getPosition(),
-								t.getBaseAttackPosition(getBrain().getID()));
-						if(getBrain().isBlocked()) {
-							getBrain().setHeading((new Random().nextBoolean())?1:1 * 90 + getBrain().getHeading());
-						}
-						return WarRocketLauncher.ACTION_MOVE;
+								t.getTargetPosition(getBrain().getID()));
+					} else {
+						t.setAttacking(false);
+						return move();
+					}
+				} catch (Exception e) {
+					t.setAttacking(false);
+					return move();
+				};
+
+			}
+			System.out.println(t.isAttacking());
+			if(t.isAttacking()) {
+				if(percept.size() > 0) {
+					if(!getBrain().isReloaded()) {
+						Tools.setHeadingOn(
+								getBrain(), 
+								ev.getStructWarBrain(getBrain().getID()).getPosition(),
+								t.getTargetPosition(getBrain().getID()));
+					} else {
+						getBrain().setHeading(percept.get(0).getAngle());
+						return WarRocketLauncher.ACTION_FIRE;
 					}
 				} else {
-
-					try {
-						if(getBrain().getID() == leader) {
-							Vector2 enemyBasePosition = ev.getApproxEnemyBasePosition();
-							System.out.println(enemyBasePosition);
-							System.out.println("my position : " + ev.getStructWarBrain(getBrain().getID()).getPosition());
-							Tools.setHeadingOn(
-									getBrain(), 
-									ev.getStructWarBrain(getBrain().getID()).getPosition(),
-									enemyBasePosition);
-							if(getBrain().isBlocked()) {
-								getBrain().setHeading((new Random().nextBoolean())?1:1 * 90 + getBrain().getHeading());
-							}
-							return WarRocketLauncher.ACTION_MOVE;
-						}
-
-					} catch (BaseNotFoundException e) {};
-				}
-			}
-
-			if(t.isBaseAttacked() && getBrain().getID() == leader) {
-				Tools.setHeadingOn(
-						getBrain(), 
-						ev.getStructWarBrain(getBrain().getID()).getPosition(),
-						t.getDefensePosition(leader));
-			}
-			if(percept != null && percept.size() > 0){
-				t.setAttacking(true);
-				if(getBrain().getID() == leader) {
-					t.setTarget(ev.getEnemy(ev.getClosestEnemy(ev.getStructWarBrain(getBrain().getID()).getPosition())).getPosition(), 0);
-					//					t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), percept.get(0).getAngle(), percept.get(0).getDistance()), (int) percept.get(0).getAngle());
-				}
-			} else {
-				t.setAttacking(false);
-			}
-			if(t.isAttacking() ) {
-				if(!getBrain().isReloaded()) {
+					System.out.println("going to target");
 					Tools.setHeadingOn(
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getTargetPosition(getBrain().getID()));
-				} else {
-					if(percept.size() > 0) {
-						getBrain().setHeading(percept.get(0).getAngle());
-						return WarRocketLauncher.ACTION_FIRE;
-					}
 				}
 			}
 			if(getBrain().isBlocked()) {
@@ -204,7 +183,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					}
 				} else {
 					int n = new Random().nextInt(100);
-					if(n > 95 || getBrain().isBlocked()) {
+					if(n > 98 || getBrain().isBlocked()) {
 						newPosition();
 					}
 					Tools.setHeadingOn(
@@ -223,5 +202,71 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		}
 
 		return WarRocketLauncher.ACTION_MOVE;
+	}
+
+	private String attackBase(int leader, Group t, Environnement ev) throws NotExistException {
+		if(ev.oneBaseIsFound()) {
+			ArrayList<WarPercept> p = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
+			if(p.size() > 0) {
+				if(lastBaseFoundId == -1) {
+					lastBaseFoundId = p.get(0).getID();
+				}
+				if(!getBrain().isReloaded()) {
+					Tools.setHeadingOn(
+							getBrain(), 
+							ev.getStructWarBrain(getBrain().getID()).getPosition(),
+							t.getBaseAttackPosition(getBrain().getID()));
+					if(getBrain().isBlocked()) {
+						getBrain().setHeading((new Random().nextBoolean())?1:1 * 90 + getBrain().getHeading());
+					}
+					return WarRocketLauncher.ACTION_MOVE;
+				} else {
+					getBrain().setHeading(p.get(0).getAngle());
+					return WarRocketLauncher.ACTION_FIRE;
+				}
+			} else {
+				if(lastBaseFoundId >= 0) {
+					ev.voteToKillBase(lastBaseFoundId);
+					if(ev.getFirstEnemyBase() != lastBaseFoundId) {
+						lastBaseFoundId = -1;
+					}
+				}
+				Tools.setHeadingOn(
+						getBrain(), 
+						ev.getStructWarBrain(getBrain().getID()).getPosition(),
+						t.getBaseAttackPosition(getBrain().getID()));
+				if(getBrain().isBlocked()) {
+					getBrain().setHeading((new Random().nextBoolean())?1:1 * 90 + getBrain().getHeading());
+				}
+				return WarRocketLauncher.ACTION_MOVE;
+			}
+		} else {
+			return goToApproxEnemyBase(leader, t, ev);
+		}
+	}
+
+	private String goToApproxEnemyBase(int leader, Group t, Environnement ev) throws NotExistException {
+		try {
+			if(getBrain().getID() == leader) {
+				Vector2 enemyBasePosition = ev.getApproxEnemyBasePosition();
+				Tools.setHeadingOn(
+						getBrain(), 
+						ev.getStructWarBrain(getBrain().getID()).getPosition(),
+						enemyBasePosition);
+				if(getBrain().isBlocked()) {
+					getBrain().setHeading((new Random().nextBoolean())?1:1 * 90 + getBrain().getHeading());
+				}
+				return WarRocketLauncher.ACTION_MOVE;
+			}
+
+		} catch (BaseNotFoundException e) {};
+		return "";
+	}
+
+	private String rush(int leader, Group t, Environnement ev) throws NotExistException {
+		if(!ev.killedFirstBase()) {
+			return attackBase(leader, t, ev);
+		}
+		return "";
 	}
 }

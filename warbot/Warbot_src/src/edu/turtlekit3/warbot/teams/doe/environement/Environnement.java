@@ -34,14 +34,15 @@ public class Environnement {
 	}
 
 	public int idSearcherBase = -1;
-	
+
 	private TeamManager tm;
 	private WarBaseBrain mainBase;
 	private Stack<Integer> takenFood;
 	private HashMap<Integer, StructWarBrainAllie> listAllies;
 	private HashMap<Integer, StructWarBrainEnemy> listEnemies;
 	private boolean killedFirstBase;
-	private Boolean weAreInTop = null; // En haut à droite, null si on sait pas encore
+	private Boolean weAreInTop; // En haut à droite, null si on sait pas encore
+	private ArrayList<Integer> explorers;
 
 	public Environnement() {
 		tm = new TeamManager();
@@ -50,12 +51,24 @@ public class Environnement {
 		listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
 		listEnemies = new HashMap<Integer, StructWarBrainEnemy>();
 		killedFirstBase = false;
+		weAreInTop = null;
+		explorers = new ArrayList<Integer>();
 	}
 
 	/*** ECRITURE **/
 
 	public void setWeAreInTop(boolean weAreInTop) {
 		this.weAreInTop = weAreInTop;
+	}
+
+	public void registerExplorer(Integer id) {
+		if(!explorers.contains(id)) {
+			explorers.add(id);
+		}
+	}
+
+	public int getExplorerIndex(Integer id) {
+		return explorers.indexOf(id);
 	}
 
 	public void voteToKillBase(Integer baseId) {
@@ -74,7 +87,11 @@ public class Environnement {
 	}
 
 	public void setMainBase(WarBaseBrain mainBase) {
-		if (!this.mainBaseIsDefined())
+		boolean mainBaseAlive = true;
+		try{
+			mainBaseAlive = (getMainBase().getHealth() > 0);
+		} catch (Exception e){}
+		if (!this.mainBaseIsDefined() || !mainBaseAlive)
 			this.mainBase = mainBase;
 	}
 
@@ -84,9 +101,7 @@ public class Environnement {
 		if (s != null) {
 			s.setPosition(newPosCart);
 			s.setLife(life);
-			if(type.equals(WarAgentType.WarBase)) {
-				s.resetTtl();
-			}
+			s.resetTtl();
 		} else {
 			StructWarBrainEnemy x = new StructWarBrainEnemy(ID, newPosCart, life, type);
 			this.listEnemies.put(ID, x);
@@ -117,6 +132,13 @@ public class Environnement {
 		} catch(Exception e) {}
 		try {
 			for (StructWarBrainEnemy s : listEnemies.values()) {
+				if(killedFirstBase) {
+					if(s.isBase()) {
+						s.decrementTtl();
+					} else {
+						s.decrementTtl();
+					} 
+				}
 				if (!s.isAlive() || s.getTtl() <= 0) {
 					if(s.isBase()) {
 						killedFirstBase = true;
@@ -159,7 +181,6 @@ public class Environnement {
 		return mainBase;
 	}
 
-
 	public boolean getWeAreInTop() throws BaseNotFoundException {
 		if (weAreInTop == null)
 			throw new BaseNotFoundException();
@@ -182,7 +203,6 @@ public class Environnement {
 		}
 		return list;
 	}
-
 
 	public ArrayList<Integer> getEnemyBases() {
 		ArrayList<Integer> list = new ArrayList<Integer>();
@@ -209,6 +229,7 @@ public class Environnement {
 	}
 
 	public boolean oneBaseIsFound() {
+		System.out.println("number of bases found and alive : " + this.getEnemyBases().size());
 		return (this.getEnemyBases().size() > 0);
 	}
 
@@ -243,7 +264,6 @@ public class Environnement {
 	public boolean killedFirstBase() {
 		return killedFirstBase;
 	}
-
 
 	public TeamManager getTeamManager() {
 		return this.tm;
@@ -309,10 +329,12 @@ public class Environnement {
 		int id = -1;
 		try {
 			for (StructWarBrainEnemy s : this.listEnemies.values()) {
-				double dst = position.dst(s.getPosition());
-				if (dst < minDistance) {
-					minDistance = position.dst(s.getPosition());
-					id = s.getID();
+				if(!s.isBase()) {
+					double dst = position.dst(s.getPosition());
+					if (dst < minDistance) {
+						minDistance = position.dst(s.getPosition());
+						id = s.getID();
+					}
 				}
 			}
 			return id;
@@ -336,8 +358,4 @@ public class Environnement {
 		}
 		return base;
 	}
-
-
-
-
 }
