@@ -7,10 +7,12 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 public class StructWarBrainEnemy extends StructWarBrain {
 
 	private int life;
+	private int ttl;
 	
 	public StructWarBrainEnemy(int ID, Vector2 posCart, int life, WarAgentType type) {
 		super(ID, posCart, type);
 		this.life = life;
+		ttl = 20;
 	}
 
 	public void setLife(int life) {
@@ -21,6 +23,20 @@ public class StructWarBrainEnemy extends StructWarBrain {
 	public int getHealth() {
 		return this.life;
 	}
+	
+	public int getTtl() {
+		return ttl;
+	}
+	
+	public void decrementTtl() {
+		ttl--;
+	}
+	
+	public void resetTtl() {
+		ttl = 20;
+	}
+	
+	
 
 
 }
