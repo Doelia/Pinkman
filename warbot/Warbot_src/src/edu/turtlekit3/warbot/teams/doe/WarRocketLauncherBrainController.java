@@ -187,11 +187,11 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 						getBrain().setHeading(new Random().nextInt(360) + getBrain().getHeading());
 					}
 				} else {
-					if(t.isReady()) {
+					if(!t.isReady()) {
 						Tools.setHeadingOn(
 								getBrain(), 
 								ev.getStructWarBrain(getBrain().getID()).getPosition(),
-								t.getLeaderPositionForWaiting(getBrain().getID(), ev));
+								t.getLeaderPositionForWaiting(getBrain().getID(), ev, isOnTop));
 					} else {
 						int n = new Random().nextInt(100);
 						if(n > 98 || getBrain().isBlocked()) {

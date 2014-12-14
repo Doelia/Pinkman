@@ -98,13 +98,13 @@ public class Group {
 		}
 	}
 	
-	public Vector2 getLeaderPositionForWaiting(Integer brainId, Environnement ev) throws NotExistException {
+	public Vector2 getLeaderPositionForWaiting(Integer brainId, Environnement ev, int isOnTop) throws NotExistException {
 		try {
 			int index = teamIndex;
 			int nbrPersonnes = ev.getTeamManager().size();
-			float tick = (360/nbrPersonnes);
+			float tick = (180/nbrPersonnes) * isOnTop;
 			float alpha = tick*index;
-			Vector2 target = Tools.cartFromPolaire(alpha, 120);
+			Vector2 target = Tools.cartFromPolaire(alpha, 80);
 			target.add(ev.getStructWarBrain(ev.getMainBase().getID()).getPosition());
 			return target;
 		} catch (Exception e) {
