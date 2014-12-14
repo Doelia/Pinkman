@@ -93,17 +93,13 @@ public class Environnement {
 		System.out.println(mainBase.getID());
 		boolean mainBaseAlive = true;
 		try{
-			System.out.println("main base id : " + getMainBase().getID());
-			System.out.println("testing mainbase alive : " + getMainBase().getHealth());
 			mainBaseAlive = (getMainBase().getHealth() > 0);
 		} catch (Exception e){
 			mainBaseAlive = false;
 			this.mainBase = null;
-			System.out.println("mainbase dead");
 		}
 		if (!this.mainBaseIsDefined() || !mainBaseAlive) {
 			this.mainBase = mainBase;
-			System.out.println("setting new main base");
 		}
 	}
 
@@ -141,7 +137,7 @@ public class Environnement {
 			mainBases.put(integer, mainBases.get(integer) - 1);
 		}
 	}
-	
+
 	public void clean() {
 		try {
 			for (StructWarBrain s : listAllies.values()) {
@@ -154,11 +150,7 @@ public class Environnement {
 		try {
 			for (StructWarBrainEnemy s : listEnemies.values()) {
 				if(killedFirstBase) {
-					if(s.isBase()) {
-						s.decrementTtl();
-					} else {
-						s.decrementTtl();
-					} 
+					s.decrementTtl();
 				}
 				if (!s.isAlive() || s.getTtl() <= 0) {
 					if(s.isBase()) {
@@ -400,14 +392,14 @@ public class Environnement {
 		}
 		return base;
 	}
-	
+
 	public int getBiggestBaseId() {
 		int big = 0;
 		for (StructWarBrainAllie s : this.getListAllies()) {
 			if (s.getType() == WarAgentType.WarBase)
-			if (s.getID() > big) {
-				big = s.getID();
-			}
+				if (s.getID() > big) {
+					big = s.getID();
+				}
 		}
 		return big;
 	}

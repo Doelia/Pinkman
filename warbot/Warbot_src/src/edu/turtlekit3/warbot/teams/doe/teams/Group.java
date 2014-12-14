@@ -85,8 +85,14 @@ public class Group {
 	}
 
 	public Vector2 getTargetPosition(Integer brainId) throws NotExistException {
+		requestNumber++;
+		if(requestNumber > 500 * getSize()) {
+			requestNumber = 0;
+			battleModifier++;
+			battleModifier = battleModifier % getSize();
+		}
 		try {
-			int index = members.indexOf(brainId);
+			int index = (members.indexOf(brainId) + battleModifier) % getSize();
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
 			float alpha = tick*index;

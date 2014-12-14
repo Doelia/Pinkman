@@ -64,7 +64,8 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		toReturn = move();
 		toReturn = attack();
 		if(getBrain().isBlocked()) {
-			getBrain().setHeading(90 + getBrain().getHeading());
+//			getBrain().setHeading(90 + getBrain().getHeading());
+			setRandomHeading();
 			toReturn = WarRocketLauncher.ACTION_MOVE;
 		}
 		return toReturn;
@@ -78,6 +79,20 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		else {
 			x = (new Random().nextInt(200) + 700) * isOnTop;
 			y = (new Random().nextInt(300) + 250) * isOnTop;
+		}
+	}
+	
+	public void setRandomHeading() {
+		x = new Random().nextInt(900)  * isOnTop;
+		y = new Random().nextInt(600) * isOnTop;
+		Vector2 myPosition;
+		try {
+			myPosition = getEnvironnement().getStructWarBrain(getBrain().getID()).getPosition();
+			Tools.setHeadingOn(
+					getBrain(), 
+					myPosition,
+					new Vector2(x, y));
+		} catch (NotExistException e) {
 		}
 	}
 
@@ -185,14 +200,16 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getMovementPosition(getBrain().getID()));
 				} else {
-					if(!t.isReady() && !ev.killedFirstBase()) {
+					if(!t.isReady() && ev.killedFirstBase()) {
 						Tools.setHeadingOn(
 								getBrain(), 
 								ev.getStructWarBrain(getBrain().getID()).getPosition(),
 								t.getLeaderPositionForWaiting(getBrain().getID(), ev, isOnTop));
 					} else {
 						int n = new Random().nextInt(100);
-					
+						if(n > 98 || getBrain().isBlocked()) {
+							newPosition();
+						}
 						Tools.setHeadingOn(
 								getBrain(), 
 								ev.getStructWarBrain(getBrain().getID()).getPosition(),
@@ -244,7 +261,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 
 	private String attackBase(int leader, Group t, Environnement ev) throws NotExistException {
-		if(ev.oneBaseIsFound()) {
+		if(ev.oneBaseIsFound() || !t.isBaseAttackTeam()) {
 			ArrayList<WarPercept> p = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
 			if(p.size() > 0) {
 				t.setTarget(getEnvironnement().getPositionFirstEnemyBase(), true);
@@ -287,9 +304,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getTarget());
-					return WarRocketLauncher.ACTION_FIRE;
 				}
-
 				return WarRocketLauncher.ACTION_MOVE;
 			}
 		} else {
