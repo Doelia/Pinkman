@@ -158,7 +158,7 @@ public class Group {
 		if(!attacking) {
 			nbStopAttacking++;
 		}
-		if(nbStopAttacking > getSize() * 12) {
+		if(nbStopAttacking > getSize() * 10) {
 			nbStopAttacking = 0;
 			this.attacking = false;
 		}
