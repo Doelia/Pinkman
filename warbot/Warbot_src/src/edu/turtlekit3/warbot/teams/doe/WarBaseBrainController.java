@@ -1,7 +1,6 @@
 package edu.turtlekit3.warbot.teams.doe;
 
 import edu.turtlekit3.warbot.agents.agents.WarBase;
-import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
 import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
@@ -44,6 +43,13 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		
 	}
 	
+	public WarAgentType getNextToCreate() {
+		if (e.getNumberOfType(WarAgentType.WarExplorer) < 6) {
+			return WarAgentType.WarExplorer;
+		}
+		return WarAgentType.WarRocketLauncher;
+	}
+	
 	@Override
 	public String action() {
 		
@@ -61,8 +67,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		this.getBrain().setDebugString("Bag "+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize()+" - life "+this.getBrain().getHealth());
 		
 		if (healhIsSufisant()) {
-			
-			this.getBrain().setNextAgentToCreate(WarAgentType.WarRocketLauncher);
+			this.getBrain().setNextAgentToCreate(this.getNextToCreate());
 			return WarBase.ACTION_CREATE;
 		}
 	
