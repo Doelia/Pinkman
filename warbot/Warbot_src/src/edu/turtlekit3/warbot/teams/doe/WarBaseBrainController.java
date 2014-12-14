@@ -1,6 +1,7 @@
 package edu.turtlekit3.warbot.teams.doe;
 
 import edu.turtlekit3.warbot.agents.agents.WarBase;
+import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
 import edu.turtlekit3.warbot.teams.demo.Constants;
@@ -34,6 +35,16 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		}
 	}
 	
+	private boolean healhIsSufisant() {
+		
+		if (WarBase.MAX_HEALTH < 80000) {
+			return (this.getBrain().getHealth() >= WarBase.MAX_HEALTH && this.getBrain().isBagFull());
+		} else {
+			return (this.getBrain().getHealth() >= 80000);
+		}
+		
+	}
+	
 	@Override
 	public String action() {
 		
@@ -50,12 +61,13 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		
 		this.getBrain().setDebugString("Bag "+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize()+" - life "+this.getBrain().getHealth());
 		
-		if (this.getBrain().getHealth() == 12000 && this.getBrain().isBagFull()) {
+		if (healhIsSufisant()) {
+			
 			this.getBrain().setNextAgentToCreate(WarAgentType.WarRocketLauncher);
 			return WarBase.ACTION_CREATE;
 		}
 	
-		if (this.getBrain().getHealth() < 12000)
+		if (this.getBrain().getHealth() < WarBase.MAX_HEALTH)
 			return WarBase.ACTION_EAT;
 		else
 			return WarBase.ACTION_IDLE;
