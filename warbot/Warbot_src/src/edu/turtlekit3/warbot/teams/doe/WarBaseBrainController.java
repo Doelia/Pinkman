@@ -24,7 +24,8 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	
 	private Environnement getEnvironnement() {
 		if (Behavior.CHEAT) {
-			return Environnement.getInstance();
+			e = Environnement.getInstance();;
+			return e;
 		} else {
 			if (e == null) {
 				e = new Environnement();
@@ -33,7 +34,13 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		}
 	}
 	
-	private boolean healhIsSufisant() {
+	private boolean canCreate() {
+		
+		int nbrBases = getEnvironnement().getNumberOfType(WarAgentType.WarBase);
+		
+		if (nbrBases > 5 && this.getBrain().getID() == getEnvironnement().getBiggestBaseId()) {
+			return true;
+		}
 		
 		if (WarBase.MAX_HEALTH < 80000) {
 			return (this.getBrain().getHealth() >= WarBase.MAX_HEALTH && this.getBrain().isBagFull());
@@ -44,7 +51,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	}
 	
 	public WarAgentType getNextToCreate() {
-		if (e.getNumberOfType(WarAgentType.WarExplorer) < 6) {
+		if (this.getEnvironnement().getNumberOfType(WarAgentType.WarExplorer) < 6) {
 			return WarAgentType.WarExplorer;
 		}
 		return WarAgentType.WarRocketLauncher;
@@ -66,7 +73,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		
 		this.getBrain().setDebugString("Bag "+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize()+" - life "+this.getBrain().getHealth());
 		
-		if (healhIsSufisant()) {
+		if (canCreate()) {
 			this.getBrain().setNextAgentToCreate(this.getNextToCreate());
 			return WarBase.ACTION_CREATE;
 		}

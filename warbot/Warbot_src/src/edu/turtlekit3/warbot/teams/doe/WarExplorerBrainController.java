@@ -91,16 +91,17 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	
 	private void returnBase() {
 		this.isInGave = true;
-		this.getBrain().setDebugString("return base");
+		Vector2 base = getEnvironnement().getPositionAllieBaseWithLowLife();
+		this.getBrain().setDebugString("return base "+base);
 
-		this.activeTask.setTarget(getEnvironnement().getPositionAllieBaseWithLowLife());
+		this.activeTask.setTarget(base);
 
 		ArrayList<WarPercept> basePercepts = getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
 		if (basePercepts != null && basePercepts.size() > 0) {
-			WarPercept base = basePercepts.get(0);
-			if (base.getDistance() <= MovableWarAgent.MAX_DISTANCE_GIVE){
+			WarPercept x = basePercepts.get(0);
+			if (x.getDistance() <= MovableWarAgent.MAX_DISTANCE_GIVE){
 				this.getBrain().setDebugString("giving to base");
-				getBrain().setIdNextAgentToGive(base.getID());
+				getBrain().setIdNextAgentToGive(x.getID());
 				action = MovableWarAgent.ACTION_GIVE;
 			}
 		}
