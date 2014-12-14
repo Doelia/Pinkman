@@ -44,8 +44,8 @@
             <HitboxRadius>4</HitboxRadius>
             <AngleOfView>360</AngleOfView>
             <DistanceOfView>80</DistanceOfView>
-            <Cost>120000</Cost>
-            <MaxHealth>120000</MaxHealth>
+            <Cost>12000</Cost>
+            <MaxHealth>12000</MaxHealth>
             <BagSize>4</BagSize>
         </WarBase>
         <WarExplorer>
