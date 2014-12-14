@@ -173,7 +173,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 				} else {
 
 					if (this.getTargetFood() != null) {
-						this.getBrain().setDebugString("target food");
+						this.getBrain().setDebugString("target food "+this.getTargetFood());
 						if (Tools.isNextTo(curentPosition, this.getTargetFood(), MovableWarAgent.MAX_DISTANCE_GIVE)) {
 							this.getBrain().setDebugString("taking food");
 							action = MovableWarAgent.ACTION_TAKE;

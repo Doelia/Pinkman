@@ -350,6 +350,15 @@ public class Environnement {
 			throw new NoTargetFoundException();
 		}
 	}
+	
+	public int getNumberOfType(WarAgentType type) {
+		int cpt = 0;
+		for (StructWarBrain s : this.getListAllies()) {
+			if (s.getType() == type)
+				cpt++;
+		}
+		return cpt;
+	}
 
 	public Vector2 getPositionAllieBaseWithLowLife() {
 		Vector2 base = new Vector2(0, 0);
