@@ -28,6 +28,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private boolean isInGave = false;
 	private boolean haveTouchAproxTarget = false;
 
+	private boolean detectFood;
+
 	public boolean isAWall() {
 		return (this.getBrain().isBlocked() && this.getBrain().getPercepts().isEmpty());
 	}
@@ -86,6 +88,52 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private Vector2 getPositionAprox() throws BaseNotFoundException {
 		return getEnvironnement().getApproxEnemyBasePosition();
 	}
+	
+	private void returnBase() {
+		this.isInGave = true;
+		this.getBrain().setDebugString("return base");
+
+		this.activeTask.setTarget(getEnvironnement().getPositionAllieBaseWithLowLife());
+
+		ArrayList<WarPercept> basePercepts = getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
+		if (basePercepts != null && basePercepts.size() > 0) {
+			WarPercept base = basePercepts.get(0);
+			if (base.getDistance() <= MovableWarAgent.MAX_DISTANCE_GIVE){
+				this.getBrain().setDebugString("giving to base");
+				getBrain().setIdNextAgentToGive(base.getID());
+				action = MovableWarAgent.ACTION_GIVE;
+			}
+		}
+	}
+	
+	private void targetFood() throws NotExistException {
+		if (this.getTargetFood() != null) {
+			this.getBrain().setDebugString("target food "+this.getTargetFood());
+			if (Tools.isNextTo(this.activeTask.getCurentPosition(), this.getTargetFood(), MovableWarAgent.MAX_DISTANCE_GIVE)) {
+				this.getBrain().setDebugString("taking food");
+				action = MovableWarAgent.ACTION_TAKE;
+				getEnvironnement().getStructWarBrain(this.getBrain().getID()).setFirstTargetFound();
+			}
+		}
+		this.activeTask.setTarget(this.getTargetFood());
+	}
+	
+	private boolean getFood() throws NotExistException {
+		ArrayList<WarPercept> foodPercepts = getBrain().getPerceptsResources();
+
+		if (foodPercepts != null && foodPercepts.size() > 0 && !this.getBrain().isBagFull()) {
+			WarPercept food = foodPercepts.get(0);
+			if (food.getDistance() <= MovableWarAgent.MAX_DISTANCE_GIVE) {
+				action = MovableWarAgent.ACTION_TAKE;
+			} else {
+				Vector2 pos = Tools.getPositionOfEntityFromMine(this.activeTask.getCurentPosition(), food.getAngle(), food.getDistance());
+				this.activeTask.setTarget(pos);
+			}
+			this.detectFood = false;
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public String action() {
@@ -96,35 +144,32 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		new DetectEnemyTask(this, t, e).exec();
 		new SendAlliesTask(this, t, e).exec();
 
+		this.action = WarExplorer.ACTION_MOVE;
 		if (activeTask == null)
 			activeTask = new MoveTask(this, t, e);
-
-		this.action = WarExplorer.ACTION_MOVE;
 		
-		e.registerExplorer(getBrain().getID());
+		this.detectFood = true;
 
 		try {
 
 			Vector2 curentPosition = activeTask.getCurentPosition();
 
+			// 1. On cherche la base de l'enemie
 			if (!this.baseEnemyIsFound()) {
 
-				if (this.getEnvironnement().ourBaseIsFound()) {
-					
-					ArrayList<WarPercept> foodPercepts = getBrain().getPerceptsResources();
+				// 1.1. On cherche la position de notre base
+				if (!this.getEnvironnement().ourBaseIsFound()) {
+					this.getBrain().setDebugString("searching our base position");
+					return this.findOurPositionBase();
 
-					if (foodPercepts != null && foodPercepts.size() > 0 && !this.getBrain().isBagFull()) {
-						WarPercept food = foodPercepts.get(0);
-						if (food.getDistance() <= MovableWarAgent.MAX_DISTANCE_GIVE) {
-							return WarExplorer.ACTION_TAKE;
-						} else {
-							Vector2 pos = Tools.getPositionOfEntityFromMine(curentPosition, food.getAngle(), food.getDistance());
-							this.activeTask.setTarget(pos);
-						}
-					}
-					else {
+				}
+				
+				// 1.2 On s'approche de la base enemie
+				else {
+					
+					// 1.2.1 On cherche de la nourriture sur le passage, sinon on continue
+					if (!this.getFood())  {
 						
-						new DetectFoodTask(this, t, e).exec();
 						this.getBrain().setDebugString("going to aprox enemy base: "+this.getPositionAprox());
 
 						this.activeTask.setTarget(this.getPositionAprox());
@@ -133,55 +178,30 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 							this.haveTouchAproxTarget = true;
 						}
 
+						// On a atteint la position approximative, on wiggile jusqu'a ce qu'on trouve
 						if (this.haveTouchAproxTarget) {
 							this.activeTask.setTarget(null);
 						}
 					}
 					
-
-				} else {
-					new DetectFoodTask(this, t, e).exec();
-					this.getBrain().setDebugString("searching our base position");
-					return this.findOurPositionBase();
 				}
 
+			// 2. Comportement par défaut de l'éclaireur
 			} else {
 				
-				new DetectFoodTask(this, t, e).exec();
-
 				if (this.getBrain().isBagEmpty()) {
 					this.isInGave = false;
 				}
 
 				if ((getBrain().isBagFull() || this.isInGave)){
-					
-					this.isInGave = true;
-					this.getBrain().setDebugString("return base");
-
-					this.activeTask.setTarget(getEnvironnement().getPositionAllieBaseWithLowLife());
-
-					ArrayList<WarPercept> basePercepts = getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
-					if (basePercepts != null && basePercepts.size() > 0) {
-						WarPercept base = basePercepts.get(0);
-						if (base.getDistance() <= MovableWarAgent.MAX_DISTANCE_GIVE){
-							this.getBrain().setDebugString("giving to base");
-							getBrain().setIdNextAgentToGive(base.getID());
-							action = MovableWarAgent.ACTION_GIVE;
-						}
-					}
-
+					this.returnBase();
 				} else {
-
-					if (this.getTargetFood() != null) {
-						this.getBrain().setDebugString("target food "+this.getTargetFood());
-						if (Tools.isNextTo(curentPosition, this.getTargetFood(), MovableWarAgent.MAX_DISTANCE_GIVE)) {
-							this.getBrain().setDebugString("taking food");
-							action = MovableWarAgent.ACTION_TAKE;
-							getEnvironnement().getStructWarBrain(this.getBrain().getID()).setFirstTargetFound();
-						}
-					}
-					this.activeTask.setTarget(this.getTargetFood());
+					this.targetFood();
 				}
+			}
+			
+			if (this.detectFood) {
+				new DetectFoodTask(this, t, e).exec();
 			}
 
 			this.activeTask.exec();
