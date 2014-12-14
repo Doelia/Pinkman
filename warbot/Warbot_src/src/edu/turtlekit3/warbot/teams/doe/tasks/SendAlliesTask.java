@@ -4,7 +4,7 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.WarBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
-import edu.turtlekit3.warbot.teams.demo.Constants;
+import edu.turtlekit3.warbot.teams.doe.Constants;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
