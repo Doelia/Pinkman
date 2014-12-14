@@ -51,20 +51,17 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 	public boolean jeDoisPartirADroite() {
 		try {
-		return (getEnvironnement().getExplorerIndex(getBrain().getID()) % 2 == 0);
+			return (getEnvironnement().getExplorerIndex(getBrain().getID()) % 2 == 0);
 		} catch (Exception e) {
 			return true;
 		}
 	}
 
 	private String findOurPositionBase() {
-
 		this.getBrain().setHeading(this.jeDoisPartirADroite()?0:180);
-
 		if (this.isAWall()) {
 			getEnvironnement().setWeAreInTop(this.jeDoisPartirADroite());
 		}
-
 		return MovableWarAgent.ACTION_MOVE;
 	}
 
@@ -93,13 +90,11 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		this.isInGave = true;
 		Vector2 base = getEnvironnement().getPositionAllieBaseWithLowLife();
 		this.getBrain().setDebugString("return base "+base);
-
 		this.activeTask.setTarget(base);
-
 		ArrayList<WarPercept> basePercepts = getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
 		if (basePercepts != null && basePercepts.size() > 0) {
 			WarPercept x = basePercepts.get(0);
-			if (x.getDistance() <= MovableWarAgent.MAX_DISTANCE_GIVE){
+			if (x.getDistance() < MovableWarAgent.MAX_DISTANCE_GIVE){
 				this.getBrain().setDebugString("giving to base");
 				getBrain().setIdNextAgentToGive(x.getID());
 				action = MovableWarAgent.ACTION_GIVE;
@@ -121,7 +116,6 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	
 	private boolean getFood() throws NotExistException {
 		ArrayList<WarPercept> foodPercepts = getBrain().getPerceptsResources();
-
 		if (foodPercepts != null && foodPercepts.size() > 0 && !this.getBrain().isBagFull()) {
 			WarPercept food = foodPercepts.get(0);
 			if (food.getDistance() <= MovableWarAgent.MAX_DISTANCE_GIVE) {
@@ -148,7 +142,6 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		this.action = WarExplorer.ACTION_MOVE;
 		if (activeTask == null)
 			activeTask = new MoveTask(this, t, e);
-		
 		this.detectFood = true;
 
 		try {
@@ -157,24 +150,17 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 			// 1. On cherche la base de l'enemie
 			if (!this.baseEnemyIsFound()) {
-
+				
 				// 1.1. On cherche la position de notre base
 				if (!this.getEnvironnement().ourBaseIsFound()) {
 					this.getBrain().setDebugString("searching our base position");
 					return this.findOurPositionBase();
-
 				}
-				
-				// 1.2 On s'approche de la base enemie
+				 // 1.2 On s'approche de la base enemie
 				else {
-					
-					// 1.2.1 On cherche de la nourriture sur le passage, sinon on continue
-					if (!this.getFood())  {
-						
+					if (!this.getFood())  { // 1.2.1 On cherche de la nourriture sur le passage, sinon on continue
 						this.getBrain().setDebugString("going to aprox enemy base: "+this.getPositionAprox());
-
 						this.activeTask.setTarget(this.getPositionAprox());
-
 						if (Tools.isNextTo(curentPosition, activeTask.getTarget(), 5)) {
 							this.haveTouchAproxTarget = true;
 						}
@@ -184,17 +170,14 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 							this.activeTask.setTarget(null);
 						}
 					}
-					
 				}
 
 			// 2. Comportement par défaut de l'éclaireur
 			} else {
-				
 				if (this.getBrain().isBagEmpty()) {
 					this.isInGave = false;
 				}
-
-				if ((getBrain().isBagFull() || this.isInGave)){
+				if ((getBrain().isBagFull() || this.isInGave)) {
 					this.returnBase();
 				} else {
 					this.targetFood();
@@ -207,13 +190,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 			this.activeTask.exec();
 
-
-		}  catch (NotExistException ex) {
+		} catch (NotExistException ex) {
 		} catch (BaseNotFoundException ex) {
 		}
 
 		return action;
-
-
 	}
 }

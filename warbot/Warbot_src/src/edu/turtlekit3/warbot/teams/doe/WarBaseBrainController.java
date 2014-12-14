@@ -51,7 +51,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	}
 	
 	public WarAgentType getNextToCreate() {
-		if (this.getEnvironnement().getNumberOfType(WarAgentType.WarExplorer) < 6) {
+		if (this.getEnvironnement().getNumberOfType(WarAgentType.WarExplorer) < 6 || this.getEnvironnement().getNumberOfType(WarAgentType.WarRocketLauncher) > 20) {
 			return WarAgentType.WarExplorer;
 		}
 		return WarAgentType.WarRocketLauncher;
