@@ -4,7 +4,6 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.WarBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
-import edu.turtlekit3.warbot.teams.doe.Constants;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
@@ -17,7 +16,7 @@ public class SendAlliesTask extends Task {
 	
 	private WarMessage getMessageFromBase(WarBrain brain) {
 		for (WarMessage m : brain.getMessages()) {
-			if (m.getSenderType().equals(WarAgentType.WarBase) && m.getMessage().equals(Constants.here))
+			if (m.getSenderType().equals(WarAgentType.WarBase) && m.getMessage().equals("HERE"))
 				return m;
 		}
 

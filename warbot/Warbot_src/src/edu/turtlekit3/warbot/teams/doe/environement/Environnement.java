@@ -400,4 +400,15 @@ public class Environnement {
 		}
 		return base;
 	}
+	
+	public int getBiggestBaseId() {
+		int big = 0;
+		for (StructWarBrainAllie s : this.getListAllies()) {
+			if (s.getType() == WarAgentType.WarBase)
+			if (s.getID() > big) {
+				big = s.getID();
+			}
+		}
+		return big;
+	}
 }

@@ -15,6 +15,7 @@ public class MoveTask extends Task {
 	
 	public MoveTask(WarBrainController brain, WarAgentType type, Environnement e) {
 		super(brain, type, e);
+		e.registerExplorer(getBrain().getID());
 	}
 
 	@Override
