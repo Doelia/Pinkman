@@ -63,6 +63,10 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 
 		toReturn = move();
 		toReturn = attack();
+		if(getBrain().isBlocked()) {
+			getBrain().setHeading(90 + getBrain().getHeading());
+			toReturn = WarRocketLauncher.ACTION_MOVE;
+		}
 		return toReturn;
 	}
 
@@ -164,9 +168,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					toReturn = WarRocketLauncher.ACTION_MOVE;
 				}
 			}
-			if(getBrain().isBlocked()) {
-				getBrain().setHeading((new Random().nextBoolean())?1:1 * 90 + getBrain().getHeading());
-			}
 		} catch (Exception e){};
 
 		return toReturn;
@@ -183,28 +184,21 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getMovementPosition(getBrain().getID()));
-					if(getBrain().isBlocked()) {
-						getBrain().setHeading(90 + getBrain().getHeading());
-					}
 				} else {
-					if(!t.isReady()) {
+					if(!t.isReady() && !ev.killedFirstBase()) {
 						Tools.setHeadingOn(
 								getBrain(), 
 								ev.getStructWarBrain(getBrain().getID()).getPosition(),
 								t.getLeaderPositionForWaiting(getBrain().getID(), ev, isOnTop));
 					} else {
 						int n = new Random().nextInt(100);
-						if(n > 98 || getBrain().isBlocked()) {
-							newPosition();
-						}
+					
 						Tools.setHeadingOn(
 								getBrain(), 
 								ev.getStructWarBrain(getBrain().getID()).getPosition(),
 								new Vector2(x, y));
 					}
-					if(getBrain().isBlocked()) {
-						getBrain().setHeading(90 + getBrain().getHeading());
-					}
+
 				}
 			} catch (NotExistException e) {
 			}
@@ -229,10 +223,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getBaseAttackPosition(getBrain().getID()));
-					if(getBrain().isBlocked()) {
-						getBrain().setHeading(90 + getBrain().getHeading());
-
-					}
 					Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
 					Vector2 enemyBase = t.getBaseAttackPosition(getBrain().getID());
 					if(myPosition.dst(enemyBase) < 5) {
@@ -266,10 +256,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getBaseAttackPosition(getBrain().getID()));
-					if(getBrain().isBlocked()) {
-						getBrain().setHeading(90 + getBrain().getHeading());
-
-					}
+					
 					Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
 					Vector2 enemyBase = t.getBaseAttackPosition(getBrain().getID());
 					if(myPosition.dst(enemyBase) < 5) {
@@ -292,9 +279,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 						getBrain(), 
 						ev.getStructWarBrain(getBrain().getID()).getPosition(),
 						t.getBaseAttackPosition(getBrain().getID()));
-				if(getBrain().isBlocked()) {
-					getBrain().setHeading((new Random().nextBoolean())?1:1 * 90 + getBrain().getHeading());
-				}
+				
 				Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
 				Vector2 enemyBase = t.getBaseAttackPosition(getBrain().getID());
 				if(myPosition.dst(enemyBase) < 5) {
@@ -319,10 +304,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					getBrain(), 
 					ev.getStructWarBrain(getBrain().getID()).getPosition(),
 					enemyBasePosition);
-			if(getBrain().isBlocked()) {
-				getBrain().setHeading(90 + getBrain().getHeading());
-
-			}
+			
 			return WarRocketLauncher.ACTION_MOVE;
 
 		} catch (BaseNotFoundException e) {};

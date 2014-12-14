@@ -41,6 +41,7 @@ public class Environnement {
 	private boolean killedFirstBase;
 	private Boolean weAreInTop; // En haut à droite, null si on sait pas encore
 	private ArrayList<Integer> explorers;
+	private HashMap<Integer, Integer> mainBases;
 
 	public Environnement() {
 		tm = new TeamManager();
@@ -51,6 +52,7 @@ public class Environnement {
 		killedFirstBase = false;
 		weAreInTop = null;
 		explorers = new ArrayList<Integer>();
+		mainBases = new HashMap<Integer, Integer>();
 	}
 
 	/*** ECRITURE **/
@@ -85,12 +87,24 @@ public class Environnement {
 	}
 
 	public void setMainBase(WarBaseBrain mainBase) {
+		cleanMainBases();
+		mainBases.put(mainBase.getID(), 2 * mainBases.size());
+
+		System.out.println(mainBase.getID());
 		boolean mainBaseAlive = true;
 		try{
+			System.out.println("main base id : " + getMainBase().getID());
+			System.out.println("testing mainbase alive : " + getMainBase().getHealth());
 			mainBaseAlive = (getMainBase().getHealth() > 0);
-		} catch (Exception e){}
-		if (!this.mainBaseIsDefined() || !mainBaseAlive)
+		} catch (Exception e){
+			mainBaseAlive = false;
+			this.mainBase = null;
+			System.out.println("mainbase dead");
+		}
+		if (!this.mainBaseIsDefined() || !mainBaseAlive) {
 			this.mainBase = mainBase;
+			System.out.println("setting new main base");
+		}
 	}
 
 	public void updatePositionOfEnemy(int ID, Vector2 newPosCart, int life, WarAgentType type) {
@@ -119,6 +133,15 @@ public class Environnement {
 		this.clean();
 	}
 
+	private void cleanMainBases() {
+		for (Integer integer : mainBases.keySet()) {
+			if(mainBases.get(integer) == 0 && integer == mainBase.getID()) {
+				mainBase = null;
+			}
+			mainBases.put(integer, mainBases.get(integer) - 1);
+		}
+	}
+	
 	public void clean() {
 		try {
 			for (StructWarBrain s : listAllies.values()) {
@@ -353,7 +376,7 @@ public class Environnement {
 			throw new NoTargetFoundException();
 		}
 	}
-	
+
 	public int getNumberOfType(WarAgentType type) {
 		int cpt = 0;
 		for (StructWarBrain s : this.getListAllies()) {
