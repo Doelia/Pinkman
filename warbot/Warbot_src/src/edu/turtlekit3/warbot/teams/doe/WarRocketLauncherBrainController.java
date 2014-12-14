@@ -184,7 +184,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getMovementPosition(getBrain().getID()));
 					if(getBrain().isBlocked()) {
-						getBrain().setHeading(new Random().nextInt(360) + getBrain().getHeading());
+						getBrain().setHeading(90 + getBrain().getHeading());
 					}
 				} else {
 					if(!t.isReady()) {
@@ -203,7 +203,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 								new Vector2(x, y));
 					}
 					if(getBrain().isBlocked()) {
-						getBrain().setHeading(new Random().nextInt(360) + getBrain().getHeading());
+						getBrain().setHeading(90 + getBrain().getHeading());
 					}
 				}
 			} catch (NotExistException e) {
@@ -230,7 +230,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getBaseAttackPosition(getBrain().getID()));
 					if(getBrain().isBlocked()) {
-						getBrain().setHeading(new Random().nextInt(360) + getBrain().getHeading());
+						getBrain().setHeading(90 + getBrain().getHeading());
 
 					}
 					Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
@@ -267,7 +267,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getBaseAttackPosition(getBrain().getID()));
 					if(getBrain().isBlocked()) {
-						getBrain().setHeading(new Random().nextInt(360) + getBrain().getHeading());
+						getBrain().setHeading(90 + getBrain().getHeading());
 
 					}
 					Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
@@ -320,7 +320,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					ev.getStructWarBrain(getBrain().getID()).getPosition(),
 					enemyBasePosition);
 			if(getBrain().isBlocked()) {
-				getBrain().setHeading(new Random().nextInt(360) + getBrain().getHeading());
+				getBrain().setHeading(90 + getBrain().getHeading());
 
 			}
 			return WarRocketLauncher.ACTION_MOVE;
