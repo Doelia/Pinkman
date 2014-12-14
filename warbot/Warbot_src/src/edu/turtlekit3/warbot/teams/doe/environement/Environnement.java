@@ -339,7 +339,10 @@ public class Environnement {
 		int id = -1;
 		try {
 			for (StructWarBrainEnemy s : this.listEnemies.values()) {
-				if(s.getType() == WarAgentType.WarBase || s.getType() == WarAgentType.WarRocketLauncher) {
+				if(s.getType() == WarAgentType.WarBase 
+						|| s.getType() == WarAgentType.WarRocketLauncher
+						|| s.getType() == WarAgentType.WarTurret
+						|| s.getType() == WarAgentType.WarKamikaze) {
 					double dst = position.dst(s.getPosition());
 					if (dst < minDistance) {
 						minDistance = position.dst(s.getPosition());
