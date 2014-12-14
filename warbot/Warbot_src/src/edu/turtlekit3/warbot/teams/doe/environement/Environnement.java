@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ObjectMap.Values;
+import com.badlogic.gdx.utils.OrderedMap;
 
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
@@ -37,7 +39,7 @@ public class Environnement {
 	private WarBaseBrain mainBase;
 	private Stack<Integer> takenFood;
 	private HashMap<Integer, StructWarBrainAllie> listAllies;
-	private HashMap<Integer, StructWarBrainEnemy> listEnemies;
+	private OrderedMap<Integer, StructWarBrainEnemy> listEnemies;
 	private boolean killedFirstBase;
 	private Boolean weAreInTop; // En haut à droite, null si on sait pas encore
 	private ArrayList<Integer> explorers;
@@ -48,7 +50,7 @@ public class Environnement {
 		mainBase = null;
 		takenFood = new Stack<Integer>();
 		listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
-		listEnemies = new HashMap<Integer, StructWarBrainEnemy>();
+		listEnemies = new OrderedMap<Integer, StructWarBrainEnemy>();
 		killedFirstBase = false;
 		weAreInTop = null;
 		explorers = new ArrayList<Integer>();
@@ -259,7 +261,7 @@ public class Environnement {
 		return (this.mainBase != null);
 	}
 
-	public Collection<StructWarBrainEnemy> getEnemies() {
+	public Values<StructWarBrainEnemy> getEnemies() {
 		return listEnemies.values();
 	}
 

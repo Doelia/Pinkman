@@ -96,7 +96,7 @@ public class Group {
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
 			float alpha = tick*index;
-			Vector2 target = Tools.cartFromPolaire(alpha, 20);
+			Vector2 target = Tools.cartFromPolaire(alpha, 30);
 			target.add(this.target);
 			return target;
 		} catch (Exception e) {
@@ -131,8 +131,8 @@ public class Group {
 			int index = members.indexOf(brainId);
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
-			float alpha = tick*index + getEnvironnement().getIndexOfTeam(this) * 20;
-			Vector2 target = Tools.cartFromPolaire(alpha, 20);
+			float alpha = tick*index + getEnvironnement().getIndexOfTeam(this) * (360 / getEnvironnement().getTeamManager().size());
+			Vector2 target = Tools.cartFromPolaire(alpha, 30);
 			target.add(base);
 			return target;
 		} catch (Exception e) {
@@ -163,7 +163,7 @@ public class Group {
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
 			float alpha = tick*index + angle;
-			Vector2 target = Tools.cartFromPolaire(alpha, 20);
+			Vector2 target = Tools.cartFromPolaire(alpha, 30);
 			target.add(position);
 			return target;
 		} catch (Exception e) {
