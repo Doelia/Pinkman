@@ -19,8 +19,6 @@ import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
 public class Environnement {
 
-	public static boolean RUSH_MODE = true;
-
 	private static Environnement instance;
 	public static Environnement getInstance() {
 		if (instance == null) {
@@ -239,7 +237,6 @@ public class Environnement {
 	}
 
 	public boolean oneBaseIsFound() {
-		System.out.println("number of bases found and alive : " + this.getEnemyBases().size());
 		return (this.getEnemyBases().size() > 0);
 	}
 

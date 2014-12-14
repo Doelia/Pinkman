@@ -3,8 +3,6 @@ package edu.turtlekit3.warbot.teams.doe;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.lwjgl.Sys;
-
 import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;

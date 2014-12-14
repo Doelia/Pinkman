@@ -47,60 +47,22 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		}
 	}
 
-	int distance = 0;
-	private void setDirectionToFindBasePosition(Vector2 position, Vector2 direction) {
-		Tools.setHeadingOn(
-				getBrain(), 
-				position,
-				direction);
+	public boolean jeDoisPartirADroite() {
+		try {
+		return (getEnvironnement().getExplorerIndex(getBrain().getID()) % 2 == 0);
+		} catch (Exception e) {
+			return true;
+		}
 	}
 
 	private String findOurPositionBase() {
 
-		System.out.println("uie");
-		Environnement e = getEnvironnement();
+		this.getBrain().setHeading(this.jeDoisPartirADroite()?0:180);
 
-		int index = e.getExplorerIndex(getBrain().getID());
-		Vector2 v1 = new Vector2(20000, 0);
-		Vector2 v2 = new Vector2(-20000, 0);
-		Vector2 v3 = new Vector2(0, 0);
-		
-		if(index % 2 == 0) {
-			setDirectionToFindBasePosition(v3, v2);
-		} else if (index % 2 == 1) {
-			setDirectionToFindBasePosition(v3, v1);
+		if (this.isAWall()) {
+			getEnvironnement().setWeAreInTop(this.jeDoisPartirADroite());
 		}
 
-		if(this.isAWall()) {
-			if(index % 2 == 0) {
-				e.setWeAreInTop(false);
-			} else if (index % 2 == 1) {
-				e.setWeAreInTop(true);
-			}
-		}
-
-		if(getBrain().isBlocked()) {
-			getBrain().setHeading(getBrain().getHeading() + 90);
-		}
-
-
-		//		if (this.isAWall()) {
-		//			System.out.println("Base en haut à droite");
-		//			e.setWeAreInTop(true);
-		//			return MovableWarAgent.ACTION_IDLE;
-		//		}
-		//		
-		//		if (this.distance > 200) {
-		//			System.out.println("Base en bas à droite");
-		//			getEnvironnement().setWeAreInTop(false);
-		//			return MovableWarAgent.ACTION_IDLE;
-		//		}
-		//		
-		//		this.getBrain().setHeading(0);
-		//		if (!this.getBrain().isBlocked())
-		//			distance++;
-		//		
-		//		this.getBrain().setDebugString("distance="+distance);
 		return MovableWarAgent.ACTION_MOVE;
 	}
 
@@ -111,16 +73,6 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			return null;
 		}
 	}
-
-	private boolean imSearcher() {
-		return true;
-//		if (getEnvironnement().idSearcherBase == -1) {
-//			getEnvironnement().idSearcherBase = this.getBrain().getID();
-//		}
-//
-//		return (getEnvironnement().idSearcherBase == this.getBrain().getID());
-	}
-
 
 	private boolean baseEnemyIsFound() {
 		try {
@@ -133,10 +85,6 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 	private Vector2 getPositionAprox() throws BaseNotFoundException {
 		return getEnvironnement().getApproxEnemyBasePosition();
-	}
-
-	private boolean imInSearchEnemyBaseGroup() {
-		return this.imSearcher();
 	}
 
 	@Override
@@ -160,7 +108,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 			Vector2 curentPosition = activeTask.getCurentPosition();
 
-			if (!this.baseEnemyIsFound() && (Environnement.RUSH_MODE || this.imInSearchEnemyBaseGroup())) {
+			if (!this.baseEnemyIsFound()) {
 
 				if (this.getEnvironnement().ourBaseIsFound()) {
 
@@ -177,10 +125,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 					}
 
 				} else {
-					if (this.imSearcher()) {
-						this.getBrain().setDebugString("searching our base position");
-						return this.findOurPositionBase();
-					}
+					this.getBrain().setDebugString("searching our base position");
+					return this.findOurPositionBase();
 				}
 
 			} else {
@@ -190,6 +136,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 				}
 
 				if ((getBrain().isBagFull() || this.isInGave)){
+					
 					this.isInGave = true;
 					this.getBrain().setDebugString("return base");
 
@@ -197,9 +144,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 					ArrayList<WarPercept> basePercepts = getBrain().getPerceptsAlliesByType(WarAgentType.WarBase);
 
-					if(basePercepts != null && basePercepts.size() > 0) {
+					if (basePercepts != null && basePercepts.size() > 0) {
 						WarPercept base = basePercepts.get(0);
-						if (base.getDistance() < MovableWarAgent.MAX_DISTANCE_GIVE){
+						if (base.getDistance() < MovableWarAgent.MAX_DISTANCE_GIVE-2){
+							this.getBrain().setDebugString("giving to base");
 							getBrain().setIdNextAgentToGive(base.getID());
 							action = MovableWarAgent.ACTION_GIVE;
 						}
