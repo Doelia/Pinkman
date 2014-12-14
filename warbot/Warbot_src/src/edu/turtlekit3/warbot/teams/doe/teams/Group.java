@@ -21,6 +21,8 @@ public class Group {
 	private int angle;
 	boolean isBaseAttacked;
 	boolean isTargetBase;
+	int teamIndex;
+	private boolean ready;
 	Environnement e = null;
 
 	public Group() {
@@ -33,10 +35,19 @@ public class Group {
 		isBaseAttacked = false;
 		angle = new Random().nextInt(20);
 		isTargetBase = false;
+		isBaseAttacked = false;
+		ready = false;
 	}
 
+	public boolean isReady() {
+		return this.ready;
+	}
+	
 	public void addMember(Integer w) {
 		members.add(w);
+		if(members.size() == getMaxSize() && !ready) {
+			ready = true;
+		}
 	}
 	
 	public ArrayList<Integer> getMembers() {
@@ -44,12 +55,11 @@ public class Group {
 	}
 
 	public int getLeader() throws NotExistException {
-//		try {
-//			return Environnement.getInstance().getStructWarBrain(members.get(0)).getID();
-//		} catch (Exception e) {
-//			throw new NotExistException();
-//		}
-		return members.get(0);
+		try {
+			return Environnement.getInstance().getStructWarBrain(members.get(0)).getID();
+		} catch (Exception e) {
+			throw new NotExistException();
+		}
 	}
 
 	public boolean contains(Integer id) {
@@ -80,8 +90,22 @@ public class Group {
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
 			float alpha = tick*index;
-			Vector2 target = Tools.cartFromPolaire(alpha, 40);
+			Vector2 target = Tools.cartFromPolaire(alpha, 20);
 			target.add(this.target);
+			return target;
+		} catch (Exception e) {
+			throw new NotExistException();
+		}
+	}
+	
+	public Vector2 getLeaderPositionForWaiting(Integer brainId, Environnement ev, int isOnTop) throws NotExistException {
+		try {
+			int index = teamIndex;
+			int nbrPersonnes = ev.getTeamManager().size();
+			float tick = (180/nbrPersonnes) * isOnTop;
+			float alpha = tick*index;
+			Vector2 target = Tools.cartFromPolaire(alpha, 80);
+			target.add(ev.getStructWarBrain(ev.getMainBase().getID()).getPosition());
 			return target;
 		} catch (Exception e) {
 			throw new NotExistException();
@@ -102,7 +126,7 @@ public class Group {
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
 			float alpha = tick*index + getEnvironnement().getIndexOfTeam(this) * 20;
-			Vector2 target = Tools.cartFromPolaire(alpha, 25);
+			Vector2 target = Tools.cartFromPolaire(alpha, 20);
 			target.add(base);
 			return target;
 		} catch (Exception e) {
@@ -158,7 +182,7 @@ public class Group {
 		if(!attacking) {
 			nbStopAttacking++;
 		}
-		if(nbStopAttacking > getSize() * 10) {
+		if(nbStopAttacking > getSize() * 1) {
 			nbStopAttacking = 0;
 			this.attacking = false;
 		}
@@ -191,5 +215,13 @@ public class Group {
 	
 	public boolean isTargetBase() {
 		return isTargetBase;
+	}
+	
+	public boolean isBaseAttackTeam() {
+		return teamIndex % 2 == 0;
+	}
+	
+	public void setTeamIndex(int index) {
+		this.teamIndex = index;
 	}
 }

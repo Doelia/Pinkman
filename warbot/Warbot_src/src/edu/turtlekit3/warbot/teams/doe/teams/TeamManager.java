@@ -21,9 +21,13 @@ public class TeamManager {
 		throw new NoTeamFoundException();
 	}
 	
+	public int size() {
+		return teams.size();
+	}
+	
 	public void affectTeamTo(int brainId) {
 		for (Group team : teams) {
-			if(team.getSize() < team.getMaxSize()) {
+			if(team.getSize() < team.getMaxSize() && !team.isReady()) {
 				team.addMember(brainId);
 				return;
 			}
@@ -35,6 +39,7 @@ public class TeamManager {
 		Group team = new Group();
 		team.addMember(brainId);
 		teams.add(team);
+		team.setTeamIndex(teams.indexOf(team));
 		return team;
 	}
 
@@ -45,10 +50,6 @@ public class TeamManager {
 	}
 
 	public void setBaseAttacked(boolean b) {
-//		for (int i = 0; i < teams.size() / 2 + 1; i++) {
-//			teams.get(i).setBaseAttacked(b);
-//		}
-		
 		for (Group group : teams) {
 			group.setBaseAttacked(b);
 		}
