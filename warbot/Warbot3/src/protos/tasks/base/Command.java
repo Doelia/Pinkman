@@ -110,12 +110,12 @@ public class Command extends Task<Nexus>
 					ProtosCommunication.INFORM_FOUND_ENEMY_BASE))
 			{
 				TargetMessageWrapper tmw = TargetMessageWrapper.unwrap(wm);
-				w.getCharts().addEnemyBaseCoord(tmw.compute());
+				w.getCharts().addEnemyBaseLocation(tmw.compute());
 			} else if (wm.getMessage().equals(
 					ProtosCommunication.INFORM_DESTROYED_ENEMY_BASE))
 			{
 				TargetMessageWrapper tmw = TargetMessageWrapper.unwrap(wm);
-				w.getCharts().addDestroyedBaseCoord(tmw.compute());
+				w.getCharts().addEnemyBaseLocation(tmw.compute());
 			} else if (wm.getMessage().equals(
 					ProtosCommunication.ASK_HQ_POSITION))
 			{
