@@ -3,6 +3,8 @@ package edu.turtlekit3.warbot.teams.doe;
 import java.util.ArrayList;
 import java.util.Random;
 
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
+
 import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
@@ -82,13 +84,29 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			return unstuck();
 		}
 		
+		
+		
 		toReturn = move();
 		toReturn = attack();
 		
-		if(getBrain().isBlocked()) {
-			return unstuck();
-		}
-		
+		Group g;
+		try {
+			g = getEnvironnement().getTeamManager().getTeamOf(this.getBrain().getID());
+			int leader = g.getLeader();
+			if(getBrain().getID() == leader) {
+				getBrain().setDebugString("leader : " + getBrain().isReloading());
+			} else {
+				getBrain().setDebugString(getBrain().isReloading() + "");
+			}
+			if(g.getLeader() == getBrain().getID() && isOnTop == 1) {
+				getBrain().setHeading(getBrain().getHeading() + 180);
+			}
+		} catch (Exception ex) {};
+//		
+//		if(getBrain().isBlocked()) {
+//			return unstuck();
+//		}
+//		
 		return toReturn;
 	}
 
@@ -117,9 +135,8 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		Group t;
 		try {
 			t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
-			int leader = t.getLeader();
 
-			String s = rush(leader, t, ev);
+			String s = rush(t, ev);
 			if(!s.equals("")) {
 				getBrain().setDebugString("rushing enemy base");
 				return s;
@@ -155,7 +172,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 								myPosition,
 								enemyBase);
 
-						if(myPosition.dst(enemyBase) < 2) {
+						if(myPosition.dst(enemyBase) < 3) {
 							Tools.setHeadingOn(
 									getBrain(), 
 									myPosition,
@@ -167,7 +184,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 						toReturn = WarRocketLauncher.ACTION_MOVE;
 					} else {
 						t.setAttacking(false);
-						s = attackBaseAfterFirstBaseDead(leader, t, ev);
+						s = attackBaseAfterFirstBaseDead(t, ev);
 						if(!s.equals("")) {
 							getBrain().setDebugString("going to attack enemy base");
 							return s;
@@ -175,7 +192,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					}
 				} catch (Exception e) {
 					t.setAttacking(false);
-					s = attackBaseAfterFirstBaseDead(leader, t, ev);
+					s = attackBaseAfterFirstBaseDead(t, ev);
 					if(!s.equals("")) {
 						getBrain().setDebugString("going to attack enemy base");
 						return s;
@@ -194,7 +211,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 								ev.getStructWarBrain(getBrain().getID()).getPosition(),
 								t.getTargetPosition(getBrain().getID(), isOnTop));
 
-						if(myPosition.dst(enemyPosition) < 2) {
+						if(myPosition.dst(enemyPosition) < 3) {
 							Tools.setHeadingOn(
 									getBrain(), 
 									myPosition,
@@ -216,7 +233,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							myPosition,
 							enemyBase);
 
-					if(myPosition.dst(enemyBase) < 2) {
+					if(myPosition.dst(enemyBase) < 3) {
 						Tools.setHeadingOn(
 								getBrain(), 
 								myPosition,
@@ -226,7 +243,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					toReturn = WarRocketLauncher.ACTION_MOVE;
 				}
 			}
-		} catch (Exception e){};
+		} catch (Exception e){getBrain().setDebugString(getBrain().getDebugString() + "in catch1");};
 
 		return toReturn;
 	}
@@ -270,67 +287,63 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		return WarRocketLauncher.ACTION_MOVE;
 	}
 
-	private String attackBaseAfterFirstBaseDead(int leader, Group t, Environnement ev) throws NotExistException {
-		System.out.println("number of bases found : " + ev.getEnemyBases().size());
+	private String attackBaseAfterFirstBaseDead(Group t, Environnement ev) throws NotExistException {
 		if(ev.oneBaseIsFound()) {
+			Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
+			Vector2 enemyBase = t.getBaseAttackPosition(getBrain().getID());
 			ArrayList<WarPercept> p = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
 			if(p.size() > 0) {
 				t.setTarget(getEnvironnement().getPositionFirstEnemyBase(), true);
 				if(!getBrain().isReloaded()) {
 					Tools.setHeadingOn(
 							getBrain(), 
-							ev.getStructWarBrain(getBrain().getID()).getPosition(),
-							t.getBaseAttackPosition(getBrain().getID()));
-					Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
-					Vector2 enemyBase = t.getBaseAttackPosition(getBrain().getID());
-					if(myPosition.dst(enemyBase) < 2) {
+							myPosition,
+							enemyBase);
+					if(myPosition.dst(enemyBase) < 3) {
 						Tools.setHeadingOn(
 								getBrain(), 
 								ev.getStructWarBrain(getBrain().getID()).getPosition(),
 								t.getTarget());
-						return  WarRocketLauncher.ACTION_MOVE;
 					}
-
 					return WarRocketLauncher.ACTION_MOVE;
+					
 				} else {
 					getBrain().setHeading(p.get(0).getAngle());
 					return WarRocketLauncher.ACTION_FIRE;
 				}
 			} else {
-				Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
-				Vector2 enemyBase = t.getBaseAttackPosition(getBrain().getID());
-				if(myPosition.dst(enemyBase) < 2) {
+				if(myPosition.dst(enemyBase) < 3) {
 					Tools.setHeadingOn(
 							getBrain(), 
-							ev.getStructWarBrain(getBrain().getID()).getPosition(),
+							myPosition,
 							t.getTarget());
-					return  WarRocketLauncher.ACTION_IDLE;
 				} else {
 					Tools.setHeadingOn(
 							getBrain(), 
-							ev.getStructWarBrain(getBrain().getID()).getPosition(),
-							t.getBaseAttackPosition(getBrain().getID()));
-					return WarRocketLauncher.ACTION_MOVE;
+							myPosition,
+							enemyBase);
 				}
+				return WarRocketLauncher.ACTION_MOVE;
 			}
 		}
 		return "";
 	}
 
-	private String attackBase(int leader, Group t, Environnement ev) throws NotExistException {
-		if(ev.oneBaseIsFound() || !t.isBaseAttackTeam()) {
+	private String attackBase(Group t, Environnement ev) throws NotExistException {
+		if(ev.oneBaseIsFound()) {
+			Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
+			Vector2 enemyBase = t.getBaseAttackPosition(getBrain().getID());
 			ArrayList<WarPercept> p = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
 			if(p.size() > 0) {
+				
 				t.setTarget(getEnvironnement().getPositionFirstEnemyBase(), true);
 				if(!getBrain().isReloaded()) {
 					Tools.setHeadingOn(
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
-							t.getBaseAttackPosition(getBrain().getID()));
+							enemyBase);
 
-					Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
-					Vector2 enemyBase = t.getBaseAttackPosition(getBrain().getID());
-					if(myPosition.dst(enemyBase) < 5) {
+					if(myPosition.dst(enemyBase) < 3) {
 						Tools.setHeadingOn(
 								getBrain(), 
 								myPosition,
@@ -346,11 +359,8 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 				Tools.setHeadingOn(
 						getBrain(), 
 						ev.getStructWarBrain(getBrain().getID()).getPosition(),
-						t.getBaseAttackPosition(getBrain().getID()));
-
-				Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
-				Vector2 enemyBase = t.getBaseAttackPosition(getBrain().getID());
-				if(myPosition.dst(enemyBase) < 2) {
+						enemyBase);
+				if(myPosition.dst(enemyBase) < 3) {
 					Tools.setHeadingOn(
 							getBrain(), 
 							myPosition,
@@ -359,11 +369,11 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 				return WarRocketLauncher.ACTION_MOVE;
 			}
 		} else {
-			return goToApproxEnemyBase(leader, t, ev);
+			return goToApproxEnemyBase(t, ev);
 		}
 	}
 
-	private String goToApproxEnemyBase(int leader, Group t, Environnement ev) throws NotExistException {
+	private String goToApproxEnemyBase(Group t, Environnement ev) throws NotExistException {
 		try {
 			Vector2 enemyBasePosition = ev.getApproxEnemyBasePosition();
 			Tools.setHeadingOn(
@@ -377,11 +387,10 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		return "";
 	}
 
-	private String rush(int leader, Group t, Environnement ev) throws NotExistException {
+	private String rush(Group t, Environnement ev) throws NotExistException {
 		if (ev.inRush()) {
-			return attackBase(leader, t, ev);
+			return attackBase(t, ev);
 		} else if (ticksSinceLastEncounter > 100 && !ev.oneBaseIsFound()){
-			//			newPosition();
 			t.setReady(true);
 		}
 		return "";

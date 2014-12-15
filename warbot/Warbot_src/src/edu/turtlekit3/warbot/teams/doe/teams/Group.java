@@ -108,7 +108,7 @@ public class Group {
 			Vector2 t = target;
 			
 			orientation = getEnvironnement().getTeamManager().getIndexOfTeam(this) * (360 / getSize());
-			int index = (members.indexOf(brainId) + battleModifier) % getSize();
+			int index = members.indexOf(brainId);
 			int nbrPersonnes = members.size();
 			float tick = (angle/nbrPersonnes);
 			float alpha = tick*index + orientation;
@@ -147,7 +147,7 @@ public class Group {
 			int index = members.indexOf(brainId);
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
-			float alpha = tick*index + getEnvironnement().getIndexOfTeam(this) * (360 / getEnvironnement().getTeamManager().size());
+			float alpha = tick*index + getEnvironnement().getIndexOfTeam(this) * (360 / getEnvironnement().getTeamManager().size()) + 20;
 			Vector2 target = Tools.cartFromPolaire(alpha, 25);
 			target.add(base);
 			return target;
