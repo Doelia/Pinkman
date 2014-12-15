@@ -49,7 +49,7 @@ public class StructWarBrainEnemy extends StructWarBrain {
 	public void resetTtl() {
 		this.timeWithoutUpdate = 0;
 		if(isBase()) {
-			ttl = 200;
+			ttl = 150;
 		} else {
 			ttl = 10;
 		}

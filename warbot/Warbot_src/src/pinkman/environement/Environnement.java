@@ -152,7 +152,6 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		try {
 			for (StructWarBrainEnemy s : listEnemies.values()) {
 				if (s.isBase()) {
-					System.out.println("TimeLife = "+s.getTimeLife());
 					if (!s.isAlive() || s.getTtl() <= 0 || s.getTimeLife() > 3000) {
 						listEnemies.remove(s.getID());
 					}
@@ -421,6 +420,19 @@ public class Environnement implements EnvironnementUpdaterInterface {
 			}
 		}
 		return base;
+	}
+	
+	public Vector2 getPositionFirstEclaireur() {
+		Vector2 v = new Vector2(0,0);
+		for (StructWarBrainAllie s : this.getListAllies()) {
+			if (s.getType() == WarAgentType.WarExplorer) {
+				try {
+					return s.getPosition();
+				} catch (NotExistException e) {
+				}
+			}
+		}
+		return v;
 	}
 
 	public int getBiggestBaseId() {
