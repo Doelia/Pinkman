@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.WarBrainController;
-import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
+import edu.turtlekit3.warbot.teams.doe.behavior.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 import edu.turtlekit3.warbot.teams.doe.messages.EnvironnementUpdaterInterface;

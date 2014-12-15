@@ -22,30 +22,6 @@ import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
 public class Environnement implements EnvironnementUpdaterInterface {
 
-	private static Environnement instance1;
-	private static Environnement instance2;
-	
-	public static Environnement getInstance1() {
-		if (instance1 == null) {
-			instance1 = new Environnement();
-		}
-		return instance1;
-	}
-	
-	public static Environnement getInstance2() {
-		if (instance2 == null) {
-			instance2 = new Environnement();
-		}
-		return instance2;
-	}
-
-	public static void clear() {
-		instance1 = null;
-		instance2 = null;
-	}
-
-	public int idSearcherBase = -1;
-
 	private TeamManager tm;
 	private WarBaseBrain mainBase;
 	private Stack<Integer> takenFood;

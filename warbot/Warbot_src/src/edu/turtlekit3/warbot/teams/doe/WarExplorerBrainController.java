@@ -9,7 +9,7 @@ import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarExplorerAbstractBrainController;
-import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
+import edu.turtlekit3.warbot.teams.doe.behavior.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
@@ -29,7 +29,6 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private String action;
 	private boolean isInGave = false;
 	private boolean haveTouchAproxTarget = false;
-
 	private boolean detectFood;
 
 	public boolean isAWall() {
@@ -157,8 +156,6 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 
 		try {
 
-			Vector2 curentPosition = activeTask.getCurentPosition();
-
 			// 1. On cherche la base de l'enemie
 			if (!this.baseEnemyIsFound()) {
 				
@@ -172,7 +169,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 					if (!this.getFood())  { // 1.2.1 On cherche de la nourriture sur le passage, sinon on continue
 						this.getBrain().setDebugString("going to aprox enemy base: "+this.getPositionAprox());
 						this.activeTask.setTarget(this.getPositionAprox());
-						if (Tools.isNextTo(curentPosition, activeTask.getTarget(), 5)) {
+						if (Tools.isNextTo(activeTask.getCurentPosition(), activeTask.getTarget(), 5)) {
 							this.haveTouchAproxTarget = true;
 						}
 

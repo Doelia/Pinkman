@@ -3,7 +3,7 @@ package edu.turtlekit3.warbot.teams.doe;
 import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
-import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
+import edu.turtlekit3.warbot.teams.doe.behavior.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.messages.EnvironnementUpdaterInterface;
 import edu.turtlekit3.warbot.teams.doe.messages.ReceiverEnvironementInstruction;
@@ -20,7 +20,6 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
 	public WarBaseBrainController() {
 		super();
-		Environnement.clear();
 	}
 
 	private void broadcastPosition() {

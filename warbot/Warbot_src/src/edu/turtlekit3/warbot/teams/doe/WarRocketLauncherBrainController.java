@@ -10,7 +10,7 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarRocketLauncherAbstractBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
-import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
+import edu.turtlekit3.warbot.teams.doe.behavior.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTeamFoundException;
