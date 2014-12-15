@@ -61,6 +61,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		this.getBrain().setHeading(this.jeDoisPartirADroite()?0:180);
 		if (this.isAWall()) {
 			getEnvironnement().setWeAreInTop(this.jeDoisPartirADroite());
+		} else {
+			if (this.getBrain().isBlocked()) {
+				this.getBrain().setHeading(90);
+			}
 		}
 		return MovableWarAgent.ACTION_MOVE;
 	}
