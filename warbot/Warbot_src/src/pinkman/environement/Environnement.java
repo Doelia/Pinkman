@@ -340,7 +340,6 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		return listAllies.values();
 	}
 
-
 	public int getClosestEnemy(Vector2 position) throws NoTargetFoundException {
 		this.clean();
 		double minDistance = 200;
