@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Group {
 	private ArrayList<Integer> members;
-	private Vector2 target;
+	private Vector2 t;
 	private boolean attacking;
 	private int requestNumber;
 	private int battleModifier;
@@ -23,15 +23,16 @@ public class Group {
 	boolean isBaseAttacked;
 	boolean isTargetBase;
 	int teamIndex;
-	private int targetID;
 	private int voteToChangeTarget;
 	private Environnement e;
+	
+	private Target target;
 
 	public Group(Environnement e) {
 		members = new ArrayList<Integer>();
 		attacking = false;
-		target = new Vector2();
-		requestNumber = 0;
+		t = new Vector2();
+		requestNumber = 99999;
 		battleModifier = 0;
 		nbStopAttacking = 0;
 		isBaseAttacked = false;
@@ -41,23 +42,23 @@ public class Group {
 		voteToChangeTarget = 0;
 		this.e = e;
 	}
-	
+
 	public void setTargetID(int id) {
 		voteToChangeTarget++;
 		if(voteToChangeTarget > getSize() * 10) {
 			voteToChangeTarget = 0;
-			targetID = id;
+			//			targetID = id;
 		}
 	}
-	
-	public int getTargetID() {
-		return targetID;
-	}
-	
+
+	//	public int getTargetID() {
+	//		return targetID;
+	//	}
+
 	public void addMember(Integer w) {
 		members.add(w);
 	}
-	
+
 	public ArrayList<Integer> getMembers() {
 		return this.members;
 	}
@@ -81,7 +82,7 @@ public class Group {
 	public int getMaxSize() {
 		return 8;
 	}
-	
+
 	public Vector2 getBattlePosition(Integer brainId) throws NotExistException {
 		requestNumber++;
 		if(requestNumber > 15 * getSize()) {
@@ -96,9 +97,9 @@ public class Group {
 		try {
 			int angle = 360;
 			float orientation = 0;
-			int dist = 25;
-			Vector2 t = target;
-			
+			int dist = 40;
+			Vector2 ta = t;
+
 			orientation = getEnvironnement().getTeamManager().getIndexOfTeam(this) * (360 / getSize());
 			int index = members.indexOf(brainId);
 			int nbrPersonnes = members.size();
@@ -111,7 +112,7 @@ public class Group {
 			throw new NotExistException();
 		}
 	}
-	
+
 	public Vector2 getLeaderPositionForWaiting(Integer brainId, Environnement ev, int isOnTop) throws NotExistException {
 		try {
 			int index = teamIndex;
@@ -125,11 +126,11 @@ public class Group {
 			throw new NotExistException();
 		}
 	}
-	
+
 	private Environnement getEnvironnement() {
 		return e;
 	}
-	
+
 	public Vector2 getBaseAttackPosition(Integer brainId) throws NotExistException {
 		try {
 			Vector2 base = getEnvironnement().getPositionFirstEnemyBase();
@@ -144,11 +145,11 @@ public class Group {
 			throw new NotExistException();
 		}
 	}
-	
+
 	public Vector2 getMovementPosition(Integer brainId) throws NotExistException {
 		try {
 			Vector2 position = new Vector2(getEnvironnement().getStructWarBrain(getLeader()).getPosition());
-			
+
 			int index = 1 + (members.indexOf(brainId) + battleModifier) % (getSize() - 1);
 			int nbrPersonnes = members.size() - 1;
 			float tick = (360/nbrPersonnes);
@@ -160,7 +161,7 @@ public class Group {
 			throw new NotExistException();
 		}
 	}
-	
+
 	public Vector2 getDefensePosition(Integer brainId) throws NotExistException {
 		try {
 			Vector2 position = getEnvironnement().getBaseAttacked();
@@ -177,16 +178,18 @@ public class Group {
 	}
 
 	public void setTarget(Vector2 target, boolean isTargetBase) {
-		this.target = target;
-		this.isTargetBase = isTargetBase;
+		if(voteToChangeTarget > getSize() * 10) {
+			this.t = target;
+			this.isTargetBase = isTargetBase;
+		}
 	}
 
 	public Vector2 getTarget() {
-		try {
-			return getEnvironnement().getEnemy(targetID).getPosition();
-		} catch (NotExistException e) {
-		}
-		return this.target;
+		//		try {
+		//			return getEnvironnement().getEnemy(targetID).getPosition();
+		//		} catch (NotExistException e) {
+		//		}
+		return this.t;
 	}
 
 	public boolean isAttacking() {
@@ -205,17 +208,17 @@ public class Group {
 			nbStopAttacking = 0;
 			this.attacking = true;
 		}
-		
+
 	}
-	
+
 	public void removeMember(Integer id) {
 		members.remove(id);
 	}
-	
+
 	public boolean canShoot() {
 		return leaderCanShoot;
 	}
-	
+
 	public void setLeaderCanShoot(boolean b) {
 		leaderCanShoot = b;
 	}
@@ -223,20 +226,31 @@ public class Group {
 	public void setBaseAttacked(boolean b) {
 		this.isBaseAttacked = b;
 	}
-	
+
 	public boolean isBaseAttacked() {
 		return this.isBaseAttacked;
 	}
-	
+
 	public boolean isTargetBase() {
 		return isTargetBase;
 	}
-	
+
 	public boolean isBaseAttackTeam() {
 		return teamIndex % 2 == 0;
 	}
-	
+
 	public void setTeamIndex(int index) {
 		this.teamIndex = index;
+	}
+	
+	public void setTarget(Target t) {
+		this.target = t;
+	}
+	
+	public Target getTarget() {
+		if(target == null) {
+			throw new NoTargetException();
+		}
+		return target;
 	}
 }
