@@ -125,7 +125,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		if(new Random().nextInt(100) > 98) {
 			angleToUnstuck = new Random().nextInt(360);
 		}
-		getBrain().setHeading(getBrain().getHeading() + 90);
+		getBrain().setHeading(getBrain().getHeading() + angleModifier);
 		return WarRocketLauncher.ACTION_MOVE;
 	}
 
