@@ -41,7 +41,6 @@ public class Environnement implements EnvironnementUpdaterInterface {
 	private Stack<Integer> takenFood;
 	private HashMap<Integer, StructWarBrainAllie> listAllies;
 	private OrderedMap<Integer, StructWarBrainEnemy> listEnemies;
-	private boolean killedFirstBase;
 	private Boolean weAreInTop; // En haut à droite, null si on sait pas encore
 	private ArrayList<Integer> explorers;
 	private HashMap<Integer, Integer> mainBases;
@@ -53,7 +52,6 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		takenFood = new Stack<Integer>();
 		listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
 		listEnemies = new OrderedMap<Integer, StructWarBrainEnemy>();
-		killedFirstBase = false;
 		weAreInTop = null;
 		explorers = new ArrayList<Integer>();
 		mainBases = new HashMap<Integer, Integer>();
@@ -75,17 +73,11 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		}
 	}
 	
-	public void setKilledFirstBase() {
-		killedFirstBase = true;
-	}
 
 	public int getExplorerIndex(Integer id) {
 		return explorers.indexOf(id);
 	}
 
-	public void voteToKillBase(Integer baseId) {
-		listEnemies.get(baseId).decrementTtl();
-	}
 
 	public void addFreeFood(Vector2 lastFood, int ID) {
 		if (!this.takenFood.contains(ID)) {
@@ -160,22 +152,17 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		} catch(Exception e) {}
 		try {
 			for (StructWarBrainEnemy s : listEnemies.values()) {
-				if(killedFirstBase) {
-					s.decrementTtl();
-				}
 				if (!s.isAlive() || s.getTtl() <= 0) {
-					if(s.isBase()) {
-						killedFirstBase = true;
-						System.out.println("removing base");
-					}
 					listEnemies.remove(s.getID());
-				} else {
-					if (!s.isBase() && !s.positionIsUptodate()) {
-						listEnemies.remove(s.getID());
-					}
 				}
 			}
 		} catch(Exception e) { }
+	}
+	
+	public void decrementTtlOfAll() {
+		for (StructWarBrainEnemy e : this.getEnemies()) {
+			e.decrementTtl();
+		}
 	}
 
 
@@ -183,6 +170,10 @@ public class Environnement implements EnvironnementUpdaterInterface {
 
 	public int getNumberOfBases() {
 		return mainBases.size(); 
+	}
+	
+	public boolean inRush() {
+		return (this.getNumberOfBases() == 1);
 	}
 
 	public boolean ourBaseIsFound() {
@@ -297,9 +288,6 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		}
 	}
 
-	public boolean killedFirstBase() {
-		return killedFirstBase;
-	}
 
 	public TeamManager getTeamManager() {
 		return this.tm;

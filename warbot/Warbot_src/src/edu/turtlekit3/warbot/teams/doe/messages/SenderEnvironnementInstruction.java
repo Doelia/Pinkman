@@ -34,17 +34,6 @@ public class SenderEnvironnementInstruction implements EnvironnementUpdaterInter
 		
 	}
 
-	@Override
-	public void setKilledFirstBase() {
-		this.sendMessage(TypeUpdateEnv.setKilledFirstBase, "", "", "");
-		
-	}
-
-	@Override
-	public void voteToKillBase(Integer baseId) {
-		this.sendMessage(TypeUpdateEnv.voteToKillBase, String.valueOf(baseId), "", "");
-		
-	}
 
 	@Override
 	public void addFreeFood(Vector2 lastFood, int ID) {

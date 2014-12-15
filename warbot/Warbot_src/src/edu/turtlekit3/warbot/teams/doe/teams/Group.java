@@ -106,13 +106,8 @@ public class Group {
 			float orientation = 0;
 			int dist = 25;
 			Vector2 t = target;
-			StructWarBrain b = getEnvironnement().getEnemy(targetID);
 			
-			if(b.isBase()) {
-				t = b.getPosition();
-			} else {
-				orientation = new Vector2(isTop * 450, isTop * 250).add(getEnvironnement().getStructWarBrain(brainId).getPosition()).angle();
-			}
+			orientation = getEnvironnement().getTeamManager().getIndexOfTeam(this) * (180 / getMaxSize());
 			int index = (members.indexOf(brainId) + battleModifier) % getSize();
 			int nbrPersonnes = members.size();
 			float tick = (angle/nbrPersonnes);
