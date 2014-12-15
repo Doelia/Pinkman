@@ -49,7 +49,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			angleModifier = -angleModifier;
 		}
 		toReturn = "";
-		ticksSinceLastEncounter = 100000;
+		ticksSinceLastEncounter = 0;
 		messages = new ArrayList<WarMessage>();
 	}
 
@@ -375,9 +375,9 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 
 	private String rush(int leader, Group t, Environnement ev) throws NotExistException {
 		if(!ev.killedFirstBase() && t.isBaseAttackTeam()) {
-			if(ev.getNumberOfBases() == 1) {
+			if(ev.getNumberOfBases() <= 1) {
 				return attackBase(leader, t, ev);
-			} else {
+			} else if(ticksSinceLastEncounter > 100){
 				ev.setKilledFirstBase();
 				newPosition();
 				t.setReady(true);
