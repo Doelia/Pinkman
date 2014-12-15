@@ -13,6 +13,7 @@ import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
+import edu.turtlekit3.warbot.teams.doe.messages.ReceiverEnvironementInstruction;
 import edu.turtlekit3.warbot.teams.doe.tasks.DetectEnemyTask;
 import edu.turtlekit3.warbot.teams.doe.tasks.DetectFoodTask;
 import edu.turtlekit3.warbot.teams.doe.tasks.MoveTask;
@@ -22,6 +23,7 @@ import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 public class WarExplorerBrainController extends WarExplorerAbstractBrainController {
 
 	private Environnement ev;
+	private ReceiverEnvironementInstruction receiver;
 
 	private MoveTask activeTask = null;
 	private String action;
@@ -41,10 +43,12 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private Environnement getEnvironnement() {
 		if (Behavior.CHEAT) {
 			ev = Behavior.getGoodInstance(this.getBrain());
+			receiver = new ReceiverEnvironementInstruction(ev);
 		}
 		else {
 			if (ev == null) {
 				ev = new Environnement();
+				receiver = new ReceiverEnvironementInstruction(ev);
 			}
 		}
 		return ev;
@@ -148,6 +152,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		if (activeTask == null)
 			activeTask = new MoveTask(this, t, e);
 		this.detectFood = true;
+		
+		this.receiver.processMessages(this.getBrain());
 
 		try {
 
