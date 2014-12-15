@@ -62,7 +62,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		}
 
 		if (WarBase.MAX_HEALTH < 80000) {
-			return (this.getBrain().getHealth() >= WarBase.MAX_HEALTH && this.getBrain().isBagFull());
+			return (this.getBrain().getHealth() >= WarBase.MAX_HEALTH);
 		} else {
 			return (this.getBrain().getHealth() >= 80000);
 		}
