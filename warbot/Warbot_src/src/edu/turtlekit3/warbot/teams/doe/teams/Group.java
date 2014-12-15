@@ -104,7 +104,7 @@ public class Group {
 		try {
 			int angle = 360;
 			float orientation = 0;
-			int dist = 25;
+			int dist = 40;
 			Vector2 t = target;
 			
 			orientation = getEnvironnement().getTeamManager().getIndexOfTeam(this) * (180 / getMaxSize());
@@ -148,7 +148,7 @@ public class Group {
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
 			float alpha = tick*index + getEnvironnement().getIndexOfTeam(this) * (360 / getEnvironnement().getTeamManager().size());
-			Vector2 target = Tools.cartFromPolaire(alpha, 30);
+			Vector2 target = Tools.cartFromPolaire(alpha, 40);
 			target.add(base);
 			return target;
 		} catch (Exception e) {

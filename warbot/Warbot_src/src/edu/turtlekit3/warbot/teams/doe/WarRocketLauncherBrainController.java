@@ -128,14 +128,16 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 
 			if(percept != null && percept.size() > 0){
 				t.setTargetID(percept.get(0).getID());
-//				t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), percept.get(0).getAngle(), percept.get(0).getDistance()), false);
+				//				t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), percept.get(0).getAngle(), percept.get(0).getDistance()), false);
 				t.setAttacking(true);
 			} else {
-				if(t.isBaseAttacked() && !t.isBaseAttackTeam() && leader == t.getLeader()) {
+				if(t.isBaseAttacked() && !t.isBaseAttackTeam()) {
+					getBrain().setDebugString("base is under attack !");
 					Tools.setHeadingOn(
 							getBrain(), 
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getDefensePosition(getBrain().getID()));
+					return WarRocketLauncher.ACTION_MOVE;
 				}
 				try {
 					Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
@@ -290,6 +292,22 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 					getBrain().setHeading(p.get(0).getAngle());
 					return WarRocketLauncher.ACTION_FIRE;
 				}
+			} else {
+				Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
+				Vector2 enemyBase = t.getBaseAttackPosition(getBrain().getID());
+				if(myPosition.dst(enemyBase) < 5) {
+					Tools.setHeadingOn(
+							getBrain(), 
+							ev.getStructWarBrain(getBrain().getID()).getPosition(),
+							t.getTarget());
+					return  WarRocketLauncher.ACTION_FIRE;
+				} else {
+					Tools.setHeadingOn(
+							getBrain(), 
+							ev.getStructWarBrain(getBrain().getID()).getPosition(),
+							t.getBaseAttackPosition(getBrain().getID()));
+					return WarRocketLauncher.ACTION_MOVE;
+				}
 			}
 		}
 		return "";
@@ -359,7 +377,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		if (ev.inRush()) {
 			return attackBase(leader, t, ev);
 		} else if (ticksSinceLastEncounter > 100){
-//			newPosition();
+			//			newPosition();
 			t.setReady(true);
 		}
 		return "";
