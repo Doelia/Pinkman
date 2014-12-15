@@ -3,8 +3,11 @@ package edu.turtlekit3.warbot.teams.doe;
 import edu.turtlekit3.warbot.agents.agents.WarBase;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
-import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
+import edu.turtlekit3.warbot.teams.doe.behavior.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
+import edu.turtlekit3.warbot.teams.doe.messages.EnvironnementUpdaterInterface;
+import edu.turtlekit3.warbot.teams.doe.messages.ReceiverEnvironementInstruction;
+import edu.turtlekit3.warbot.teams.doe.messages.SenderEnvironnementInstruction;
 import edu.turtlekit3.warbot.teams.doe.tasks.DetectEnemyTask;
 import edu.turtlekit3.warbot.teams.doe.tasks.SendAlliesTask;
 import edu.turtlekit3.warbot.teams.doe.tasks.SetBaseAttackedTask;
@@ -12,23 +15,37 @@ import edu.turtlekit3.warbot.teams.doe.tasks.SetBaseAttackedTask;
 public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
 	private Environnement e;
+	private EnvironnementUpdaterInterface sender;
+	private ReceiverEnvironementInstruction receiver;
 
 	public WarBaseBrainController() {
 		super();
-		Environnement.clear();
 	}
 
 	private void broadcastPosition() {
 		getBrain().broadcastMessageToAll("HERE", "");
 	}
 
+	private EnvironnementUpdaterInterface getSender() {
+		if (sender == null) {
+			if (Behavior.CHEAT) {
+				sender = this.getEnvironnement();
+			} else {
+				sender = new SenderEnvironnementInstruction(this.getBrain());
+			}
+		}
+		return sender;
+	}
+	
 	private Environnement getEnvironnement() {
 		if (Behavior.CHEAT) {
-			e = Environnement.getInstance();;
+			e = Behavior.getGoodInstance(this.getBrain());
+			receiver = new ReceiverEnvironementInstruction(e);
 			return e;
 		} else {
 			if (e == null) {
 				e = new Environnement();
+				receiver = new ReceiverEnvironementInstruction(e);
 			}
 			return e;
 		}
@@ -65,11 +82,13 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		new DetectEnemyTask(this, t, e).exec();
 		new SendAlliesTask(this, t, e, getBrain().getMessages()).exec();
 		new SetBaseAttackedTask(this, t, e).exec();
+		
+		this.receiver.processMessages(this.getBrain());
 
 		e.setMainBase(this.getBrain());
 		if (e.isMainBase(this.getBrain())) {
 			this.broadcastPosition();
-			e.decrementTtlOfAll();
+			this.getSender().decrementTtlOfAll();
 		}
 
 		this.getBrain().setDebugString("Bag "+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize()+" - life "+this.getBrain().getHealth());

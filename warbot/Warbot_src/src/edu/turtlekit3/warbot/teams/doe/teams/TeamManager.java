@@ -2,14 +2,17 @@ package edu.turtlekit3.warbot.teams.doe.teams;
 
 import java.util.ArrayList;
 
+import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTeamFoundException;
 
 public class TeamManager {
 	
 	private ArrayList<Group> teams;
+	private Environnement e;
 	
-	public TeamManager() {
+	public TeamManager(Environnement e) {
 		teams = new ArrayList<Group>();
+		this.e = e;
 	}
 	
 	public Group getTeamOf(int id) throws NoTeamFoundException {
@@ -36,7 +39,7 @@ public class TeamManager {
 	}
 	
 	public Group createTeam(int brainId) {
-		Group team = new Group();
+		Group team = new Group(e);
 		team.addMember(brainId);
 		teams.add(team);
 		team.setTeamIndex(teams.indexOf(team));

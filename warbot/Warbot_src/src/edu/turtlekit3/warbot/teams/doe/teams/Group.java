@@ -5,9 +5,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
-import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
-import edu.turtlekit3.warbot.teams.doe.environement.StructWarBrain;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
@@ -26,9 +24,9 @@ public class Group {
 	private boolean ready;
 	private int targetID;
 	private int voteToChangeTarget;
-	Environnement e = null;
+	private Environnement e;
 
-	public Group() {
+	public Group(Environnement e) {
 		members = new ArrayList<Integer>();
 		attacking = false;
 		target = new Vector2();
@@ -41,6 +39,7 @@ public class Group {
 		isBaseAttacked = false;
 		ready = false;
 		voteToChangeTarget = 0;
+		this.e = e;
 	}
 
 	public boolean isReady() {
@@ -72,7 +71,7 @@ public class Group {
 
 	public int getLeader() throws NotExistException {
 		try {
-			return Environnement.getInstance().getStructWarBrain(members.get(0)).getID();
+			return this.getEnvironnement().getStructWarBrain(members.get(0)).getID();
 		} catch (Exception e) {
 			throw new NotExistException();
 		}
@@ -107,7 +106,7 @@ public class Group {
 			int dist = 25;
 			Vector2 t = target;
 			
-			orientation = getEnvironnement().getTeamManager().getIndexOfTeam(this) * (180 / getMaxSize());
+			orientation = getEnvironnement().getTeamManager().getIndexOfTeam(this) * (360 / getSize());
 			int index = (members.indexOf(brainId) + battleModifier) % getSize();
 			int nbrPersonnes = members.size();
 			float tick = (angle/nbrPersonnes);
@@ -135,10 +134,7 @@ public class Group {
 	}
 	
 	private Environnement getEnvironnement() {
-		if (Behavior.CHEAT)
-			return Environnement.getInstance();
-		else
-			return this.e;
+		return e;
 	}
 	
 	public Vector2 getBaseAttackPosition(Integer brainId) throws NotExistException {
@@ -148,7 +144,7 @@ public class Group {
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
 			float alpha = tick*index + getEnvironnement().getIndexOfTeam(this) * (360 / getEnvironnement().getTeamManager().size());
-			Vector2 target = Tools.cartFromPolaire(alpha, 30);
+			Vector2 target = Tools.cartFromPolaire(alpha, 25);
 			target.add(base);
 			return target;
 		} catch (Exception e) {
