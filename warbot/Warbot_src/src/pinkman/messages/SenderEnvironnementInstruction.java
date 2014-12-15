@@ -1,5 +1,8 @@
 package pinkman.messages;
 
+import pinkman.environement.Environnement;
+import pinkman.tasks.Task;
+
 import com.badlogic.gdx.math.Vector2;
 
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
@@ -62,8 +65,12 @@ public class SenderEnvironnementInstruction implements EnvironnementUpdaterInter
 	@Override
 	public void decrementTtlOfAll() {
 		this.sendMessage(TypeUpdateEnv.DECREMENT_TTL, "", "", "");
-		
 	}
+	
+	public static Environnement createNewSender(WarBrain b) {
+		return Task.getTypeAvailable(b.getTeamName().contains("bis")?0:1);
+	}
+	
 	
 	
 }

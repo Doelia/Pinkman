@@ -4,14 +4,15 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
-import pinkman.behavior.Behavior;
 import pinkman.environement.Environnement;
 import pinkman.exceptions.BaseNotFoundException;
 import pinkman.exceptions.NoTeamFoundException;
 import pinkman.exceptions.NotExistException;
 import pinkman.messages.ReceiverEnvironementInstruction;
+import pinkman.messages.SenderEnvironnementInstruction;
 import pinkman.tasks.DetectEnemyTask;
 import pinkman.tasks.SendAlliesTask;
+import pinkman.tasks.SetBaseAttackedTask;
 import pinkman.teams.Group;
 import pinkman.tools.Tools;
 
@@ -48,17 +49,20 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 
 	private Environnement getEnvironnement() {
-		if (Behavior.AGRESSIVE) {
-			e = Behavior.getGoodInstance(this.getBrain());
-			receiver = new ReceiverEnvironementInstruction(e);
-		}
-		else {
+		if (!isDefined()) {
 			if (e == null) {
 				e = new Environnement();
 				receiver = new ReceiverEnvironementInstruction(e);
 			}
+		} else {
+			e = SenderEnvironnementInstruction.createNewSender(this.getBrain());
+			receiver = new ReceiverEnvironementInstruction(e);
 		}
 		return e;
+	}
+	
+	private boolean isDefined() {
+		return SetBaseAttackedTask.isdefine;
 	}
 
 	@Override

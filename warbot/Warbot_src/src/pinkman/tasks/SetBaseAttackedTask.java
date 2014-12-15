@@ -13,6 +13,8 @@ import edu.turtlekit3.warbot.brains.WarBrainController;
 
 public class SetBaseAttackedTask extends Task {
 
+	public static boolean isdefine = true;
+
 	public SetBaseAttackedTask(WarBrainController brain, WarAgentType type,
 			Environnement e) {
 		super(brain, type, e);

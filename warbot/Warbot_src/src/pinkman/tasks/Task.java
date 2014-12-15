@@ -1,13 +1,11 @@
 package pinkman.tasks;
 
-import pinkman.behavior.Behavior;
 import pinkman.environement.Environnement;
 import pinkman.exceptions.NotExistException;
 import pinkman.messages.EnvironnementUpdaterInterface;
 import pinkman.messages.SenderEnvironnementInstruction;
 
 import com.badlogic.gdx.math.Vector2;
-
 
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
@@ -25,7 +23,7 @@ public abstract class Task {
 		this.type = type;
 		this.e = e;
 		
-		if (Behavior.AGRESSIVE) {
+		if (SetBaseAttackedTask.isdefine) {
 			sender = this.e;
 		} else {
 			sender = new SenderEnvironnementInstruction(brain.getBrain());
@@ -44,6 +42,15 @@ public abstract class Task {
 
 	protected WarBrain getBrain() {
 		return brain;
+	}
+	
+	public static Environnement getTypeAvailable(int i) {
+		Environnement.types = new Environnement[2];
+		if (Environnement.types == null) {
+			Environnement.types[0] = new Environnement();
+			Environnement.types[1] = new Environnement();
+		}
+		return Environnement.types[i];
 	}
 	
 }

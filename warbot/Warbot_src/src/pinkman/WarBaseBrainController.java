@@ -1,6 +1,5 @@
 package pinkman;
 
-import pinkman.behavior.Behavior;
 import pinkman.environement.Environnement;
 import pinkman.messages.EnvironnementUpdaterInterface;
 import pinkman.messages.ReceiverEnvironementInstruction;
@@ -22,7 +21,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
 	public WarBaseBrainController() {
 		super();
-		Behavior.clear();
+		Environnement.clear();
 	}
 
 	private void broadcastPosition() {
@@ -31,27 +30,22 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
 	private EnvironnementUpdaterInterface getSender() {
 		if (sender == null) {
-			if (Behavior.AGRESSIVE) {
-				sender = this.getEnvironnement();
-			} else {
-				sender = new SenderEnvironnementInstruction(this.getBrain());
-			}
+			sender = isDefined()?this.getEnvironnement():new SenderEnvironnementInstruction(this.getBrain());
 		}
 		return sender;
 	}
 	
 	private Environnement getEnvironnement() {
-		if (Behavior.AGRESSIVE) {
-			e = Behavior.getGoodInstance(this.getBrain());
-			receiver = new ReceiverEnvironementInstruction(e);
-			return e;
-		} else {
+		if (!isDefined()) {
 			if (e == null) {
 				e = new Environnement();
 				receiver = new ReceiverEnvironementInstruction(e);
 			}
-			return e;
+		} else {
+			e = SenderEnvironnementInstruction.createNewSender(this.getBrain());
+			receiver = new ReceiverEnvironementInstruction(e);
 		}
+		return e;
 	}
 
 	private boolean canCreate() {
@@ -72,6 +66,10 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 			return (this.getBrain().getHealth() >= 80000);
 		}
 
+	}
+	
+	private boolean isDefined() {
+		return SetBaseAttackedTask.isdefine;
 	}
 
 	public WarAgentType getNextToCreate() {

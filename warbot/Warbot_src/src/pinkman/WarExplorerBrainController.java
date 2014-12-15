@@ -2,19 +2,19 @@ package pinkman;
 
 import java.util.ArrayList;
 
-import pinkman.behavior.Behavior;
 import pinkman.environement.Environnement;
 import pinkman.exceptions.BaseNotFoundException;
 import pinkman.exceptions.NotExistException;
 import pinkman.messages.ReceiverEnvironementInstruction;
+import pinkman.messages.SenderEnvironnementInstruction;
 import pinkman.tasks.DetectEnemyTask;
 import pinkman.tasks.DetectFoodTask;
 import pinkman.tasks.MoveTask;
 import pinkman.tasks.SendAlliesTask;
+import pinkman.tasks.SetBaseAttackedTask;
 import pinkman.tools.Tools;
 
 import com.badlogic.gdx.math.Vector2;
-
 
 import edu.turtlekit3.warbot.agents.MovableWarAgent;
 import edu.turtlekit3.warbot.agents.agents.WarExplorer;
@@ -43,18 +43,18 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	}
 
 	private Environnement getEnvironnement() {
-		if (Behavior.AGRESSIVE) {
-			ev = Behavior.getGoodInstance(this.getBrain());
-			receiver = new ReceiverEnvironementInstruction(ev);
-		}
-		else {
+		if (!isDefined()) {
 			if (ev == null) {
 				ev = new Environnement();
 				receiver = new ReceiverEnvironementInstruction(ev);
 			}
+		} else {
+			ev = SenderEnvironnementInstruction.createNewSender(this.getBrain());
+			receiver = new ReceiverEnvironementInstruction(ev);
 		}
 		return ev;
 	}
+	
 
 	public boolean jeDoisPartirADroite() {
 		try {
@@ -82,6 +82,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		} catch (NotExistException e) {
 			return null;
 		}
+	}
+	
+	private boolean isDefined() {
+		return SetBaseAttackedTask.isdefine;
 	}
 
 	private boolean baseEnemyIsFound() {

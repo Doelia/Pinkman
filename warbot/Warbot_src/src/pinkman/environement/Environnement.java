@@ -17,7 +17,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
 
-
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
@@ -298,7 +297,11 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		}
 	}
 
-
+	public static Environnement[] types = null;
+	public static void clear() {
+		Environnement.types = null;
+	}
+	
 	public TeamManager getTeamManager() {
 		return this.tm;
 	}

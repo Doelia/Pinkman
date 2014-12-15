@@ -4,18 +4,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import pinkman.environement.Environnement;
-import pinkman.environement.StructWarBrainEnemy;
 import pinkman.exceptions.NoTargetException;
 import pinkman.exceptions.NotExistException;
 import pinkman.tools.Tools;
 
 import com.badlogic.gdx.math.Vector2;
 
-
-
 public class Group {
 	private ArrayList<Integer> members;
-	private Vector2 t;
 	private boolean attacking;
 	private int requestNumber;
 	private int battleModifier;
@@ -33,7 +29,6 @@ public class Group {
 	public Group(Environnement e) {
 		members = new ArrayList<Integer>();
 		attacking = false;
-		t = new Vector2();
 		requestNumber = 99999;
 		battleModifier = 0;
 		nbStopAttacking = 0;
