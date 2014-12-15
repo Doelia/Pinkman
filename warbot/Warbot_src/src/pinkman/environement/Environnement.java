@@ -373,7 +373,7 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		}
 	}
 	
-	public int getClosestFromBase(Vector2 position) throws NoTargetFoundException {
+	public int getBestTargetFromBase(Vector2 position) throws NoTargetFoundException {
 		this.clean();
 		double minDistance = 200;
 		int id = -1;
@@ -384,8 +384,11 @@ public class Environnement implements EnvironnementUpdaterInterface {
 						|| s.getType() == WarAgentType.WarKamikaze) {
 					double dst = position.dst(s.getPosition());
 					if (dst < minDistance) {
-						minDistance = position.dst(s.getPosition());
-						id = s.getID();
+						if (!tm.isAlreadyTargeted(s.getID())) { // S'il nest pas déjà target par une autre team
+							minDistance = position.dst(s.getPosition());
+							id = s.getID();
+						}
+						
 					}
 				}
 			}
