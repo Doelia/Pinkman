@@ -28,10 +28,13 @@ public class Command extends Task<Nexus>
 		if (!w.haveCharts())
 			w.startCharts();
 		
+		//handle les statistiques
 		w.getCharts().handleStats(w.getBrain().getMessages());
+		
+		
+		//fait le café pour la gestion des cibles Bases et Foods
 		w.getCharts().handleInformationTargets(w.getBrain().getMessages());
 		
-		basicCommunication(w);
 		
 		askCommunication(w);
 		
@@ -52,30 +55,19 @@ public class Command extends Task<Nexus>
 		
 		if(w.getCharts().haveFoodTargets())
 		{
-			for(w.getCharts().getFoodLocalisations())
+			for(CoordPolar cp : w.getCharts().getFoodLocalisations())
 			TargetMessageWrapper.wrapAndSendMessageToAgentType
-			(ProtosCommunication.INFORM_FOUND_FOOD, w.getBrain(),w.getCharts().getNearestFood(),WarAgentType.WarExplorer);
+			(ProtosCommunication.INFORM_FOUND_FOOD, w.getBrain(),cp,WarAgentType.WarExplorer);
 		}
 		
-		// Contract Handler
-		/*
-		 * else if(wm.getMessage().equals(ProtosCommunication.ASK_ENEMY_BASE)) {
-		 * if(w.getStats().haveEnemyBaseTarget()) {
-		 * TargetMessageWrapper.wrapAndSendMessageToID
-		 * (ProtosCommunication.INFORM_ENEMY_BASE, w.getBrain(),
-		 * w.getStats().getNearEnemyBase(), wm.getSenderID()); } } else
-		 * if(wm.getMessage().equals(ProtosCommunication.INFORM_TAKE_CONTRACT))
-		 * { int idContract = Integer.parseInt(wm.getContent()[0]);
-		 * if(w.getContractManager().existContractWithID(idContract) &&
-		 * w.getContractManager
-		 * ().isStillAccessible(idContract,wm.getSenderType()) ) {
-		 * w.getContractManager().
-		 * addContractorOnContract(idContract,wm.getSenderType
-		 * (),wm.getSenderID()); } else {
-		 * 
-		 * } }
-		 */
-		if(w.getBrain().getHealth() >  WarBase.MAX_HEALTH*0.6)
+		
+		if(w.getCharts().countBases()> 1)
+		{
+			
+		}
+		
+		
+		if(w.getBrain().getHealth() ==  WarBase.MAX_HEALTH)
 		{
 			w.getBrain().setNextAgentToCreate(WarAgentType.WarRocketLauncher);
 			return new ResultTask(this, WarBase.ACTION_CREATE);
@@ -98,42 +90,6 @@ public class Command extends Task<Nexus>
 	}
 	
 	
-	public void basicCommunication(Nexus w)
-	{
-		// basic communication
-		for (WarMessage wm : w.getBrain().getMessages())
-		{
-			if (wm.getMessage().equals(ProtosCommunication.ASK_HQ_ID))
-			{// Gestion des demandeurs de HQ
-				w.getBrain().reply(wm, ProtosCommunication.INFORM_HQ_DECLARED);
-			} else if (wm.getMessage().equals(
-					ProtosCommunication.INFORM_FOUND_ENEMY_BASE))
-			{
-				TargetMessageWrapper tmw = TargetMessageWrapper.unwrap(wm);
-				w.getCharts().addEnemyBaseLocation(tmw.compute());
-			} else if (wm.getMessage().equals(
-					ProtosCommunication.INFORM_DESTROYED_ENEMY_BASE))
-			{
-				TargetMessageWrapper tmw = TargetMessageWrapper.unwrap(wm);
-				w.getCharts().addEnemyBaseLocation(tmw.compute());
-			} else if (wm.getMessage().equals(
-					ProtosCommunication.ASK_HQ_POSITION))
-			{
-				w.getBrain().reply(wm, ProtosCommunication.INFORM_HQ_POSITION);
-			} else if (wm.getMessage().equals(
-					ProtosCommunication.INFORM_FOUND_FOOD))
-			{
-				TargetMessageWrapper tmw = TargetMessageWrapper.unwrap(wm);
-				w.getCharts().addPossibleFoodCoord(tmw.compute());
-			} else if (wm.getMessage().equals(
-					ProtosCommunication.INFORM_NO_MORE_FOOD_AT_GIVEN_POSITION))
-			{
-				TargetMessageWrapper tmw = TargetMessageWrapper.unwrap(wm);
-				w.getCharts().removePossibleFoodCoord(tmw.compute());
-			}
-		}
-	}
-	
 	public void askCommunication(Nexus w)
 	{
 		for (WarMessage wm : w.getBrain().getMessages())
@@ -153,7 +109,7 @@ public class Command extends Task<Nexus>
 					c.need(WarAgentType.WarKamikaze, 1);
 					if (w.getCharts().haveEnemyBaseTargets())
 					{
-						CoordPolar cp = w.getCharts().getNearestEnemyBase();
+						CoordPolar cp = w.getCharts().getEnemyBaseTargets().get(0);
 						c.addContractArgument("" + cp.toCartesian().getX());
 						c.addContractArgument("" + cp.toCartesian().getY());
 					}
@@ -170,6 +126,7 @@ public class Command extends Task<Nexus>
 			} else if (wm.getMessage().equals(
 					ProtosCommunication.ASK_ENEMY_BASE_POSITION))
 			{ //Gestion des demandes de localisation bases enemies
+				/*
 				if (w.getStats().haveEnemyBaseTargets())
 				{
 					TargetMessageWrapper.wrapAndSendMessageToID(
@@ -177,6 +134,7 @@ public class Command extends Task<Nexus>
 							w.getBrain(), w.getStats().getNearestEnemyBase(),
 							wm.getSenderID());
 				}
+				*/
 			}
 		}
 	}

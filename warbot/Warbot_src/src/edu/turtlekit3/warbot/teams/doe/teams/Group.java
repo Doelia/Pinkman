@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
+import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.environement.StructWarBrain;
@@ -26,9 +27,9 @@ public class Group {
 	private boolean ready;
 	private int targetID;
 	private int voteToChangeTarget;
-	Environnement e = null;
+	private Environnement e;
 
-	public Group() {
+	public Group(Environnement e) {
 		members = new ArrayList<Integer>();
 		attacking = false;
 		target = new Vector2();
@@ -41,6 +42,7 @@ public class Group {
 		isBaseAttacked = false;
 		ready = false;
 		voteToChangeTarget = 0;
+		this.e = e;
 	}
 
 	public boolean isReady() {
@@ -72,7 +74,7 @@ public class Group {
 
 	public int getLeader() throws NotExistException {
 		try {
-			return Environnement.getInstance().getStructWarBrain(members.get(0)).getID();
+			return this.getEnvironnement().getStructWarBrain(members.get(0)).getID();
 		} catch (Exception e) {
 			throw new NotExistException();
 		}
@@ -135,10 +137,12 @@ public class Group {
 	}
 	
 	private Environnement getEnvironnement() {
-		if (Behavior.CHEAT)
-			return Environnement.getInstance();
-		else
-			return this.e;
+		if (!Behavior.CHEAT) {
+			if (e == null) {
+				e = new Environnement();
+			}
+		}
+		return e;
 	}
 	
 	public Vector2 getBaseAttackPosition(Integer brainId) throws NotExistException {

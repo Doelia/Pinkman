@@ -1,10 +1,13 @@
 package edu.turtlekit3.warbot.teams.doe.cheat;
 
+import com.badlogic.gdx.graphics.g3d.Environment;
+
 import edu.turtlekit3.warbot.agents.ControllableWarAgent;
 import edu.turtlekit3.warbot.agents.WarAgent;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.game.Game;
 import edu.turtlekit3.warbot.game.Team;
+import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 
 public class Behavior {
 
@@ -36,6 +39,13 @@ public class Behavior {
 		Team t = Game.getInstance().getAllTeams().get(idTeam);
 		WarAgent wa = t.getAgentWithID(brain.getID());
 		return wa;
+	}
+	
+	public static Environnement getGoodInstance(WarBrain b) {
+		if (b.getTeamName().contains("bis"))
+			return Environnement.getInstance1();
+		else
+			return Environnement.getInstance2();
 	}
 
 	public static final boolean CHEAT = true;

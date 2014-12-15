@@ -39,14 +39,15 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	}
 
 	private Environnement getEnvironnement() {
-		if (Behavior.CHEAT)
-			return Environnement.getInstance();
+		if (Behavior.CHEAT) {
+			ev = Behavior.getGoodInstance(this.getBrain());
+		}
 		else {
 			if (ev == null) {
 				ev = new Environnement();
 			}
-			return ev;
 		}
+		return ev;
 	}
 
 	public boolean jeDoisPartirADroite() {

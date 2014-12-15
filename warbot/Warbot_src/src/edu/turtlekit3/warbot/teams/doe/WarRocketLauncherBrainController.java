@@ -49,13 +49,14 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 
 	private Environnement getEnvironnement() {
 		if (Behavior.CHEAT) {
-			return Environnement.getInstance();
-		} else {
+			e = Behavior.getGoodInstance(this.getBrain());
+		}
+		else {
 			if (e == null) {
 				e = new Environnement();
 			}
-			return e;
 		}
+		return e;
 	}
 
 	@Override

@@ -27,15 +27,16 @@ public class Nexus extends WarBaseAbstractBrainController
 
 	private WarCharts charts;
 	
-	public static final int MIN_HEATH_TO_CREATE = (int) (WarBase.MAX_HEALTH * 0.8);
+	public static final int MIN_HEATH_TO_CREATE = (int) (WarBase.MAX_HEALTH * 0.9);
 	
 	private static List<AbstractBehaviour<WarBrainController>> nexusBehaviours;
 	
 	static
 	{//Produce a static ordered list of behaviour for all Nexus instances
 		nexusBehaviours = new ArrayList<>();
-		nexusBehaviours.add(new UrgentHealBehaviour( (int) ((double)WarBase.MAX_HEALTH * 0.5)));
 		nexusBehaviours.add(new SelfHealBehaviour(MIN_HEATH_TO_CREATE));
+		nexusBehaviours.add(new UrgentHealBehaviour( (int) ((double)WarBase.MAX_HEALTH * 0.75)));
+		
 	}
 	
 	

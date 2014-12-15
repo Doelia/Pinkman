@@ -22,16 +22,26 @@ import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
 public class Environnement implements EnvironnementUpdaterInterface {
 
-	private static Environnement instance;
-	public static Environnement getInstance() {
-		if (instance == null) {
-			instance = new Environnement();
+	private static Environnement instance1;
+	private static Environnement instance2;
+	
+	public static Environnement getInstance1() {
+		if (instance1 == null) {
+			instance1 = new Environnement();
 		}
-		return instance;
+		return instance1;
+	}
+	
+	public static Environnement getInstance2() {
+		if (instance2 == null) {
+			instance2 = new Environnement();
+		}
+		return instance2;
 	}
 
 	public static void clear() {
-		instance = null;
+		instance1 = null;
+		instance2 = null;
 	}
 
 	public int idSearcherBase = -1;
@@ -47,7 +57,7 @@ public class Environnement implements EnvironnementUpdaterInterface {
 	private Vector2 baseAttacked;
 
 	public Environnement() {
-		tm = new TeamManager();
+		tm = new TeamManager(this);
 		mainBase = null;
 		takenFood = new Stack<Integer>();
 		listAllies = new HashMap<Integer, StructWarBrainAllie>(); 

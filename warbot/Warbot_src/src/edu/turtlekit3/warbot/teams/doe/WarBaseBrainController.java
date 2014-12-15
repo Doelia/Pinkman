@@ -24,7 +24,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
 	private Environnement getEnvironnement() {
 		if (Behavior.CHEAT) {
-			e = Environnement.getInstance();;
+			e = Behavior.getGoodInstance(this.getBrain());
 			return e;
 		} else {
 			if (e == null) {
