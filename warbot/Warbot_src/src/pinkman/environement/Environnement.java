@@ -64,6 +64,10 @@ public class Environnement implements EnvironnementUpdaterInterface {
 	public int getExplorerIndex(Integer id) {
 		return explorers.indexOf(id);
 	}
+	
+	public int getNumberExplorers() {
+		return this.explorers.size();
+	}
 
 
 	public void addFreeFood(Vector2 lastFood, int ID) {

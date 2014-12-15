@@ -57,12 +57,16 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
 		int nbrBases = getEnvironnement().getNumberOfType(WarAgentType.WarBase);
 
+		// On fait péter toutes les bases
 		if (nbrBases > MAX_BASES && this.getBrain().getID() == getEnvironnement().getBiggestBaseId()) {
 			return true;
 		}
 
 		if (WarBase.MAX_HEALTH < 80000) {
-			return (this.getBrain().getHealth() >= WarBase.MAX_HEALTH);
+			if (nbrBases <= 1) {
+				return (this.getBrain().getHealth() >= WarBase.MAX_HEALTH && this.getBrain().isBagFull());
+			} else
+				return (this.getBrain().getHealth() >= WarBase.MAX_HEALTH);
 		} else {
 			return (this.getBrain().getHealth() >= 80000);
 		}
@@ -70,7 +74,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	}
 
 	public WarAgentType getNextToCreate() {
-		if (this.getEnvironnement().getNumberOfType(WarAgentType.WarExplorer) < 6 || this.getEnvironnement().getNumberOfType(WarAgentType.WarRocketLauncher) > 20) {
+		if (this.getEnvironnement().getNumberExplorers() < 5 || this.getEnvironnement().getNumberOfType(WarAgentType.WarRocketLauncher) > 20) {
 			return WarAgentType.WarExplorer;
 		}
 		return WarAgentType.WarRocketLauncher;
