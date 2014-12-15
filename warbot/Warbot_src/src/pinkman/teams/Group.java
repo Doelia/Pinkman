@@ -95,7 +95,7 @@ public class Group {
 		try {
 			int angle = 360;
 			float orientation = 0;
-			int dist = 30;
+			int dist = 20;
 
 			if(this.hasTarget()) {
 				Vector2 enemyPosition = getEnvironnement().getEnemy(target.brainID).getPosition();
