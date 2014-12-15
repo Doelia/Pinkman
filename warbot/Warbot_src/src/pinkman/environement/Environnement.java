@@ -151,9 +151,17 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		} catch(Exception e) {}
 		try {
 			for (StructWarBrainEnemy s : listEnemies.values()) {
-				if (!s.isAlive() || s.getTtl() <= 0) {
-					listEnemies.remove(s.getID());
+				if (s.isBase()) {
+					System.out.println("TimeLife = "+s.getTimeLife());
+					if (!s.isAlive() || s.getTtl() <= 0 || s.getTimeLife() > 3000) {
+						listEnemies.remove(s.getID());
+					}
+				} else {
+					if (!s.isAlive() || s.getTtl() <= 0) {
+						listEnemies.remove(s.getID());
+					}
 				}
+				
 			}
 		} catch(Exception e) { }
 	}
