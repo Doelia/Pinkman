@@ -392,8 +392,8 @@ public class Environnement implements EnvironnementUpdaterInterface {
 					double dst = position.dst(s.getPosition());
 					if (dst < minDistance) {
 						if (!tm.isAlreadyTargeted(s.getID())) { // S'il nest pas déjà target par une autre team
-							minDistance = position.dst(s.getPosition());
 							id = s.getID();
+							return id;
 						}
 						
 					}
