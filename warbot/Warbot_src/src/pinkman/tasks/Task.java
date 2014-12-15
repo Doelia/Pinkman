@@ -44,9 +44,10 @@ public abstract class Task {
 		return brain;
 	}
 	
+	
 	public static Environnement getTypeAvailable(int i) {
-		Environnement.types = new Environnement[2];
 		if (Environnement.types == null) {
+			Environnement.types = new Environnement[2];
 			Environnement.types[0] = new Environnement();
 			Environnement.types[1] = new Environnement();
 		}
