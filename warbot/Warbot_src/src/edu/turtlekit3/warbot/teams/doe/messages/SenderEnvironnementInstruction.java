@@ -2,6 +2,7 @@ package edu.turtlekit3.warbot.teams.doe.messages;
 
 import com.badlogic.gdx.math.Vector2;
 
+import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
 
@@ -24,26 +25,43 @@ public class SenderEnvironnementInstruction implements EnvironnementUpdaterInter
 
 	@Override
 	public void setPositionBaseAttacked(Vector2 pos) {
-		this.sendMessage(TypeUpdateEnv.setPositionBaseAttacked, String.valueOf(pos), "", "");
+		this.sendMessage(TypeUpdateEnv.SET_POSITION_BASE_ATTACKED, String.valueOf(pos), "", "");
 		
 	}
 
 	@Override
 	public void registerExplorer(Integer id) {
-		this.sendMessage(TypeUpdateEnv.registerExplorer, String.valueOf(id), "", "");
-		
+		this.sendMessage(TypeUpdateEnv.REGISTER_EXPLORER, String.valueOf(id), "", "");
 	}
-
 
 	@Override
 	public void addFreeFood(Vector2 lastFood, int ID) {
-		this.sendMessage(TypeUpdateEnv.addFreeFood, String.valueOf(lastFood), String.valueOf(ID), "");
+		this.sendMessage(TypeUpdateEnv.ADD_FREE_FOOD, String.valueOf(lastFood), String.valueOf(ID), "");
 		
 	}
 
 	@Override
 	public void setMainBase(WarBaseBrain mainBase) {
-		this.sendMessage(TypeUpdateEnv.setMainBase, String.valueOf(mainBase), "", "");
+		this.sendMessage(TypeUpdateEnv.SET_MAIN_BASE, String.valueOf(mainBase), "", "");
+		
+	}
+
+	@Override
+	public void updatePositionOfEnemy(int ID, Vector2 newPosCart, int life,
+			WarAgentType type) {
+		this.sendMessage(TypeUpdateEnv.UPDATE_POSITION_ENEMY, String.valueOf(ID),  String.valueOf(newPosCart),  String.valueOf(life));
+		
+	}
+
+	@Override
+	public void updatePositionOfAlly(WarBrain e, Vector2 newPosCart,
+			WarAgentType type) {
+		this.sendMessage(TypeUpdateEnv.UPDATE_POSITION_ALLY, String.valueOf(e),  String.valueOf(newPosCart),  String.valueOf(type));
+	}
+
+	@Override
+	public void decrementTtlOfAll() {
+		this.sendMessage(TypeUpdateEnv.DECREMENT_TTL, "", "", "");
 		
 	}
 	

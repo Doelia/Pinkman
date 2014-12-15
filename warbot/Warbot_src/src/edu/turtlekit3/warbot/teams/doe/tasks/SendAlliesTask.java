@@ -35,7 +35,7 @@ public class SendAlliesTask extends Task {
 			double angle = m.getAngle();
 			double distance = m.getDistance();
 			if (angle != Double.NaN && distance != Double.NaN) {
-				e.updatePositionOfAlly(
+				sender.updatePositionOfAlly(
 						brain,
 						Tools.cartFromPolaire(angle, distance),
 						type

@@ -22,20 +22,6 @@ import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
 public class Environnement implements EnvironnementUpdaterInterface {
 
-	private static Environnement instance;
-	public static Environnement getInstance() {
-		if (instance == null) {
-			instance = new Environnement();
-		}
-		return instance;
-	}
-
-	public static void clear() {
-		instance = null;
-	}
-
-	public int idSearcherBase = -1;
-
 	private TeamManager tm;
 	private WarBaseBrain mainBase;
 	private Stack<Integer> takenFood;
@@ -47,7 +33,7 @@ public class Environnement implements EnvironnementUpdaterInterface {
 	private Vector2 baseAttacked;
 
 	public Environnement() {
-		tm = new TeamManager();
+		tm = new TeamManager(this);
 		mainBase = null;
 		takenFood = new Stack<Integer>();
 		listAllies = new HashMap<Integer, StructWarBrainAllie>(); 
@@ -68,11 +54,10 @@ public class Environnement implements EnvironnementUpdaterInterface {
 	}
 
 	public void registerExplorer(Integer id) {
-		if(!explorers.contains(id)) {
+		if (!explorers.contains(id)) {
 			explorers.add(id);
 		}
 	}
-	
 
 	public int getExplorerIndex(Integer id) {
 		return explorers.indexOf(id);
@@ -132,6 +117,14 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		this.clean();
 	}
 
+	public void decrementTtlOfAll() {
+		for (StructWarBrainEnemy e : this.getEnemies()) {
+			e.decrementTtl();
+		}
+	}
+
+	/** LECTURE **/
+	
 	private void cleanMainBases() {
 		for (Integer integer : mainBases.keySet()) {
 			if(mainBases.get(integer) == 0 && integer == mainBase.getID()) {
@@ -140,8 +133,8 @@ public class Environnement implements EnvironnementUpdaterInterface {
 			mainBases.put(integer, mainBases.get(integer) - 1);
 		}
 	}
-
-	public void clean() {
+	
+	private void clean() {
 		try {
 			for (StructWarBrain s : listAllies.values()) {
 				if (!s.isAlive() || !s.positionIsUptodate()) {
@@ -158,15 +151,6 @@ public class Environnement implements EnvironnementUpdaterInterface {
 			}
 		} catch(Exception e) { }
 	}
-	
-	public void decrementTtlOfAll() {
-		for (StructWarBrainEnemy e : this.getEnemies()) {
-			e.decrementTtl();
-		}
-	}
-
-
-	/** LECTURE **/
 
 	public int getNumberOfBases() {
 		return mainBases.size(); 

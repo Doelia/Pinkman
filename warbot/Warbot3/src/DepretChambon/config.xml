@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Team>
-	<Name>doe</Name>
+	<Name>DepretChambon</Name>
 	<IconPath>myTeam.png</IconPath>
 	<SoundPath>myTeam.wav</SoundPath>
 	<Description>
-	    Write a description here !
+	   Equipe Warbot de Axel Depret et Théo Chambon
 	</Description>
 	<AgentsBrainControllers>
 		<WarExplorer>WarExplorerBrainController.class</WarExplorer>

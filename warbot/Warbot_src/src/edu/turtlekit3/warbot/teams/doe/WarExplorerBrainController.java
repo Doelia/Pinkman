@@ -9,10 +9,11 @@ import edu.turtlekit3.warbot.agents.agents.WarExplorer;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarExplorerAbstractBrainController;
-import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
+import edu.turtlekit3.warbot.teams.doe.behavior.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
+import edu.turtlekit3.warbot.teams.doe.messages.ReceiverEnvironementInstruction;
 import edu.turtlekit3.warbot.teams.doe.tasks.DetectEnemyTask;
 import edu.turtlekit3.warbot.teams.doe.tasks.DetectFoodTask;
 import edu.turtlekit3.warbot.teams.doe.tasks.MoveTask;
@@ -22,12 +23,12 @@ import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 public class WarExplorerBrainController extends WarExplorerAbstractBrainController {
 
 	private Environnement ev;
+	private ReceiverEnvironementInstruction receiver;
 
 	private MoveTask activeTask = null;
 	private String action;
 	private boolean isInGave = false;
 	private boolean haveTouchAproxTarget = false;
-
 	private boolean detectFood;
 
 	public boolean isAWall() {
@@ -39,14 +40,17 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	}
 
 	private Environnement getEnvironnement() {
-		if (Behavior.CHEAT)
-			return Environnement.getInstance();
+		if (Behavior.CHEAT) {
+			ev = Behavior.getGoodInstance(this.getBrain());
+			receiver = new ReceiverEnvironementInstruction(ev);
+		}
 		else {
 			if (ev == null) {
 				ev = new Environnement();
+				receiver = new ReceiverEnvironementInstruction(ev);
 			}
-			return ev;
 		}
+		return ev;
 	}
 
 	public boolean jeDoisPartirADroite() {
@@ -86,7 +90,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		return getEnvironnement().getApproxEnemyBasePosition();
 	}
 	
-	private void returnBase() {
+	private void returnBase() throws NotExistException {
 		this.isInGave = true;
 		Vector2 base = getEnvironnement().getPositionAllieBaseWithLowLife();
 		this.getBrain().setDebugString("return base "+base);
@@ -98,6 +102,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 				this.getBrain().setDebugString("giving to base");
 				getBrain().setIdNextAgentToGive(x.getID());
 				action = MovableWarAgent.ACTION_GIVE;
+			} else {
+				Vector2 target = Tools.cartFromPolaire(x.getAngle(), x.getDistance());
+				target.sub(this.activeTask.getCurentPosition());
+				this.activeTask.setTarget(target);
 			}
 		}
 	}
@@ -143,10 +151,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		if (activeTask == null)
 			activeTask = new MoveTask(this, t, e);
 		this.detectFood = true;
+		
+		this.receiver.processMessages(this.getBrain());
 
 		try {
-
-			Vector2 curentPosition = activeTask.getCurentPosition();
 
 			// 1. On cherche la base de l'enemie
 			if (!this.baseEnemyIsFound()) {
@@ -161,7 +169,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 					if (!this.getFood())  { // 1.2.1 On cherche de la nourriture sur le passage, sinon on continue
 						this.getBrain().setDebugString("going to aprox enemy base: "+this.getPositionAprox());
 						this.activeTask.setTarget(this.getPositionAprox());
-						if (Tools.isNextTo(curentPosition, activeTask.getTarget(), 5)) {
+						if (Tools.isNextTo(activeTask.getCurentPosition(), activeTask.getTarget(), 5)) {
 							this.haveTouchAproxTarget = true;
 						}
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="Warbot3/teams/protos.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/Warbot3/export_protos.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.contract"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.tasks.rocketlauncher"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.tasks.engineer"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.headquarters"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.ownfms.behaviours"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.ownfms.behaviours.talking"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.tasks.base"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.tasks.turret"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.ownfms.customs"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.role"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.communication.messages"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.ownfms"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.ownfms.conditions"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.tasks.kamikaze"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.ownfms.behaviours.ping"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.tasks"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.tasks.explorator"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.tools"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;protos.communication"/>
+    </selectedElements>
+</jardesc>

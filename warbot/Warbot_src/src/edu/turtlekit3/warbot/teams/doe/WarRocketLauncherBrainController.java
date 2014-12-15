@@ -12,11 +12,12 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarRocketLauncherAbstractBrainController;
 import edu.turtlekit3.warbot.communications.WarMessage;
-import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
+import edu.turtlekit3.warbot.teams.doe.behavior.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTeamFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
+import edu.turtlekit3.warbot.teams.doe.messages.ReceiverEnvironementInstruction;
 import edu.turtlekit3.warbot.teams.doe.tasks.DetectEnemyTask;
 import edu.turtlekit3.warbot.teams.doe.tasks.SendAlliesTask;
 import edu.turtlekit3.warbot.teams.doe.teams.Group;
@@ -35,6 +36,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	private ArrayList<WarMessage> messages;
 
 	private Environnement e;
+	private ReceiverEnvironementInstruction receiver;
 
 	public WarRocketLauncherBrainController() {
 		super();
@@ -51,17 +53,21 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 
 	private Environnement getEnvironnement() {
 		if (Behavior.CHEAT) {
-			return Environnement.getInstance();
-		} else {
+			e = Behavior.getGoodInstance(this.getBrain());
+			receiver = new ReceiverEnvironementInstruction(e);
+		}
+		else {
 			if (e == null) {
 				e = new Environnement();
+				receiver = new ReceiverEnvironementInstruction(e);
 			}
-			return e;
 		}
+		return e;
 	}
 
 	@Override
 	public String action() {
+		
 		if(!getBrain().isReloaded() && !getBrain().isReloading()) {
 			return WarRocketLauncher.ACTION_RELOAD;
 		}
@@ -74,6 +80,8 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 
 		new DetectEnemyTask(this, t, e).exec();
 		new SendAlliesTask(this, t, e, this.messages).exec();
+		
+		this.receiver.processMessages(this.getBrain());
 
 		try {
 			boolean top = getEnvironnement().getWeAreInTop();

@@ -47,6 +47,9 @@ public class WarCharts
 	
 	private List<CoordPolar> foodLocations;
 
+
+	private List<CoordPolar> destroyedBaseLocations;
+
 	/**
      *
      * @param hq
@@ -281,16 +284,8 @@ public class WarCharts
 		return !this.getEnemyBaseTargets().isEmpty();
 	}
 	
-	public void addEnemyBaseLocation(CoordPolar coordPolar)
-	{
-		
-	}
 	
-	public void addDestroyedEnemyBaseLocation(TargetMessageWrapper tmw)
-	{
-		
-	}
-
+	
 	public List<CoordPolar> getEnemyBaseTargets() {
 		return this.enemyBaseLocations;
 	}
@@ -301,7 +296,7 @@ public class WarCharts
     	{
     		if(wm.equals(ProtosCommunication.INFORM_ENEMY_BASE))
     		{
-    			//TODO ADD TARGET INFORMATION HANDLER
+    			addEnemyBaseLocation(TargetMessageWrapper.unwrap(wm));
     		}
     		else if(wm.equals(ProtosCommunication.INFORM_FOUND_FOOD))
     		{
@@ -314,15 +309,15 @@ public class WarCharts
     		else if(wm.equals(ProtosCommunication.INFORM_DESTROYED_ENEMY_BASE))
     		{
     			//TODO REMOVE TARGET INFORMATION HANDLER
+    			addDestroyedEnemyBaseLocation(TargetMessageWrapper.unwrap(wm));
     		}
     	}
 	}
 	
 	
-	public void addEnemyBaseLocatisation(WarMessage wm)
+	public void addEnemyBaseLocation(TargetMessageWrapper tmw)
 	{
 		
-		TargetMessageWrapper tmw = TargetMessageWrapper.unwrap(wm);
 		CoordPolar cp = tmw.compute();
 		CoordCartesian up = new CoordPolar(cp.getDistance(),cp.getAngle()).toCartesian();
 		up.add(new CoordPolar(WarBase.HITBOX_RADIUS,270).toCartesian());
@@ -359,20 +354,103 @@ public class WarCharts
 			minAngle = up.toPolar().getAngle();
 			
 		}
-		
-		
-		if((minDist <= cp.getDistance() && cp.getDistance() <= maxDist)
-				&& (minAngle <= cp.getAngle() && cp.getAngle() <= maxAngle))
+		boolean found= false;
+		for (CoordPolar cp2 : this.getEnemyBaseTargets())
 		{
-			if(!this.enemyBaseLocations.contains(cp))
-			this.enemyBaseLocations.add(cp);
+			if((minDist <= cp2.getDistance() && cp2.getDistance() <= maxDist)
+					&& (minAngle <= cp2.getAngle() && cp2.getAngle() <= maxAngle))
+			{
+				found =true;
+				break;
+			}
+		}
+		if(!found)
+		{
+			for (CoordPolar cp2 : this.getDestroyedEnemyBases())
+			{
+				if((minDist <= cp2.getDistance() && cp2.getDistance() <= maxDist)
+						&& (minAngle <= cp2.getAngle() && cp2.getAngle() <= maxAngle))
+				{
+					found =true;
+					break;
+				}
+			}
+			if(!found)
+			{
+				this.enemyBaseLocations.add(cp);
+			}
 		}
 	}
 	
+	public void addDestroyedEnemyBaseLocation(TargetMessageWrapper tmw)
+	{
+		CoordPolar cp = tmw.compute();
+		CoordCartesian up = new CoordPolar(cp.getDistance(),cp.getAngle()).toCartesian();
+		up.add(new CoordPolar(WarBase.HITBOX_RADIUS,270).toCartesian());
+		
+		
+		CoordCartesian down =  new CoordPolar(cp.getDistance(),cp.getAngle()).toCartesian();
+		down.add(new CoordPolar(WarBase.HITBOX_RADIUS,90).toCartesian());
+		
+		CoordCartesian left =  new CoordPolar(cp.getDistance(),cp.getAngle()).toCartesian();
+		left.add(new CoordPolar(WarBase.HITBOX_RADIUS,180).toCartesian());
+		
+
+		CoordCartesian right =  new CoordPolar(cp.getDistance(),cp.getAngle()).toCartesian();
+		right.add(new CoordPolar(WarBase.HITBOX_RADIUS,180).toCartesian());
+		
+		double maxDist,minDist,maxAngle,minAngle;
+		
+		if( cp.getAngle()  <= 270 && 90 <= cp.getAngle())
+		{//left part of the world
+			maxDist = left.toPolar().getDistance();
+			minDist = right.toPolar().getDistance();
+
+			maxAngle = up.toPolar().getAngle();
+			minAngle = down.toPolar().getAngle();
+			
+		}
+		else
+		{
+			//right part of the world
+			maxDist = right.toPolar().getDistance();
+			minDist = left.toPolar().getDistance();
+	
+			maxAngle = down.toPolar().getAngle();
+			minAngle = up.toPolar().getAngle();
+			
+		}
+		boolean found= false;
+		int i = -1;
+		for (CoordPolar cp2 : this.getEnemyBaseTargets())
+		{
+			if((minDist <= cp2.getDistance() && cp2.getDistance() <= maxDist)
+					&& (minAngle <= cp2.getAngle() && cp2.getAngle() <= maxAngle))
+			{
+				i = this.getEnemyBaseTargets().indexOf(cp2);
+				break;
+			}
+		}
+		if(i!=-1)
+		{
+			getDestroyedEnemyBases().add(getEnemyBaseTargets().get(i));
+			getEnemyBaseTargets().remove(i);
+		}
+	}
+
+	
+
+	private List<CoordPolar> getDestroyedEnemyBases() {
+	
+		return this.destroyedBaseLocations;
+	}
 
 	public boolean haveFoodTargets() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.foodLocations.size()>0;
+	}
+
+	public List<CoordPolar> getFoodLocalisations() {
+		return this.foodLocations;
 	}
 	
 	

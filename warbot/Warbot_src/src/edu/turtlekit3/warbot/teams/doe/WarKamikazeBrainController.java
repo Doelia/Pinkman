@@ -11,7 +11,6 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 
 	@Override
 	public String action() {
-		
 		return WarKamikaze.ACTION_IDLE;
 	}
 }
