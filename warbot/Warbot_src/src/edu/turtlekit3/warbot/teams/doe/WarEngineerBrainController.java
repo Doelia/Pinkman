@@ -11,10 +11,14 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 
 	@Override
 	public String action() {
+		
 		// Develop behaviour here
 		
 		if (getBrain().isBlocked())
 			getBrain().setRandomHeading();
+		
+		
+		
 		return WarEngineer.ACTION_MOVE;
 	}
 }

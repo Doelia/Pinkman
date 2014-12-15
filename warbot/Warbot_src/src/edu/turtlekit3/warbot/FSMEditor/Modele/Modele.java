@@ -3,7 +3,10 @@ package edu.turtlekit3.warbot.FSMEditor.Modele;
 import java.util.ArrayList;
 import java.util.Vector;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 76cd929d0200bf3a925feb48df979b25fd5ea6f1
 public class Modele {
 	
 	private ArrayList<ModeleState> sates = new ArrayList<>();

@@ -1,0 +1,97 @@
+package edu.turtlekit3.warbot.teams.noob.taches.base;
+
+import java.awt.Color;
+
+import edu.turtlekit3.warbot.agents.agents.WarBase;
+import edu.turtlekit3.warbot.agents.enums.WarAgentType;
+import edu.turtlekit3.warbot.brains.WarBrainController;
+import edu.turtlekit3.warbot.teams.noob.Constants;
+import edu.turtlekit3.warbot.teams.noob.WarBaseBrainController;
+import edu.turtlekit3.warbot.teams.noob.taches.TacheAgent;
+
+public class CreerUnite extends TacheAgent{
+	
+	
+	// Energie minimum pour créer un nouvel agent
+	private static final int MIN_HEATH_TO_CREATE = (int) (WarBase.MAX_HEALTH * 0.8);
+	
+	//type du dernier agent créé
+	private static WarAgentType lastCreatedUnit=WarAgentType.WarExplorer;
+	
+	
+	public CreerUnite(WarBrainController b){
+		super((WarBaseBrainController)b);
+	}
+
+	@Override
+	public void exec() {
+		WarBaseBrainController base=(WarBaseBrainController)typeAgent;
+		if(base.getBrain().getHealth()>MIN_HEATH_TO_CREATE)
+		{
+			
+			//si nbExplorers<nbMinExplorers
+			if(base.getNbExplorer()<Constants.nbMinExplorer){
+				lastCreatedUnit=WarAgentType.WarExplorer;
+			}
+			//Sinon, si nbEngineer =0
+			else if(base.getNbEngineer()<Constants.nbMinEngineer){
+				lastCreatedUnit=WarAgentType.WarEngineer;
+			}
+			//Sinon, si nbRocket<nbMinRocket
+			else if(base.getNbRocketLauncher()<Constants.nbMinRocket 
+					&& !(lastCreatedUnit.equals(WarAgentType.WarRocketLauncher))){
+				lastCreatedUnit=WarAgentType.WarRocketLauncher;
+			}
+			else if(base.getNbKamikaze()<Constants.nbMinKamikazes 
+					&& !(lastCreatedUnit.equals(WarAgentType.WarKamikaze))){
+				lastCreatedUnit=WarAgentType.WarKamikaze;
+			}
+			
+			else {
+				//si nbAgents > nbDeuxiemeEngineer
+				if(base.getNbTotalAgents()>Constants.nbDeuxiemeEngineer
+						&& Constants.nbMaxEngineer>base.getNbEngineer()){
+					base.getBrain().setDebugStringColor(Color.green);
+					lastCreatedUnit=WarAgentType.WarEngineer;
+				}
+				//Si nbExplorers<nbMaxExplorers
+				else{ if(base.getNbExplorer()<Constants.nbMaxExplorer){
+						//Si lastcreatedunit=kamikaze
+						if(lastCreatedUnit.equals(WarAgentType.WarKamikaze)){
+							lastCreatedUnit=WarAgentType.WarExplorer;
+						}
+						//Sinon si lastcreatedunit=explorers
+						else if(lastCreatedUnit.equals(WarAgentType.WarExplorer)){
+							lastCreatedUnit=WarAgentType.WarRocketLauncher;
+						}
+						//Sinon
+						else {
+							lastCreatedUnit=WarAgentType.WarKamikaze;
+						}
+					
+					}
+					else {
+						//Sinon si lastcreatedunit=kamikaze
+						if(lastCreatedUnit.equals(WarAgentType.WarKamikaze)){
+							lastCreatedUnit=WarAgentType.WarRocketLauncher;
+						}
+						else{
+							lastCreatedUnit=WarAgentType.WarKamikaze;
+						}
+					}
+				}
+			
+			}
+			
+			base.getBrain().setNextAgentToCreate(lastCreatedUnit);
+			base.setToReturn(WarBase.ACTION_CREATE);
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Tache Creer Unite "+lastCreatedUnit.toString();
+	}
+	
+	
+}

@@ -13,5 +13,7 @@ public abstract class WarBaseAbstractBrainController extends WarBrainController 
 	public WarBaseBrain getBrain() {
 		return (WarBaseBrain) _brain;
 	}
+	
+	
 
 }
