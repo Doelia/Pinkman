@@ -1,5 +1,6 @@
 package pinkman;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -16,6 +17,7 @@ import pinkman.tools.Tools;
 
 import com.badlogic.gdx.math.Vector2;
 
+import edu.turtlekit3.warbot.agents.MovableWarAgent;
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
@@ -31,6 +33,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	private int angleModifier = new Random().nextInt(180);
 	private ArrayList<WarMessage> messages;
 	private ArrayList<WarPercept> enemies;
+	private int ticksCount;
 
 	private Environnement e;
 	private ReceiverEnvironementInstruction receiver;
@@ -41,6 +44,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		isOnTop = 0;
 		toReturn = "";
 		messages = new ArrayList<WarMessage>();
+		ticksCount = 0;
 	}
 
 	private Environnement getEnvironnement() {
@@ -59,6 +63,8 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 
 	@Override
 	public String action() {
+		ticksCount++;
+		
 		if(!getBrain().isReloaded() && !getBrain().isReloading()) {
 			return WarRocketLauncher.ACTION_RELOAD;
 		}
@@ -84,7 +90,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			isOnTop = ((top)?-1:1);
 		} catch (BaseNotFoundException ex) {}
 
-		while(getBrain().isBlocked()) {
+		if(getBrain().isBlocked()) {
 			return unstuck();
 		}
 
@@ -106,7 +112,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 
 	public String unstuck() {
-		getBrain().setHeading(getBrain().getHeading() + 10);
+		getBrain().setHeading(getBrain().getHeading() + 25);
 		return WarRocketLauncher.ACTION_MOVE;
 	}
 
@@ -152,6 +158,10 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 
 	public String move() {
 		Environnement ev = this.getEnvironnement();
+		if(ticksCount < 100) {
+			wiggle();
+			return toReturn;
+		}
 		try {
 			Group t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
 			try {
@@ -182,5 +192,32 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			}
 		}
 		return w;
+	}
+	
+	private boolean isDistanceOk() {
+		ArrayList<WarPercept> percept = getBrain().getPerceptsAlliesByType(WarAgentType.WarRocketLauncher);
+
+		if(percept.size() > 0 && percept.get(0).getDistance() < 20) {
+			getBrain().setHeading(getBrain().getHeading() - angleModifier);
+			toReturn = MovableWarAgent.ACTION_MOVE;
+			return true;
+		}
+		return false;
+	}
+
+	private void wiggle() {
+		if(getBrain().isBlocked())
+			getBrain().setRandomHeading();
+
+		getBrain().setDebugStringColor(Color.black);
+		getBrain().setDebugString("Looking for ennemies");
+
+
+		if(!isDistanceOk()) {
+			double angle = getBrain().getHeading() + new Random().nextInt(10) - new Random().nextInt(10);
+			getBrain().setHeading(angle);
+			toReturn = MovableWarAgent.ACTION_MOVE;		
+		}
+
 	}
 }

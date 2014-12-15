@@ -1,11 +1,7 @@
 package pinkman.behavior;
 
 import pinkman.environement.Environnement;
-import edu.turtlekit3.warbot.agents.ControllableWarAgent;
-import edu.turtlekit3.warbot.agents.WarAgent;
 import edu.turtlekit3.warbot.brains.WarBrain;
-import edu.turtlekit3.warbot.game.Game;
-import edu.turtlekit3.warbot.game.Team;
 
 public class Behavior {
 	private static Environnement instance1;

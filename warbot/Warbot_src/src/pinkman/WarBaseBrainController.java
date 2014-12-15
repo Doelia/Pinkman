@@ -2,7 +2,6 @@ package pinkman;
 
 import pinkman.behavior.Behavior;
 import pinkman.environement.Environnement;
-import pinkman.exceptions.NotExistException;
 import pinkman.messages.EnvironnementUpdaterInterface;
 import pinkman.messages.ReceiverEnvironementInstruction;
 import pinkman.messages.SenderEnvironnementInstruction;
@@ -19,7 +18,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	private EnvironnementUpdaterInterface sender;
 	private ReceiverEnvironementInstruction receiver;
 	
-	private static int MAX_BASES = 5;
+	private static int MAX_BASES = 4;
 
 	public WarBaseBrainController() {
 		super();
