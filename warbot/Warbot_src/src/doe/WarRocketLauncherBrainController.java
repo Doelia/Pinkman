@@ -3,8 +3,6 @@ package doe;
 import java.util.ArrayList;
 import java.util.Random;
 
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
-
 import com.badlogic.gdx.math.Vector2;
 
 import doe.behavior.Behavior;

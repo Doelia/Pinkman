@@ -11,8 +11,8 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=Warbot_src/src&lt;doe.messages"/>
         <javaElement handleIdentifier="=Warbot_src/src&lt;doe.environement"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;doe.messages"/>
         <javaElement handleIdentifier="=Warbot_src/src&lt;doe.tasks"/>
         <javaElement handleIdentifier="=Warbot_src/src&lt;doe.tools"/>
         <javaElement handleIdentifier="=Warbot_src/src&lt;doe.teams"/>

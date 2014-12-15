@@ -31,6 +31,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	private boolean isInGave = false;
 	private boolean haveTouchAproxTarget = false;
 	private boolean detectFood;
+	private int ttl_touchAproxTarget = 1000;
 
 	public boolean isAWall() {
 		return (this.getBrain().isBlocked() && this.getBrain().getPercepts().isEmpty());
@@ -168,9 +169,9 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 				 // 1.2 On s'approche de la base enemie
 				else {
 					if (!this.getFood())  { // 1.2.1 On cherche de la nourriture sur le passage, sinon on continue
-						this.getBrain().setDebugString("going to aprox enemy base: "+this.getPositionAprox());
+						this.getBrain().setDebugString("aprox "+this.getPositionAprox()+", ttl "+ttl_touchAproxTarget);
 						this.activeTask.setTarget(this.getPositionAprox());
-						if (Tools.isNextTo(activeTask.getCurentPosition(), activeTask.getTarget(), 5)) {
+						if (Tools.isNextTo(activeTask.getCurentPosition(), activeTask.getTarget(), 5) || ttl_touchAproxTarget <= 0) {
 							this.haveTouchAproxTarget = true;
 						}
 
@@ -178,6 +179,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 						if (this.haveTouchAproxTarget) {
 							this.activeTask.setTarget(null);
 						}
+						
+						ttl_touchAproxTarget--;
 					}
 				}
 
