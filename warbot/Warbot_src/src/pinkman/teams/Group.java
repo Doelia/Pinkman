@@ -83,7 +83,7 @@ public class Group {
 	}
 
 	public int getMaxSize() {
-		return 8;
+		return 5;
 	}
 
 	public Vector2 getBattlePosition(Integer brainId) throws NotExistException {
