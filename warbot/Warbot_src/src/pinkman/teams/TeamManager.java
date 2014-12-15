@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import pinkman.environement.Environnement;
 import pinkman.environement.StructWarBrain;
 import pinkman.exceptions.BaseNotFoundException;
-import pinkman.exceptions.NoTargetFoundException;
+import pinkman.exceptions.NoTargetException;
 import pinkman.exceptions.NoTeamFoundException;
-import pinkman.exceptions.NotExistException;
 
 import com.badlogic.gdx.math.Vector2;
 
-import edu.turtlekit3.warbot.agents.WarAgent;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 
 
@@ -72,34 +70,60 @@ public class TeamManager {
 	public int getIndexOfTeam(Group t) {
 		return teams.indexOf(t);
 	}
+	
+	public boolean isAlreadyTargeted(int brainId) {
+		for (Group team : this.teams) {
+			try {
+				if (team.getTarget().brainID == brainId)
+					return true;
+			} catch (NoTargetException e) {
+			}
+		}
+		return false;
+	}
+	
 
 	public void assignTarget() {
 		for (Group team : teams) {
 			if(team.getSize() > 0) {
-				if(e.getNumberOfBases() <= 1) {
+				if(e.inRush()) {
 					try {
 						team.setTarget(new Target(e.getFirstEnemyBase()));
 					} catch (BaseNotFoundException e) {
 					}
 				} else {
+					
 					try {
 						Target t = team.getTarget();
-						if(e.getEnemy(t.brainID).getType() == WarAgentType.WarBase) {
+						
+						// Il y a déjà une target
+						
+						// Reset si base (elle sera redéfinie plus tard)
+						if (e.getEnemy(t.brainID).getType() == WarAgentType.WarBase) {
 							team.setTarget(null);
 						}
+						
+						// On la désactive si elle est devenue trop loin
 						Vector2 base = e.getPositionFirstEnemyBase();
 						e.getEnemy(t.brainID);
-						if(e.getEnemy(t.brainID).getPosition().dst(base) > 200) {
+						if (e.getEnemy(t.brainID).getPosition().dst(base) > 200) {
 							team.setTarget(null);
 						}
+						
 					} catch (Exception e) {
 						team.setTarget(null);
 					}
-					if(!team.hasTarget()) {
+					
+					// Pas d'énemie déjà en target
+					if (!team.hasTarget()) {
+						
 						try {
-							StructWarBrain s = e.getEnemy(e.getClosestFromBase(e.getPositionFirstEnemyBase()));
+							// On prend l'enemie le plus proche comme nouvelle target
+							StructWarBrain s = e.getEnemy(e.getBestTargetFromBase(e.getPositionFirstEnemyBase()));
 							team.setTarget(new Target(s.getID()));
 						} catch (Exception e1) {
+							
+							// S'il y en a pas, on focus la base, si pas de base ça reste à null
 							try {
 								team.setTarget(new Target(e.getFirstEnemyBase()));
 							} catch (BaseNotFoundException e) {

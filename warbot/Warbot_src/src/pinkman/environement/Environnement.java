@@ -151,9 +151,16 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		} catch(Exception e) {}
 		try {
 			for (StructWarBrainEnemy s : listEnemies.values()) {
-				if (!s.isAlive() || s.getTtl() <= 0) {
-					listEnemies.remove(s.getID());
+				if (s.isBase()) {
+					if (!s.isAlive() || s.getTtl() <= 0 || s.getTimeLife() > 3000) {
+						listEnemies.remove(s.getID());
+					}
+				} else {
+					if (!s.isAlive() || s.getTtl() <= 0) {
+						listEnemies.remove(s.getID());
+					}
 				}
+				
 			}
 		} catch(Exception e) { }
 	}
@@ -364,7 +371,7 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		}
 	}
 	
-	public int getClosestFromBase(Vector2 position) throws NoTargetFoundException {
+	public int getBestTargetFromBase(Vector2 position) throws NoTargetFoundException {
 		this.clean();
 		double minDistance = 200;
 		int id = -1;
@@ -375,8 +382,11 @@ public class Environnement implements EnvironnementUpdaterInterface {
 						|| s.getType() == WarAgentType.WarKamikaze) {
 					double dst = position.dst(s.getPosition());
 					if (dst < minDistance) {
-						minDistance = position.dst(s.getPosition());
-						id = s.getID();
+						if (!tm.isAlreadyTargeted(s.getID())) { // S'il nest pas déjà target par une autre team
+							minDistance = position.dst(s.getPosition());
+							id = s.getID();
+						}
+						
 					}
 				}
 			}
@@ -409,6 +419,19 @@ public class Environnement implements EnvironnementUpdaterInterface {
 			}
 		}
 		return base;
+	}
+	
+	public Vector2 getPositionFirstEclaireur() {
+		Vector2 v = new Vector2(0,0);
+		for (StructWarBrainAllie s : this.getListAllies()) {
+			if (s.getType() == WarAgentType.WarExplorer) {
+				try {
+					return s.getPosition();
+				} catch (NotExistException e) {
+				}
+			}
+		}
+		return v;
 	}
 
 	public int getBiggestBaseId() {

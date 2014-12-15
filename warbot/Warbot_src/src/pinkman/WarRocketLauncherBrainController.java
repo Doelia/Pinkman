@@ -117,7 +117,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
 			t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
 
-			if(!t.hasTarget()) {
+			if (!t.hasTarget()) {
 				return WarRocketLauncher.ACTION_MOVE;
 			} else {
 				Vector2 targetPosition = t.getTargetPosition(getBrain().getID(), isOnTop);
@@ -162,15 +162,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 							ev.getStructWarBrain(getBrain().getID()).getPosition(),
 							t.getMovementPosition(getBrain().getID()));
 				} else {
-
-					int n = new Random().nextInt(100);
-					if(n > 98 || getBrain().isBlocked()) {
-						newPosition();
-					}
-					Tools.setHeadingOn(
-							getBrain(), 
-							ev.getStructWarBrain(getBrain().getID()).getPosition(),
-							new Vector2(x, y));
+					Tools.setHeadingOn(getBrain(), ev.getStructWarBrain(getBrain().getID()).getPosition(), e.getPositionFirstEclaireur());
 				}
 			} catch (NotExistException e) {
 			}
