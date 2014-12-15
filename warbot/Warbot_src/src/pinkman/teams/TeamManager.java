@@ -125,7 +125,7 @@ public class TeamManager {
 							
 							// S'il y en a pas, on focus la base, si pas de base ça reste à null
 							try {
-								team.setTarget(new Target(e.getFirstEnemyBase()));
+								team.setTarget(new Target(e.getGoodTargetFirstEnemyBase()));
 							} catch (BaseNotFoundException e) {
 							}
 						}

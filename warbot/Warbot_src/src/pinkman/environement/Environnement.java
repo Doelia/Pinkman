@@ -249,6 +249,15 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		}
 	}
 
+	public int getGoodTargetFirstEnemyBase()  throws BaseNotFoundException {
+		for (int i : this.getEnemyBases()) {
+			if (!this.tm.isAlreadyTargeted(i)) {
+				return i;
+			}
+		}
+		return getFirstEnemyBase();
+	}
+	
 	public int getFirstEnemyBase() throws BaseNotFoundException {
 		try {
 			return this.getEnemyBases().get(0);
@@ -383,8 +392,8 @@ public class Environnement implements EnvironnementUpdaterInterface {
 					double dst = position.dst(s.getPosition());
 					if (dst < minDistance) {
 						if (!tm.isAlreadyTargeted(s.getID())) { // S'il nest pas déjà target par une autre team
-							minDistance = position.dst(s.getPosition());
 							id = s.getID();
+							return id;
 						}
 						
 					}
