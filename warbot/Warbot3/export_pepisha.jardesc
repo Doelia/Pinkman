@@ -11,13 +11,22 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.engineer"/>
-        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha"/>
+        <file path="/Warbot3/src/pepisha/README.md"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha{WarRocketLauncherBrainController.java"/>
         <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.base"/>
-        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches"/>
-        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.turrets"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha{WarBaseBrainController.java"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha{WarExplorerBrainController.java"/>
+        <file path="/Warbot3/src/pepisha/pepisha3.png"/>
         <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.kamikazes"/>
-        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.explorer"/>
         <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.rocketLauncher"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches"/>
+        <file path="/Warbot3/src/pepisha/config.xml"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha{WarEngineerBrainController.java"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.turrets"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.explorer"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.engineer"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha{WarTurretBrainController.java"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha{WarKamikazeBrainController.java"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha{Constants.java"/>
     </selectedElements>
 </jardesc>
