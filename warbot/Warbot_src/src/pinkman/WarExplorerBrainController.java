@@ -112,7 +112,8 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 			} else {
 				Vector2 target = Tools.cartFromPolaire(x.getAngle(), x.getDistance());
 				target.sub(this.activeTask.getCurentPosition());
-				this.activeTask.setTarget(target);
+				this.getBrain().setDebugString("taget percept "+target);
+				//this.activeTask.setTarget(target);
 			}
 		}
 	}

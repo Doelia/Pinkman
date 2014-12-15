@@ -2,6 +2,7 @@ package pinkman;
 
 import pinkman.behavior.Behavior;
 import pinkman.environement.Environnement;
+import pinkman.exceptions.NotExistException;
 import pinkman.messages.EnvironnementUpdaterInterface;
 import pinkman.messages.ReceiverEnvironementInstruction;
 import pinkman.messages.SenderEnvironnementInstruction;
@@ -99,7 +100,13 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 			this.e.getTeamManager().assignTarget();
 		}
 
-		this.getBrain().setDebugString("Bag "+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize()+" - life "+this.getBrain().getHealth());
+		try {
+			this.getBrain().setDebugString("Bag "+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize()+" - "
+						+e.getStructWarBrain(this.getBrain().getID()).getPosition());
+		} catch (Exception ex) {
+		}
+		
+		
 
 		if (canCreate()) {
 			this.getBrain().setNextAgentToCreate(this.getNextToCreate());
