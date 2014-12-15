@@ -27,7 +27,7 @@ public class DetectFoodTask extends Task {
 			if (foodPercepts != null && foodPercepts.size() > 0){
 				for (WarPercept p : foodPercepts) {
 						Vector2 pos = Tools.getPositionOfEntityFromMine(curentPosition, p.getAngle(), p.getDistance());
-						e.addFreeFood(pos, p.getID());
+						sender.addFreeFood(pos, p.getID());
 				}
 			}
 		}  catch (NotExistException e) {

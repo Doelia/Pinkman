@@ -41,6 +41,14 @@ public class ReceiverEnvironementInstruction {
 							
 		}
 		
+		if (m.getMessage().equals(TypeUpdateEnv.REGISTER_EXPLORER)) {
+			e.registerExplorer(Integer.parseInt(m.getContent()[0]));
+		}
+		
+		if (m.getMessage().equals(TypeUpdateEnv.UPDATE_POSITION_ENEMY)) {
+			e.registerExplorer
+				(Integer.parseInt(m.getContent()[0]));
+		}
 		
 	}
 }

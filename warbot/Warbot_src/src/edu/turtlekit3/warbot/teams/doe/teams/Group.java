@@ -5,10 +5,8 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
-import edu.turtlekit3.warbot.brains.WarBrain;
 import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
-import edu.turtlekit3.warbot.teams.doe.environement.StructWarBrain;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 

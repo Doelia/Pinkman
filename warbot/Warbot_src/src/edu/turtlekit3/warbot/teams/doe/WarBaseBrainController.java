@@ -5,6 +5,8 @@ import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarBaseAbstractBrainController;
 import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
+import edu.turtlekit3.warbot.teams.doe.messages.EnvironnementUpdaterInterface;
+import edu.turtlekit3.warbot.teams.doe.messages.SenderEnvironnementInstruction;
 import edu.turtlekit3.warbot.teams.doe.tasks.DetectEnemyTask;
 import edu.turtlekit3.warbot.teams.doe.tasks.SendAlliesTask;
 import edu.turtlekit3.warbot.teams.doe.tasks.SetBaseAttackedTask;
@@ -12,6 +14,7 @@ import edu.turtlekit3.warbot.teams.doe.tasks.SetBaseAttackedTask;
 public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
 	private Environnement e;
+	private EnvironnementUpdaterInterface sender;
 
 	public WarBaseBrainController() {
 		super();
@@ -22,6 +25,17 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		getBrain().broadcastMessageToAll("HERE", "");
 	}
 
+	private EnvironnementUpdaterInterface getSender() {
+		if (sender == null) {
+			if (Behavior.CHEAT) {
+				sender= this.getEnvironnement();
+			} else {
+				sender = new SenderEnvironnementInstruction(this.getBrain());
+			}
+		}
+		return sender;
+	}
+	
 	private Environnement getEnvironnement() {
 		if (Behavior.CHEAT) {
 			e = Behavior.getGoodInstance(this.getBrain());
@@ -69,7 +83,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		e.setMainBase(this.getBrain());
 		if (e.isMainBase(this.getBrain())) {
 			this.broadcastPosition();
-			e.decrementTtlOfAll();
+			this.getSender().decrementTtlOfAll();
 		}
 
 		this.getBrain().setDebugString("Bag "+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize()+" - life "+this.getBrain().getHealth());

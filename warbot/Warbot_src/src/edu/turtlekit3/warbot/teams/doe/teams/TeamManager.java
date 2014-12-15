@@ -12,6 +12,7 @@ public class TeamManager {
 	
 	public TeamManager(Environnement e) {
 		teams = new ArrayList<Group>();
+		this.e = e;
 	}
 	
 	public Group getTeamOf(int id) throws NoTeamFoundException {

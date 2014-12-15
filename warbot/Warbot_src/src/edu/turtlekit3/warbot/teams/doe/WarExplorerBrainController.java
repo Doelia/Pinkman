@@ -87,7 +87,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		return getEnvironnement().getApproxEnemyBasePosition();
 	}
 	
-	private void returnBase() {
+	private void returnBase() throws NotExistException {
 		this.isInGave = true;
 		Vector2 base = getEnvironnement().getPositionAllieBaseWithLowLife();
 		this.getBrain().setDebugString("return base "+base);
@@ -99,6 +99,10 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 				this.getBrain().setDebugString("giving to base");
 				getBrain().setIdNextAgentToGive(x.getID());
 				action = MovableWarAgent.ACTION_GIVE;
+			} else {
+				Vector2 target = Tools.cartFromPolaire(x.getAngle(), x.getDistance());
+				target.sub(this.activeTask.getCurentPosition());
+				this.activeTask.setTarget(target);
 			}
 		}
 	}

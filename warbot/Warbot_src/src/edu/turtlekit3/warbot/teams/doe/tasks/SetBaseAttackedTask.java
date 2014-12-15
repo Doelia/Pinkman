@@ -23,7 +23,7 @@ public class SetBaseAttackedTask extends Task {
 			getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.enemyTankHere, String.valueOf(percept.get(0).getDistance()), String.valueOf(percept.get(0).getAngle()));
 			e.getTeamManager().setBaseAttacked(true);
 			try {
-				e.setPositionBaseAttacked(e.getStructWarBrain(brain.getID()).getPosition());
+				sender.setPositionBaseAttacked(e.getStructWarBrain(brain.getID()).getPosition());
 			} catch (NotExistException e1) {}
 		} else {
 			e.getTeamManager().setBaseAttacked(false);
