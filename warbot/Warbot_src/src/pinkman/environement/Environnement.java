@@ -249,6 +249,15 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		}
 	}
 
+	public int getGoodTargetFirstEnemyBase()  throws BaseNotFoundException {
+		for (int i : this.getEnemyBases()) {
+			if (!this.tm.isAlreadyTargeted(i)) {
+				return i;
+			}
+		}
+		return getFirstEnemyBase();
+	}
+	
 	public int getFirstEnemyBase() throws BaseNotFoundException {
 		try {
 			return this.getEnemyBases().get(0);
