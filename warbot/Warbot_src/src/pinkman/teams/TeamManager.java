@@ -32,7 +32,7 @@ public class TeamManager {
 	
 	public void affectTeamTo(int brainId) {
 		for (Group team : teams) {
-			if(team.getSize() < team.getMaxSize() && !team.isReady()) {
+			if(team.getSize() < team.getMaxSize()) {
 				team.addMember(brainId);
 				return;
 			}
