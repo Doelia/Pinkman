@@ -11,14 +11,13 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=Warbot3/src&lt;doe.exceptions"/>
-        <javaElement handleIdentifier="=Warbot3/src&lt;doe.tasks"/>
         <javaElement handleIdentifier="=Warbot3/src&lt;doe.messages"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;doe.tasks"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;doe"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;doe.exceptions"/>
         <javaElement handleIdentifier="=Warbot3/src&lt;doe.teams"/>
         <javaElement handleIdentifier="=Warbot3/src&lt;doe.tools"/>
-        <javaElement handleIdentifier="=Warbot3/src&lt;myTeam"/>
-        <javaElement handleIdentifier="=Warbot3/src&lt;doe"/>
-        <javaElement handleIdentifier="=Warbot3/src&lt;doe.cheat"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;doe.behavior"/>
         <javaElement handleIdentifier="=Warbot3/src&lt;doe.environement"/>
     </selectedElements>
 </jardesc>

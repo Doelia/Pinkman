@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="Warbot3/teams/pepisha.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/Warbot3/export_pepisha.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.engineer"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.base"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.turrets"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.kamikazes"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.explorer"/>
+        <javaElement handleIdentifier="=Warbot3/src&lt;pepisha.taches.rocketLauncher"/>
+    </selectedElements>
+</jardesc>
