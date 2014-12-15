@@ -22,7 +22,6 @@ public class Group {
 	boolean isBaseAttacked;
 	boolean isTargetBase;
 	int teamIndex;
-	private boolean ready;
 	private int targetID;
 	private int voteToChangeTarget;
 	private Environnement e;
@@ -38,13 +37,8 @@ public class Group {
 		angle = new Random().nextInt(20);
 		isTargetBase = false;
 		isBaseAttacked = false;
-		ready = false;
 		voteToChangeTarget = 0;
 		this.e = e;
-	}
-
-	public boolean isReady() {
-		return this.ready;
 	}
 	
 	public void setTargetID(int id) {
@@ -61,9 +55,6 @@ public class Group {
 	
 	public void addMember(Integer w) {
 		members.add(w);
-		if(members.size() == getMaxSize() && !ready) {
-			ready = true;
-		}
 	}
 	
 	public ArrayList<Integer> getMembers() {
@@ -246,9 +237,5 @@ public class Group {
 	
 	public void setTeamIndex(int index) {
 		this.teamIndex = index;
-	}
-
-	public void setReady(boolean b) {
-		ready = true;
 	}
 }
