@@ -1,12 +1,10 @@
 package edu.turtlekit3.warbot.teams.doe;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
-import edu.turtlekit3.warbot.agents.MovableWarAgent;
 import edu.turtlekit3.warbot.agents.agents.WarRocketLauncher;
 import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.agents.percepts.WarPercept;
@@ -21,8 +19,6 @@ import edu.turtlekit3.warbot.teams.doe.tasks.DetectEnemyTask;
 import edu.turtlekit3.warbot.teams.doe.tasks.SendAlliesTask;
 import edu.turtlekit3.warbot.teams.doe.teams.Group;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
-import edu.turtlekit3.warbot.teams.noe.Constants;
-import edu.turtlekit3.warbot.tools.CoordPolar;
 
 public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractBrainController {
 

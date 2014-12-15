@@ -1,6 +1,6 @@
 package edu.turtlekit3.warbot.teams.doe;
 
-import edu.turtlekit3.warbot.agents.agents.WarEngineer;
+import edu.turtlekit3.warbot.agents.agents.WarKamikaze;
 import edu.turtlekit3.warbot.brains.braincontrollers.WarEngineerAbstractBrainController;
 
 public class WarEngineerBrainController extends WarEngineerAbstractBrainController {
@@ -11,14 +11,6 @@ public class WarEngineerBrainController extends WarEngineerAbstractBrainControll
 
 	@Override
 	public String action() {
-		
-		// Develop behaviour here
-		
-		if (getBrain().isBlocked())
-			getBrain().setRandomHeading();
-		
-		
-		
-		return WarEngineer.ACTION_MOVE;
+		return WarKamikaze.ACTION_IDLE;
 	}
 }

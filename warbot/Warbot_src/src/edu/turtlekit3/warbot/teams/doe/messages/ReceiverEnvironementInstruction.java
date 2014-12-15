@@ -36,5 +36,11 @@ public class ReceiverEnvironementInstruction {
 							
 		}
 		
+		if (m.getMessage().equals(TypeUpdateEnv.SET_WERE_TOP)) {
+			e.setWeAreInTop(Boolean.parseBoolean(m.getContent()[0]));
+							
+		}
+		
+		
 	}
 }

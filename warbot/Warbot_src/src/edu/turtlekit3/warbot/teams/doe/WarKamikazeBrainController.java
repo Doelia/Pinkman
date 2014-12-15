@@ -11,10 +11,7 @@ public class WarKamikazeBrainController extends WarKamikazeAbstractBrainControll
 
 	@Override
 	public String action() {
-		// Develop behaviour here
 		
-		if (getBrain().isBlocked())
-			getBrain().setRandomHeading();
-		return WarKamikaze.ACTION_MOVE;
+		return WarKamikaze.ACTION_IDLE;
 	}
 }

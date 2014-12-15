@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Stack;
 
-import sun.net.www.content.text.plain;
-
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
@@ -17,11 +15,12 @@ import edu.turtlekit3.warbot.brains.brains.WarBaseBrain;
 import edu.turtlekit3.warbot.teams.doe.exceptions.BaseNotFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NoTargetFoundException;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
+import edu.turtlekit3.warbot.teams.doe.messages.EnvironnementUpdaterInterface;
 import edu.turtlekit3.warbot.teams.doe.teams.Group;
 import edu.turtlekit3.warbot.teams.doe.teams.TeamManager;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
-public class Environnement {
+public class Environnement implements EnvironnementUpdaterInterface {
 
 	private static Environnement instance;
 	public static Environnement getInstance() {
