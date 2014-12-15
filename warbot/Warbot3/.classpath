@@ -10,6 +10,8 @@
 	<classpathentry kind="lib" path="lib/gdx-natives.jar"/>
 	<classpathentry kind="lib" path="lib/gdx-sources.jar"/>
 	<classpathentry kind="lib" path="lib/gdx.jar"/>
-	<classpathentry kind="lib" path="lib/warbot3.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/warbot3.0.2.jar"/>
+	<classpathentry kind="lib" path="teams/pepisha.jar"/>
+	<classpathentry kind="lib" path="teams/pinkman.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

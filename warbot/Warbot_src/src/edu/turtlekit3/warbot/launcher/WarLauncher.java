@@ -422,12 +422,12 @@ public class WarLauncher extends TKLauncher {
 			
 			currentTeam.setLogo(teamLogo);
 			
-			currentTeam.addBrainControllerClassForAgent("WarBase", edu.turtlekit3.warbot.teams.doe.WarBaseBrainController.class);
-			currentTeam.addBrainControllerClassForAgent("WarExplorer", edu.turtlekit3.warbot.teams.doe.WarExplorerBrainController.class);
-			currentTeam.addBrainControllerClassForAgent("WarEngineer", edu.turtlekit3.warbot.teams.doe.WarEngineerBrainController.class);
-			currentTeam.addBrainControllerClassForAgent("WarKamikaze", edu.turtlekit3.warbot.teams.doe.WarKamikazeBrainController.class);
-			currentTeam.addBrainControllerClassForAgent("WarRocketLauncher", edu.turtlekit3.warbot.teams.doe.WarRocketLauncherBrainController.class);
-			currentTeam.addBrainControllerClassForAgent("WarTurretBrainController", edu.turtlekit3.warbot.teams.doe.WarTurretBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarBase", pinkman.WarBaseBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarExplorer", pinkman.WarExplorerBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarEngineer", pinkman.WarEngineerBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarKamikaze", pinkman.WarKamikazeBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarRocketLauncher", pinkman.WarRocketLauncherBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarTurretBrainController", pinkman.WarTurretBrainController.class);
 			
 			Simulation.getInstance().addAvailableTeam(currentTeam);
 		}
@@ -456,12 +456,14 @@ public class WarLauncher extends TKLauncher {
 			
 			currentTeam.setLogo(teamLogo);
 			
+			/*
 			currentTeam.addBrainControllerClassForAgent("WarBase", edu.turtlekit3.warbot.teams.protos.WarBaseBrainController.class);
 			currentTeam.addBrainControllerClassForAgent("WarExplorer", edu.turtlekit3.warbot.teams.protos.WarExplorerBrainController.class);
 			currentTeam.addBrainControllerClassForAgent("WarEngineer", edu.turtlekit3.warbot.teams.protos.WarEngineerBrainController.class);
 			currentTeam.addBrainControllerClassForAgent("WarKamikaze", edu.turtlekit3.warbot.teams.protos.WarKamikazeBrainController.class);
 			currentTeam.addBrainControllerClassForAgent("WarRocketLauncher", edu.turtlekit3.warbot.teams.protos.WarRocketLauncherBrainController.class);
 			currentTeam.addBrainControllerClassForAgent("WarTurretBrainController", edu.turtlekit3.warbot.teams.protos.WarTurretBrainController.class);
+			*/
 			
 			Simulation.getInstance().addAvailableTeam(currentTeam);
 		}

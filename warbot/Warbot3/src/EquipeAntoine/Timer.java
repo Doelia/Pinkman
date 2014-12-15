@@ -1,0 +1,11 @@
+package EquipeAntoine;
+
+public enum Timer {
+	//TANKS
+	WAITMESSAGE,
+	CONTOURNE,
+	//EXPLORERS
+	WARNTANK,
+	SITUATION,
+	VEROUILLECIBLE;
+}

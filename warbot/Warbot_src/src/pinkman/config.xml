@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Team>
+	<Name>Pinkman</Name>
+	<IconPath>pinkman.png</IconPath>
+	<SoundPath>myTeam.wav</SoundPath>
+	<Description>
+	    S.Wouters N.LePhilippe Team
+	</Description>
+	<AgentsBrainControllers>
+		<WarExplorer>WarExplorerBrainController.class</WarExplorer>
+		<WarRocketLauncher>WarRocketLauncherBrainController.class</WarRocketLauncher>
+		<WarBase>WarBaseBrainController.class</WarBase>
+		<WarKamikaze>WarKamikazeBrainController.class</WarKamikaze>
+		<WarEngineer>WarEngineerBrainController.class</WarEngineer>
+		<WarTurret>WarTurretBrainController.class</WarTurret>
+	</AgentsBrainControllers>
+</Team>
