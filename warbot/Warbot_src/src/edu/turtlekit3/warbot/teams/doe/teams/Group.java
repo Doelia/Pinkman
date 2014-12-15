@@ -144,7 +144,7 @@ public class Group {
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
 			float alpha = tick*index + getEnvironnement().getIndexOfTeam(this) * (360 / getEnvironnement().getTeamManager().size()) + 20;
-			Vector2 target = Tools.cartFromPolaire(alpha, 25);
+			Vector2 target = Tools.cartFromPolaire(alpha, 20);
 			target.add(base);
 			return target;
 		} catch (Exception e) {
