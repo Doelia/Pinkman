@@ -157,7 +157,7 @@ public class Environnement implements EnvironnementUpdaterInterface {
 	}
 	
 	public boolean inRush() {
-		return (this.getNumberOfBases() == 1);
+		return (this.getNumberOfBases() <= 1);
 	}
 
 	public boolean ourBaseIsFound() {
