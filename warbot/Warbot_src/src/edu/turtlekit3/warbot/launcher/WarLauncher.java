@@ -422,12 +422,12 @@ public class WarLauncher extends TKLauncher {
 			
 			currentTeam.setLogo(teamLogo);
 			
-			currentTeam.addBrainControllerClassForAgent("WarBase", doe.WarBaseBrainController.class);
-			currentTeam.addBrainControllerClassForAgent("WarExplorer", doe.WarExplorerBrainController.class);
-			currentTeam.addBrainControllerClassForAgent("WarEngineer", doe.WarEngineerBrainController.class);
-			currentTeam.addBrainControllerClassForAgent("WarKamikaze", doe.WarKamikazeBrainController.class);
-			currentTeam.addBrainControllerClassForAgent("WarRocketLauncher", doe.WarRocketLauncherBrainController.class);
-			currentTeam.addBrainControllerClassForAgent("WarTurretBrainController", doe.WarTurretBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarBase", pinkman.WarBaseBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarExplorer", pinkman.WarExplorerBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarEngineer", pinkman.WarEngineerBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarKamikaze", pinkman.WarKamikazeBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarRocketLauncher", pinkman.WarRocketLauncherBrainController.class);
+			currentTeam.addBrainControllerClassForAgent("WarTurretBrainController", pinkman.WarTurretBrainController.class);
 			
 			Simulation.getInstance().addAvailableTeam(currentTeam);
 		}

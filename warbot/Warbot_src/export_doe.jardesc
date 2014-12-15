@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="Warbot3/teams/doe.jar"/>
+    <jar path="Warbot3/teams/pinkman.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/Warbot_src/export_doe.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -11,13 +11,13 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=Warbot_src/src&lt;doe.environement"/>
-        <javaElement handleIdentifier="=Warbot_src/src&lt;doe.messages"/>
-        <javaElement handleIdentifier="=Warbot_src/src&lt;doe.tasks"/>
-        <javaElement handleIdentifier="=Warbot_src/src&lt;doe.tools"/>
-        <javaElement handleIdentifier="=Warbot_src/src&lt;doe.teams"/>
-        <javaElement handleIdentifier="=Warbot_src/src&lt;doe.behavior"/>
-        <javaElement handleIdentifier="=Warbot_src/src&lt;doe.exceptions"/>
-        <javaElement handleIdentifier="=Warbot_src/src&lt;doe"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.tasks"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.tools"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.messages"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.exceptions"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.teams"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.environement"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.behavior"/>
     </selectedElements>
 </jardesc>
