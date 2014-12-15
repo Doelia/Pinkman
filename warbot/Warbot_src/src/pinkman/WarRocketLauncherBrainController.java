@@ -124,110 +124,113 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 
 	public String attack() {
-		Environnement ev = this.getEnvironnement();
-		Group t;
-		try {
-			t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
-			String s = rush(t, ev);
-			if(!s.equals("")) {
-				return s;
-			}
-
-			Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
-
-			if(ev.oneBaseIsFound() && myPosition.dst(ev.getPositionFirstEnemyBase()) > 150) {
-				return attackBaseAfterFirstBaseDead(t, ev);
-			}
-
-			if(enemies != null && enemies.size() > 0){
-				t.setTargetID(enemies.get(0).getID());
-				t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), enemies.get(0).getAngle(), enemies.get(0).getDistance()), false);
-				t.setAttacking(true);
-			} else {
-				try {
-					myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
-					Vector2 enemyPosition = ev.getEnemy(ev.getClosestEnemy(myPosition)).getPosition();
-
-					if(myPosition.dst(enemyPosition) < 200) {
-						t.setTarget(enemyPosition, false);
-						Vector2 enemyBase = t.getTargetPosition(getBrain().getID(), isOnTop);
-						Tools.setHeadingOn(
-								getBrain(), 
-								myPosition,
-								enemyBase);
-						if(myPosition.dst(enemyBase) < 3) {
-							Tools.setHeadingOn(
-									getBrain(), 
-									myPosition,
-									t.getTarget());
-							getBrain().setDebugString("in position to attack");
-							return  WarRocketLauncher.ACTION_IDLE;
-						}
-						getBrain().setDebugString("positioning to attack");
-						toReturn = WarRocketLauncher.ACTION_MOVE;
-					} else {
-						t.setAttacking(false);
-						s = attackBaseAfterFirstBaseDead(t, ev);
-						if(!s.equals("")) {
-							getBrain().setDebugString("going to attack enemy base");
-							return s;
-						}
-					}
-				} catch (Exception e) {
-					t.setAttacking(false);
-					s = attackBaseAfterFirstBaseDead(t, ev);
-					if(!s.equals("")) {
-						getBrain().setDebugString("going to attack enemy base");
-						return s;
-					}
-				};
-
-			}
-			if(t.isAttacking()) {
-				if(enemies.size() > 0) {
-					if(!getBrain().isReloaded()) {
-						myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
-						Vector2 enemyPosition = t.getTargetPosition(getBrain().getID(), isOnTop);
-
-						Tools.setHeadingOn(
-								getBrain(), 
-								ev.getStructWarBrain(getBrain().getID()).getPosition(),
-								t.getTargetPosition(getBrain().getID(), isOnTop));
-
-						if(myPosition.dst(enemyPosition) < 3) {
-							Tools.setHeadingOn(
-									getBrain(), 
-									myPosition,
-									t.getTarget());
-							getBrain().setDebugString("in position to attack");
-
-							return  WarRocketLauncher.ACTION_IDLE;
-						}
-					} else {
-						getBrain().setHeading(enemies.get(0).getAngle());
-						getBrain().setDebugString("shooting target");
-						return WarRocketLauncher.ACTION_FIRE;
-					}
-				} else {
-					myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
-					Vector2 enemyBase = t.getTargetPosition(getBrain().getID(), isOnTop);
-					Tools.setHeadingOn(
-							getBrain(), 
-							myPosition,
-							enemyBase);
-
-					if(myPosition.dst(enemyBase) < 3) {
-						Tools.setHeadingOn(
-								getBrain(), 
-								myPosition,
-								t.getTarget());
-						getBrain().setDebugString("in position to shoot");
-						return  WarRocketLauncher.ACTION_IDLE;
-					}
-					toReturn = WarRocketLauncher.ACTION_MOVE;
-				}
-			}
-		} catch (Exception e){getBrain().setDebugString(getBrain().getDebugString() + "in catch1");};
+		
+		
+		
+//		Environnement ev = this.getEnvironnement();
+//		Group t;
+//		try {
+//			t = ev.getTeamManager().getTeamOf(this.getBrain().getID());
+//			String s = rush(t, ev);
+//			if(!s.equals("")) {
+//				return s;
+//			}
+//
+//			Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
+//
+//			if(ev.oneBaseIsFound() && myPosition.dst(ev.getPositionFirstEnemyBase()) > 150) {
+//				return attackBaseAfterFirstBaseDead(t, ev);
+//			}
+//
+//			if(enemies != null && enemies.size() > 0){
+//				t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), enemies.get(0).getAngle(), enemies.get(0).getDistance()), false);
+//				t.setTargetID(enemies.get(0).getID());
+//				t.setAttacking(true);
+//			} else {
+//				try {
+//					myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
+//					Vector2 enemyPosition = ev.getEnemy(ev.getClosestEnemy(myPosition)).getPosition();
+//
+//					if(myPosition.dst(enemyPosition) < 200) {
+//						t.setTarget(enemyPosition, false);
+//						Vector2 targetPosition = t.getTargetPosition(getBrain().getID(), isOnTop);
+//						Tools.setHeadingOn(
+//								getBrain(), 
+//								myPosition,
+//								targetPosition);
+//						if(myPosition.dst(targetPosition) < 3) {
+//							Tools.setHeadingOn(
+//									getBrain(), 
+//									myPosition,
+//									t.getTarget());
+//							getBrain().setDebugString("in position to attack");
+//							return  WarRocketLauncher.ACTION_IDLE;
+//						}
+//						getBrain().setDebugString("positioning to attack");
+//						toReturn = WarRocketLauncher.ACTION_MOVE;
+//					} else {
+//						t.setAttacking(false);
+//						s = attackBaseAfterFirstBaseDead(t, ev);
+//						if(!s.equals("")) {
+//							getBrain().setDebugString("going to attack enemy base");
+//							return s;
+//						}
+//					}
+//				} catch (Exception e) {
+//					t.setAttacking(false);
+//					s = attackBaseAfterFirstBaseDead(t, ev);
+//					if(!s.equals("")) {
+//						getBrain().setDebugString("going to attack enemy base");
+//						return s;
+//					}
+//				};
+//
+//			}
+//			if(t.isAttacking()) {
+//				if(enemies.size() > 0) {
+//					if(!getBrain().isReloaded()) {
+//						myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
+//						Vector2 enemyPosition = t.getTargetPosition(getBrain().getID(), isOnTop);
+//
+//						Tools.setHeadingOn(
+//								getBrain(), 
+//								ev.getStructWarBrain(getBrain().getID()).getPosition(),
+//								enemyPosition);
+//
+//						if(myPosition.dst(enemyPosition) < 3) {
+//							Tools.setHeadingOn(
+//									getBrain(), 
+//									myPosition,
+//									t.getTarget());
+//							getBrain().setDebugString("in position to attack");
+//
+//							return  WarRocketLauncher.ACTION_IDLE;
+//						}
+//					} else {
+//						getBrain().setHeading(enemies.get(0).getAngle());
+//						getBrain().setDebugString("shooting target");
+//						return WarRocketLauncher.ACTION_FIRE;
+//					}
+//				} else {
+//					myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
+//					Vector2 targetPosition = t.getTargetPosition(getBrain().getID(), isOnTop);
+//					Tools.setHeadingOn(
+//							getBrain(), 
+//							myPosition,
+//							targetPosition);
+//
+//					if(myPosition.dst(targetPosition) < 3) {
+//						Tools.setHeadingOn(
+//								getBrain(), 
+//								myPosition,
+//								t.getTarget());
+//						getBrain().setDebugString("in position to shoot");
+//						return  WarRocketLauncher.ACTION_IDLE;
+//					}
+//					toReturn = WarRocketLauncher.ACTION_MOVE;
+//				}
+//			}
+//		} catch (Exception e){getBrain().setDebugString(getBrain().getDebugString() + "in catch1");};
 
 		return toReturn;
 	}

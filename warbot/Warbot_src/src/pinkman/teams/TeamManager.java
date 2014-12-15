@@ -63,6 +63,4 @@ public class TeamManager {
 	public int getIndexOfTeam(Group t) {
 		return teams.indexOf(t);
 	}
-	
-
 }
