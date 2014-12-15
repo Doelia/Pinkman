@@ -25,7 +25,7 @@ public abstract class Task {
 		this.type = type;
 		this.e = e;
 		
-		if (Behavior.CHEAT) {
+		if (Behavior.AGRESSIVE) {
 			sender = this.e;
 		} else {
 			sender = new SenderEnvironnementInstruction(brain.getBrain());

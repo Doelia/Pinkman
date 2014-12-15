@@ -43,7 +43,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 	}
 
 	private Environnement getEnvironnement() {
-		if (Behavior.CHEAT) {
+		if (Behavior.AGRESSIVE) {
 			ev = Behavior.getGoodInstance(this.getBrain());
 			receiver = new ReceiverEnvironementInstruction(ev);
 		}
