@@ -281,7 +281,7 @@ public class WarCharts
 		return !this.getEnemyBaseTargets().isEmpty();
 	}
 	
-	public void addEnemyBaseLocation(TargetMessageWrapper tmw)
+	public void addEnemyBaseLocation(CoordPolar coordPolar)
 	{
 		
 	}
@@ -365,7 +365,7 @@ public class WarCharts
 				&& (minAngle <= cp.getAngle() && cp.getAngle() <= maxAngle))
 		{
 			if(!this.enemyBaseLocations.contains(cp))
-			this.enemyBaseLocations.add(cp)
+			this.enemyBaseLocations.add(cp);
 		}
 	}
 	
