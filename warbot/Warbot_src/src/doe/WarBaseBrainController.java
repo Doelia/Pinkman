@@ -17,6 +17,8 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	private Environnement e;
 	private EnvironnementUpdaterInterface sender;
 	private ReceiverEnvironementInstruction receiver;
+	
+	private static int MAX_BASES = 5;
 
 	public WarBaseBrainController() {
 		super();
@@ -55,7 +57,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
 		int nbrBases = getEnvironnement().getNumberOfType(WarAgentType.WarBase);
 
-		if (nbrBases > 5 && this.getBrain().getID() == getEnvironnement().getBiggestBaseId()) {
+		if (nbrBases > MAX_BASES && this.getBrain().getID() == getEnvironnement().getBiggestBaseId()) {
 			return true;
 		}
 
