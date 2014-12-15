@@ -31,7 +31,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	int isOnTop;
 	int angleToUnstuck;
 	private int angleModifier = new Random().nextInt(90);
-	private int ticksSinceLastEncounter;
 	private ArrayList<WarMessage> messages;
 	private ArrayList<WarPercept> enemyBases;
 	private ArrayList<WarPercept> enemies;
@@ -48,12 +47,11 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			angleModifier = -angleModifier;
 		}
 		toReturn = "";
-		ticksSinceLastEncounter = 0;
 		messages = new ArrayList<WarMessage>();
 	}
 
 	private Environnement getEnvironnement() {
-		if (Behavior.CHEAT) {
+		if (Behavior.AGRESSIVE) {
 			e = Behavior.getGoodInstance(this.getBrain());
 			receiver = new ReceiverEnvironementInstruction(e);
 		}
@@ -71,7 +69,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		if(!getBrain().isReloaded() && !getBrain().isReloading()) {
 			return WarRocketLauncher.ACTION_RELOAD;
 		}
-		ticksSinceLastEncounter++;
 		this.messages = getBrain().getMessages();
 
 		enemyBases = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
@@ -122,9 +119,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 
 	public String unstuck() {
-		if(new Random().nextInt(100) > 98) {
-			angleToUnstuck = new Random().nextInt(360);
-		}
 		getBrain().setHeading(getBrain().getHeading() + angleModifier);
 		return WarRocketLauncher.ACTION_MOVE;
 	}
@@ -150,14 +144,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 				t.setTarget(Tools.getPositionOfEntityFromMine(ev.getStructWarBrain(getBrain().getID()).getPosition(), enemies.get(0).getAngle(), enemies.get(0).getDistance()), false);
 				t.setAttacking(true);
 			} else {
-				//				if(t.isBaseAttacked() && !t.isBaseAttackTeam()) {
-				//					getBrain().setDebugString("base is under attack !");
-				//					Tools.setHeadingOn(
-				//							getBrain(), 
-				//							ev.getStructWarBrain(getBrain().getID()).getPosition(),
-				//							t.getDefensePosition(getBrain().getID()));
-				//					return WarRocketLauncher.ACTION_MOVE;
-				//				}
 				try {
 					myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
 					Vector2 enemyPosition = ev.getEnemy(ev.getClosestEnemy(myPosition)).getPosition();
@@ -169,7 +155,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 								getBrain(), 
 								myPosition,
 								enemyBase);
-
 						if(myPosition.dst(enemyBase) < 3) {
 							Tools.setHeadingOn(
 									getBrain(), 
@@ -329,7 +314,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			Vector2 myPosition = ev.getStructWarBrain(getBrain().getID()).getPosition();
 			Vector2 enemyBase = t.getBaseAttackPosition(getBrain().getID());
 			if(enemyBases.size() > 0) {
-
 				t.setTarget(getEnvironnement().getPositionFirstEnemyBase(), true);
 				if(!getBrain().isReloaded()) {
 					Tools.setHeadingOn(

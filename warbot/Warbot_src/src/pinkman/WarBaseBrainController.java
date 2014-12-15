@@ -30,7 +30,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
 	private EnvironnementUpdaterInterface getSender() {
 		if (sender == null) {
-			if (Behavior.CHEAT) {
+			if (Behavior.AGRESSIVE) {
 				sender = this.getEnvironnement();
 			} else {
 				sender = new SenderEnvironnementInstruction(this.getBrain());
@@ -40,7 +40,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 	}
 	
 	private Environnement getEnvironnement() {
-		if (Behavior.CHEAT) {
+		if (Behavior.AGRESSIVE) {
 			e = Behavior.getGoodInstance(this.getBrain());
 			receiver = new ReceiverEnvironementInstruction(e);
 			return e;

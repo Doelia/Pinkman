@@ -11,13 +11,13 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.tasks"/>
-        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman"/>
         <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.tools"/>
         <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.messages"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.environement"/>
         <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.exceptions"/>
         <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.teams"/>
-        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.environement"/>
+        <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.tasks"/>
         <javaElement handleIdentifier="=Warbot_src/src&lt;pinkman.behavior"/>
     </selectedElements>
 </jardesc>
