@@ -27,12 +27,9 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	int x;
 	int y;
 	String toReturn = "";
-	int maxDistanceToTarget = 50;
 	int isOnTop;
-	int angleToUnstuck;
-	private int angleModifier = new Random().nextInt(90);
+	private int angleModifier = new Random().nextInt(180);
 	private ArrayList<WarMessage> messages;
-	private ArrayList<WarPercept> enemyBases;
 	private ArrayList<WarPercept> enemies;
 
 	private Environnement e;
@@ -42,10 +39,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		super();
 		newPosition();
 		isOnTop = 0;
-		angleToUnstuck = new Random().nextInt(360);
-		if(new Random().nextBoolean()) {
-			angleModifier = -angleModifier;
-		}
 		toReturn = "";
 		messages = new ArrayList<WarMessage>();
 	}
@@ -71,8 +64,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		}
 		this.messages = getBrain().getMessages();
 
-		enemyBases = getBrain().getPerceptsEnemiesByType(WarAgentType.WarBase);
-
 		enemies = getBrain().getPerceptsEnemiesByType(WarAgentType.WarTurret);
 		enemies.addAll(getBrain().getPerceptsEnemiesByType(WarAgentType.WarRocketLauncher));
 		enemies.addAll(getBrain().getPerceptsEnemiesByType(WarAgentType.WarKamikaze));
@@ -93,16 +84,12 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			isOnTop = ((top)?-1:1);
 		} catch (BaseNotFoundException ex) {}
 
-		if(getBrain().isBlocked()) {
+		while(getBrain().isBlocked()) {
 			return unstuck();
 		}
 
 		toReturn = move();
 		toReturn = attack();
-
-		if(getBrain().isBlocked()) {
-			return unstuck();
-		}
 
 		return toReturn;
 	}
@@ -119,12 +106,11 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 
 	public String unstuck() {
-		getBrain().setHeading(getBrain().getHeading() + angleModifier);
+		getBrain().setHeading(getBrain().getHeading() + 10);
 		return WarRocketLauncher.ACTION_MOVE;
 	}
 
 	public String attack() {
-
 		Environnement ev = this.getEnvironnement();
 		Group t;
 		try {
