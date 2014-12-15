@@ -242,8 +242,12 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		}
 	}
 
-	public int getFirstEnemyBase() {
-		return this.getEnemyBases().get(0);
+	public int getFirstEnemyBase() throws BaseNotFoundException {
+		try {
+			return this.getEnemyBases().get(0);
+		} catch (Exception e) {
+			throw new BaseNotFoundException();
+		}
 	}
 
 	public boolean oneBaseIsFound() {
@@ -339,12 +343,35 @@ public class Environnement implements EnvironnementUpdaterInterface {
 
 	public int getClosestEnemy(Vector2 position) throws NoTargetFoundException {
 		this.clean();
-		double minDistance = 30;
+		double minDistance = 200;
 		int id = -1;
 		try {
 			for (StructWarBrainEnemy s : this.listEnemies.values()) {
 				if(s.getType() == WarAgentType.WarBase 
 						|| s.getType() == WarAgentType.WarRocketLauncher
+						|| s.getType() == WarAgentType.WarTurret
+						|| s.getType() == WarAgentType.WarKamikaze) {
+					double dst = position.dst(s.getPosition());
+					if (dst < minDistance) {
+						minDistance = position.dst(s.getPosition());
+						id = s.getID();
+					}
+				}
+			}
+			return id;
+		} catch (Exception e) {
+			System.out.println("error");
+			throw new NoTargetFoundException();
+		}
+	}
+	
+	public int getClosestFromBase(Vector2 position) throws NoTargetFoundException {
+		this.clean();
+		double minDistance = 200;
+		int id = -1;
+		try {
+			for (StructWarBrainEnemy s : this.listEnemies.values()) {
+				if(s.getType() == WarAgentType.WarRocketLauncher
 						|| s.getType() == WarAgentType.WarTurret
 						|| s.getType() == WarAgentType.WarKamikaze) {
 					double dst = position.dst(s.getPosition());

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import pinkman.environement.Environnement;
+import pinkman.environement.StructWarBrainEnemy;
+import pinkman.exceptions.NoTargetException;
 import pinkman.exceptions.NotExistException;
 import pinkman.tools.Tools;
 
@@ -25,7 +27,7 @@ public class Group {
 	int teamIndex;
 	private int voteToChangeTarget;
 	private Environnement e;
-	
+
 	private Target target;
 
 	public Group(Environnement e) {
@@ -41,6 +43,7 @@ public class Group {
 		isBaseAttacked = false;
 		voteToChangeTarget = 0;
 		this.e = e;
+		this.target = null;
 	}
 
 	public void setTargetID(int id) {
@@ -97,17 +100,21 @@ public class Group {
 		try {
 			int angle = 360;
 			float orientation = 0;
-			int dist = 40;
-			Vector2 ta = t;
+			int dist = 30;
 
-			orientation = getEnvironnement().getTeamManager().getIndexOfTeam(this) * (360 / getSize());
-			int index = members.indexOf(brainId);
-			int nbrPersonnes = members.size();
-			float tick = (angle/nbrPersonnes);
-			float alpha = tick*index + orientation;
-			Vector2 target = Tools.cartFromPolaire(alpha, dist);
-			target.add(t);
-			return target;
+			if(this.hasTarget()) {
+				Vector2 enemyPosition = getEnvironnement().getEnemy(target.brainID).getPosition();
+				orientation = getEnvironnement().getTeamManager().getIndexOfTeam(this) * (360 / getSize());
+				int index = members.indexOf(brainId);
+				int nbrPersonnes = members.size();
+				float tick = (angle/nbrPersonnes);
+				float alpha = tick*index + orientation;
+				Vector2 target = Tools.cartFromPolaire(alpha, dist);
+				target.add(enemyPosition);
+				return target;
+			} else {
+				return getMovementPosition(brainId);
+			}
 		} catch (Exception e) {
 			throw new NotExistException();
 		}
@@ -177,20 +184,12 @@ public class Group {
 		}
 	}
 
-	public void setTarget(Vector2 target, boolean isTargetBase) {
-		if(voteToChangeTarget > getSize() * 10) {
-			this.t = target;
-			this.isTargetBase = isTargetBase;
-		}
-	}
-
-	public Vector2 getTarget() {
-		//		try {
-		//			return getEnvironnement().getEnemy(targetID).getPosition();
-		//		} catch (NotExistException e) {
-		//		}
-		return this.t;
-	}
+	//	public void setTarget(Vector2 target, boolean isTargetBase) {
+	//		if(voteToChangeTarget > getSize() * 10) {
+	//			this.t = target;
+	//			this.isTargetBase = isTargetBase;
+	//		}
+	//	}
 
 	public boolean isAttacking() {
 		return attacking;
@@ -242,15 +241,19 @@ public class Group {
 	public void setTeamIndex(int index) {
 		this.teamIndex = index;
 	}
-	
+
 	public void setTarget(Target t) {
 		this.target = t;
 	}
-	
-	public Target getTarget() {
+
+	public Target getTarget() throws NoTargetException {
 		if(target == null) {
 			throw new NoTargetException();
 		}
 		return target;
+	}
+
+	public boolean hasTarget() {
+		return target != null;
 	}
 }

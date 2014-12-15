@@ -22,6 +22,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 
 	public WarBaseBrainController() {
 		super();
+		Behavior.clear();
 	}
 
 	private void broadcastPosition() {
@@ -95,6 +96,7 @@ public class WarBaseBrainController extends WarBaseAbstractBrainController {
 		if (e.isMainBase(this.getBrain())) {
 			this.broadcastPosition();
 			this.getSender().decrementTtlOfAll();
+			this.e.getTeamManager().assignTarget();
 		}
 
 		this.getBrain().setDebugString("Bag "+this.getBrain().getNbElementsInBag()+"/"+this.getBrain().getBagSize()+" - life "+this.getBrain().getHealth());

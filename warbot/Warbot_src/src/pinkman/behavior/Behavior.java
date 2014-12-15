@@ -33,5 +33,10 @@ public class Behavior {
 	}
 
 	public static final boolean AGRESSIVE = true;
+
+	public static void clear() {
+		instance1 = null;
+		instance2 = null;
+	}
 	
 }
