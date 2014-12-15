@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Stack;
 
+import sun.net.www.content.text.plain;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.badlogic.gdx.utils.OrderedMap;
@@ -44,6 +46,7 @@ public class Environnement {
 	private Boolean weAreInTop; // En haut à droite, null si on sait pas encore
 	private ArrayList<Integer> explorers;
 	private HashMap<Integer, Integer> mainBases;
+	private Vector2 baseAttacked;
 
 	public Environnement() {
 		tm = new TeamManager();
@@ -62,11 +65,19 @@ public class Environnement {
 	public void setWeAreInTop(boolean weAreInTop) {
 		this.weAreInTop = weAreInTop;
 	}
+	
+	public void setPositionBaseAttacked(Vector2 pos) {
+		baseAttacked = pos;
+	}
 
 	public void registerExplorer(Integer id) {
 		if(!explorers.contains(id)) {
 			explorers.add(id);
 		}
+	}
+	
+	public void setKilledFirstBase() {
+		killedFirstBase = true;
 	}
 
 	public int getExplorerIndex(Integer id) {
@@ -92,7 +103,6 @@ public class Environnement {
 		cleanMainBases();
 		mainBases.put(mainBase.getID(), 2 * mainBases.size());
 
-		System.out.println(mainBase.getID());
 		boolean mainBaseAlive = true;
 		try{
 			mainBaseAlive = (getMainBase().getHealth() > 0);
@@ -172,6 +182,9 @@ public class Environnement {
 
 	/** LECTURE **/
 
+	public int getNumberOfBases() {
+		return mainBases.size(); 
+	}
 
 	public boolean ourBaseIsFound() {
 		try {
@@ -404,5 +417,9 @@ public class Environnement {
 				}
 		}
 		return big;
+	}
+
+	public Vector2 getBaseAttacked() {
+		return baseAttacked;
 	}
 }

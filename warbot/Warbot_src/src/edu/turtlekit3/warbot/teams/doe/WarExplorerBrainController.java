@@ -137,7 +137,7 @@ public class WarExplorerBrainController extends WarExplorerAbstractBrainControll
 		WarAgentType t = WarAgentType.WarExplorer;
 
 		new DetectEnemyTask(this, t, e).exec();
-		new SendAlliesTask(this, t, e).exec();
+		new SendAlliesTask(this, t, e, getBrain().getMessages()).exec();
 
 		this.action = WarExplorer.ACTION_MOVE;
 		if (activeTask == null)

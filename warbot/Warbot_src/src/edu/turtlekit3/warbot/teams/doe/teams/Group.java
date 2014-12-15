@@ -5,8 +5,10 @@ import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 
+import edu.turtlekit3.warbot.agents.enums.WarAgentType;
 import edu.turtlekit3.warbot.teams.doe.cheat.Behavior;
 import edu.turtlekit3.warbot.teams.doe.environement.Environnement;
+import edu.turtlekit3.warbot.teams.doe.environement.StructWarBrain;
 import edu.turtlekit3.warbot.teams.doe.exceptions.NotExistException;
 import edu.turtlekit3.warbot.teams.doe.tools.Tools;
 
@@ -23,6 +25,8 @@ public class Group {
 	boolean isTargetBase;
 	int teamIndex;
 	private boolean ready;
+	private int targetID;
+	private int voteToChangeTarget;
 	Environnement e = null;
 
 	public Group() {
@@ -37,10 +41,23 @@ public class Group {
 		isTargetBase = false;
 		isBaseAttacked = false;
 		ready = false;
+		voteToChangeTarget = 0;
 	}
 
 	public boolean isReady() {
 		return this.ready;
+	}
+	
+	public void setTargetID(int id) {
+		voteToChangeTarget++;
+		if(voteToChangeTarget > getSize() * 10) {
+			voteToChangeTarget = 0;
+			targetID = id;
+		}
+	}
+	
+	public int getTargetID() {
+		return targetID;
 	}
 	
 	public void addMember(Integer w) {
@@ -84,20 +101,25 @@ public class Group {
 		return getMovementPosition(brainId);
 	}
 
-	public Vector2 getTargetPosition(Integer brainId) throws NotExistException {
-		requestNumber++;
-		if(requestNumber > 500 * getSize()) {
-			requestNumber = 0;
-			battleModifier++;
-			battleModifier = battleModifier % getSize();
-		}
+	public Vector2 getTargetPosition(Integer brainId, int isTop) throws NotExistException {
 		try {
+			int angle = 360;
+			float orientation = 0;
+			int dist = 25;
+			Vector2 t = target;
+			StructWarBrain b = getEnvironnement().getEnemy(targetID);
+			
+			if(b.isBase()) {
+				t = b.getPosition();
+			} else {
+				orientation = new Vector2(isTop * 450, isTop * 250).add(getEnvironnement().getStructWarBrain(brainId).getPosition()).angle();
+			}
 			int index = (members.indexOf(brainId) + battleModifier) % getSize();
 			int nbrPersonnes = members.size();
-			float tick = (360/nbrPersonnes);
-			float alpha = tick*index;
-			Vector2 target = Tools.cartFromPolaire(alpha, 30);
-			target.add(this.target);
+			float tick = (angle/nbrPersonnes);
+			float alpha = tick*index + orientation;
+			Vector2 target = Tools.cartFromPolaire(alpha, dist);
+			target.add(t);
 			return target;
 		} catch (Exception e) {
 			throw new NotExistException();
@@ -158,7 +180,7 @@ public class Group {
 	
 	public Vector2 getDefensePosition(Integer brainId) throws NotExistException {
 		try {
-			Vector2 position = new Vector2(0, 0);
+			Vector2 position = getEnvironnement().getBaseAttacked();
 			int index = members.indexOf(brainId);
 			int nbrPersonnes = members.size();
 			float tick = (360/nbrPersonnes);
@@ -177,6 +199,10 @@ public class Group {
 	}
 
 	public Vector2 getTarget() {
+		try {
+			return getEnvironnement().getEnemy(targetID).getPosition();
+		} catch (NotExistException e) {
+		}
 		return this.target;
 	}
 
@@ -229,5 +255,9 @@ public class Group {
 	
 	public void setTeamIndex(int index) {
 		this.teamIndex = index;
+	}
+
+	public void setReady(boolean b) {
+		ready = true;
 	}
 }

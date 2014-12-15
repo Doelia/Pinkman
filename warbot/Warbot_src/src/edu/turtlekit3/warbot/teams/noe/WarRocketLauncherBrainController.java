@@ -38,8 +38,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		toReturn = null;
 		this.messages = getBrain().getMessages();
 
-		handleMessages();
-
 		// if(iAbleToFireBase)
 		//	 attaquerBase();
 
@@ -53,51 +51,6 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 		//		}
 
 		return toReturn;
-	}
-
-	private void attackEnemy(WarAgentType agentType) {
-		if(toReturn != null)
-			return;
-
-		if(!getBrain().isReloaded() && !getBrain().isReloading()){
-			toReturn =  WarRocketLauncher.ACTION_RELOAD;
-			return;
-		}
-
-		getBrain().setDebugStringColor(Color.blue);
-		getBrain().setDebugString("Attack launchers");
-
-		ArrayList<WarPercept> percept = getBrain().getPerceptsEnemiesByType(agentType);
-
-		// Je un agentType dans le percept
-		if(percept != null && percept.size() > 0){
-
-			//je le dit aux autres
-			getBrain().broadcastMessageToAgentType(WarAgentType.WarRocketLauncher, Constants.enemyTankHere, String.valueOf(percept.get(0).getDistance()), String.valueOf(percept.get(0).getAngle()));
-
-			if(getBrain().isReloaded()){
-
-				getBrain().setHeading(percept.get(0).getAngle());
-				toReturn = WarRocketLauncher.ACTION_FIRE;
-			}else{
-
-				//si je suis pas trop pres de l'enemy je m'approche
-
-				if(percept.get(0).getDistance() > WarRocket.EXPLOSION_RADIUS + 1)
-					toReturn = WarRocketLauncher.ACTION_MOVE;
-				else
-					toReturn = WarRocketLauncher.ACTION_IDLE;
-			}
-		}else{
-			//si j'ai un message me disant qu'il y a  un autre tank a tuer
-
-			WarMessage m = getFormatedMessageAboutEnemyTankToKill();
-			if(m != null){
-				CoordPolar p = getBrain().getIndirectPositionOfAgentWithMessage(m);
-				getBrain().setHeading(p.getAngle());
-				toReturn = WarRocketLauncher.ACTION_MOVE;
-			}
-		}	
 	}
 
 	private void attackRocketLaunchers() {
@@ -181,20 +134,5 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			}
 		}
 		return null;
-	}
-
-	private WarMessage getMessageAboutEnemyBase() {
-		for (WarMessage m : this.messages) {
-			if(m.getMessage().equals(Constants.enemyBaseHere))
-				return m;
-		}
-		return null;
-	}
-
-	private void handleMessages() {
-		for (WarMessage m : this.messages) {
-			if(m.getSenderType().equals(WarAgentType.WarKamikaze) && m.getMessage().equals(WarKamikazeBrainController.I_Exist))
-				this.iAbleToFireBase = true;
-		}
 	}
 }
