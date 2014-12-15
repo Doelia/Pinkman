@@ -84,7 +84,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 			isOnTop = ((top)?-1:1);
 		} catch (BaseNotFoundException ex) {}
 
-		while(getBrain().isBlocked()) {
+		if(getBrain().isBlocked()) {
 			return unstuck();
 		}
 
@@ -106,7 +106,7 @@ public class WarRocketLauncherBrainController extends WarRocketLauncherAbstractB
 	}
 
 	public String unstuck() {
-		getBrain().setHeading(getBrain().getHeading() + 10);
+		getBrain().setHeading(getBrain().getHeading() + 7);
 		return WarRocketLauncher.ACTION_MOVE;
 	}
 
