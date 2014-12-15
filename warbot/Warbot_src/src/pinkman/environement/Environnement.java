@@ -44,7 +44,7 @@ public class Environnement implements EnvironnementUpdaterInterface {
 		mainBases = new HashMap<Integer, Integer>();
 	}
 
-	/*** ECRITURE **/
+	/*** ECRITURE PAR LES MESSAGES **/
 
 	public void setWeAreInTop(boolean weAreInTop) {
 		this.weAreInTop = weAreInTop;
