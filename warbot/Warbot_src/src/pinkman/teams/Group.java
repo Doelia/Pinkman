@@ -104,7 +104,7 @@ public class Group {
 
 			if(this.hasTarget()) {
 				Vector2 enemyPosition = getEnvironnement().getEnemy(target.brainID).getPosition();
-				orientation = getEnvironnement().getTeamManager().getIndexOfTeam(this) * (360 / getSize());
+				orientation = getEnvironnement().getTeamManager().getIndexOfTeam(this) * (180 / getMaxSize());
 				int index = members.indexOf(brainId);
 				int nbrPersonnes = members.size();
 				float tick = (angle/nbrPersonnes);
